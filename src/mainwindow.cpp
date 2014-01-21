@@ -14,6 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     d->ui = new Ui::MainWindow;
     d->ui->setupUi(this);
+
+    connect( d->ui->actionAbout_Qt, SIGNAL( triggered() ), qApp, SLOT( aboutQt() ) );
 }
 
 MainWindow::~MainWindow()

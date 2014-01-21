@@ -30,6 +30,8 @@ struct LibraryManagerPrivate
     QThread        *thread;
     LibraryManager *man;
 
+    volatile bool cancelFlag;
+
     void recurse(QDir, QString);
 };
 
@@ -37,14 +39,15 @@ LibraryManager::LibraryManager() :
     QObject(0),
     d(new LibraryManagerPrivate)
 {
-    d->thread = nullptr;
-    d->man    = nullptr;
+    d->thread     = nullptr;
+    d->man        = nullptr;
+    d->cancelFlag = false;
 }
 
 LibraryManager::~LibraryManager()
 {
     if ( d->thread ) {
-        d->thread->quit();
+        stopScan();
         d->thread->wait();
         d->thread->deleteLater();
     }
@@ -64,7 +67,7 @@ void LibraryManager::scan()
     }
 
     if ( d->thread->isRunning() ) {
-        d->thread->quit();
+        stopScan();
         QTimer::singleShot( 1000, this, SLOT( scan() ) );
         return;
     }
@@ -77,11 +80,17 @@ void LibraryManager::scan()
 
     d->man->moveToThread(d->thread);
 
-    connect( d->man, SIGNAL( finishedScan() ), this,   SLOT( stopped() ) );
-    connect( this,   SIGNAL( startScan() ),    d->man, SLOT( scanFolders() ) );
+    connect( d->man, SIGNAL( scanFinished() ), this,   SLOT( stopped() ) );
+    connect( this,   SIGNAL( scanStarted() ),    d->man, SLOT( scanFolders() ) );
 
     d->thread->start();
-    emit startScan();
+    emit scanStarted();
+}
+
+void LibraryManager::stopScan()
+{
+    d->man->cancelScan();
+    d->thread->quit();
 }
 
 void LibraryManager::scanFolders()
@@ -94,9 +103,13 @@ void LibraryManager::scanFolders()
 
     for ( auto path : paths ) {
         d->recurse( path, QDir(path).canonicalPath() );
+
+        if ( d->cancelFlag ) {
+            break;
+        }
     }
 
-    emit finishedScan();
+    emit scanFinished();
 }
 
 void LibraryManager::stopped()
@@ -105,9 +118,18 @@ void LibraryManager::stopped()
     d->thread->wait();
 }
 
+void LibraryManager::cancelScan()
+{
+    d->cancelFlag = true;
+}
+
 void LibraryManagerPrivate::recurse(QDir path, QString basePath)
 {
     for ( QFileInfo entry : path.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot) ) {
+        if ( cancelFlag ) {
+            return;
+        }
+
         if ( entry.isDir() ) {
             recurse(entry.absoluteFilePath(), basePath);
         } else {

@@ -13,6 +13,7 @@ public:
 
 public slots:
     void scan();
+    void stopScan();
 
 protected:
     LibraryManager();
@@ -23,9 +24,10 @@ private:
 protected slots:
     void scanFolders();
     void stopped();
+    void cancelScan();
 
 signals:
-    void startScan();
-    void finishedScan();
+    void scanStarted();
+    void scanFinished();
 };
 #endif // LIBRARYMANAGER_H
