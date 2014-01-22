@@ -110,6 +110,12 @@ void DataBase::save(Media *m, QString basePath)
             d->query->addBindValue( m->year() );
             d->query->addBindValue(mid);
             d->query->exec();
+
+            d->query->prepare("UPDATE media SET size=?, last_modified=? WHERE id=?");
+            d->query->addBindValue(msz);
+            d->query->addBindValue(mlm);
+            d->query->addBindValue(mid);
+            d->query->exec();
         }
     }
 }
