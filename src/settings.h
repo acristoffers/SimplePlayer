@@ -20,6 +20,9 @@ private slots:
     void on_addPath_clicked();
     void on_removePath_clicked();
 
+signals:
+    void settingsChanged();
+
 private:
     SettingsPrivate *d;
 };

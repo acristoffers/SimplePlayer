@@ -27,7 +27,9 @@ Settings::Settings(QWidget *parent) :
     d->ui->setupUi(this);
     d->updatePathsWidget();
 
-    connect( this, SIGNAL( finished(int) ), LibraryManager::instance(), SLOT( scan() ) );
+    connect( this, SIGNAL( finished(int) ),     this,                       SIGNAL( settingsChanged() ) );
+    connect( this, SIGNAL( settingsChanged() ), LibraryManager::instance(), SLOT( scan() ) );
+    connect( this, SIGNAL( settingsChanged() ), LibraryManager::instance(), SLOT( changeWatchPaths() ) );
 }
 
 Settings::~Settings()
