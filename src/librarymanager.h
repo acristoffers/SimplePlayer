@@ -25,6 +25,7 @@ private:
 protected slots:
     void cancelScan();
 
+    void processFile(QString);
     void rescanFolder(QString);
 
     void scanFolders();

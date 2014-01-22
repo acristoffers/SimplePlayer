@@ -51,6 +51,7 @@ LibraryManager::LibraryManager() :
     d->watcher = new QFileSystemWatcher;
 
     connect( d->watcher, SIGNAL( directoryChanged(QString) ), this, SLOT( rescanFolder(QString) ) );
+    connect( d->watcher, SIGNAL( fileChanged(QString) ),      this, SLOT( processFile(QString) ) );
 
     changeWatchPaths();
 }
@@ -78,7 +79,15 @@ void LibraryManager::changeWatchPaths()
     d->watcher->removePaths( d->watcher->directories() );
     QStringList paths = QSettings().value("paths").toStringList();
     for ( QString path : paths ) {
-        d->watcher->addPaths( d->subfoldersList(path) );
+        QStringList folders = d->subfoldersList(path);
+        folders << path;
+        d->watcher->addPaths(folders);
+
+        QDirIterator it(path, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::FollowSymlinks | QDirIterator::Subdirectories);
+        while ( it.hasNext() ) {
+            QString file = it.next();
+            d->watcher->addPath(file);
+        }
     }
 }
 
@@ -121,6 +130,18 @@ void LibraryManager::cancelScan()
     d->cancelFlag = true;
 }
 
+void LibraryManager::processFile(QString file)
+{
+    QStringList paths = QSettings().value("paths").toStringList();
+
+    for ( QString path : paths ) {
+        if ( file.startsWith(path) ) {
+            DataBase::instance()->save(Media::specializedObjectForFile(file), path);
+            return;
+        }
+    }
+}
+
 void LibraryManager::rescanFolder(QString folder)
 {
     if ( QThread::currentThread() == qApp->thread() ) {
@@ -156,6 +177,8 @@ void LibraryManager::rescanFolder(QString folder)
 
         for ( QString path : paths ) {
             QStringList subdirs = d->subfoldersList(path);
+            subdirs << path;
+
             for ( QString subdir : subdirs ) {
                 if ( QDir(folder).canonicalPath() == QDir(subdir).canonicalPath() ) {
                     base = path;

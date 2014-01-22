@@ -67,7 +67,7 @@ void DataBase::save(Media *m, QString basePath)
 
     QMutexLocker locker(&mutex);
 
-    d->query->prepare("SELECT id FROM media WHERE file=?");
+    d->query->prepare("SELECT id, size, last_modified FROM media WHERE file=?");
     d->query->addBindValue( QFileInfo( m->file().path() ).canonicalFilePath() );
     d->query->exec();
 
@@ -95,6 +95,21 @@ void DataBase::save(Media *m, QString basePath)
                 d->query->addBindValue( m->year() );
                 d->query->exec();
             }
+        }
+    } else {
+        int    mid = d->query->value("id").toInt();
+        qint64 mlm = d->query->value("last_modified").toLongLong();
+        qint64 msz = d->query->value("size").toLongLong();
+
+        if ( (m->isA() == "Music") && ( (mlm != lastModified) || (msz != size) ) ) {
+            d->query->prepare("UPDATE music SET artist=?, album=?, title=?, track=?, year=? WHERE media=?");
+            d->query->addBindValue( m->artist() );
+            d->query->addBindValue( m->album() );
+            d->query->addBindValue( m->title() );
+            d->query->addBindValue( m->track() );
+            d->query->addBindValue( m->year() );
+            d->query->addBindValue(mid);
+            d->query->exec();
         }
     }
 }
@@ -148,19 +163,25 @@ void DataBase::clean()
 
     d->query->exec("SELECT id, file FROM media");
 
+    QList<int> ids;
+
     while ( d->query->next() ) {
         int     id   = d->query->value("id").toInt();
         QString file = d->query->value("file").toString();
 
         if ( !QFileInfo::exists(file) ) {
-            d->query->prepare("DELETE FROM media WHERE id=?");
-            d->query->addBindValue(id);
-            d->query->exec();
-
-            d->query->prepare("DELETE FROM music WHERE media=?");
-            d->query->addBindValue(id);
-            d->query->exec();
+            ids << id;
         }
+    }
+
+    for ( int id : ids ) {
+        d->query->prepare("DELETE FROM media WHERE id=?");
+        d->query->addBindValue(id);
+        d->query->exec();
+
+        d->query->prepare("DELETE FROM music WHERE media=?");
+        d->query->addBindValue(id);
+        d->query->exec();
     }
 }
 
