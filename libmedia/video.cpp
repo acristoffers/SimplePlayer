@@ -1,4 +1,4 @@
-﻿#include "src/video.h"
+﻿#include "video.h"
 
 struct VideoPrivate
 {

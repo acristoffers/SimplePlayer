@@ -1,4 +1,4 @@
-﻿#include "src/settings.h"
+﻿#include "settings.h"
 #include "ui_settings.h"
 
 #include <QDebug>
@@ -7,8 +7,8 @@
 #include <QSettings>
 #include <QStringList>
 
-#include "database.h"
-#include "librarymanager.h"
+#include <database.h>
+#include <librarymanager.h>
 
 struct SettingsPrivate
 {

@@ -1,7 +1,8 @@
 ﻿#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "librarymanager.h"
+#include <librarymanager.h>
+
 #include "settings.h"
 
 struct MainWindowPrivate

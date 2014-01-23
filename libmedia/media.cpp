@@ -8,11 +8,11 @@
 #include <QMimeDatabase>
 #include <QPixmap>
 
-#include "taglib/attachedpictureframe.h"
-#include "taglib/fileref.h"
-#include "taglib/id3v2tag.h"
-#include "taglib/mpegfile.h"
-#include "taglib/tbytevectorlist.h"
+#include <taglib/attachedpictureframe.h>
+#include <taglib/fileref.h>
+#include <taglib/id3v2tag.h>
+#include <taglib/mpegfile.h>
+#include <taglib/tbytevectorlist.h>
 
 #include "image.h"
 #include "music.h"

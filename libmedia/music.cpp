@@ -1,4 +1,4 @@
-﻿#include "src/music.h"
+﻿#include "music.h"
 
 struct MusicPrivate
 {

@@ -1,4 +1,4 @@
-﻿#include "src/database.h"
+﻿#include "database.h"
 
 #include <QDebug>
 #include <QSqlError>
