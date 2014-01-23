@@ -101,6 +101,7 @@ namespace TagLib
              * responsible for deleting it after the File object.
              */
             File(IOStream *stream);
+
         private:
             File(const File &);
             File &operator=(const File &);

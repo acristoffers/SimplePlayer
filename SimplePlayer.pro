@@ -4,9 +4,10 @@
 #
 #-------------------------------------------------
 
-QT       += core gui multimedia sql
+# Requires Qt5
+# Tested with Qt 5.2.0
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets multimediawidgets
+QT       += core gui multimedia sql widgets multimediawidgets
 
 CONFIG += c++11
 

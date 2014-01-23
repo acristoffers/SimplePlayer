@@ -33,6 +33,7 @@ namespace TagLib
         class Properties : public AudioProperties
         {
             friend class File;
+
         public:
             /*! Flag bits. */
             enum {

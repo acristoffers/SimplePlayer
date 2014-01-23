@@ -22,7 +22,7 @@ public:
 
     virtual QPixmap cover();
 
-    QString isA();                                        // returns Image, Music, Video or NaM
+    virtual QString isA();                                // returns Image, Music, Video or NaM
     static Media *specializedObjectForFile(QString file); // returns a Image*, Music* or Video* for the given file. nullptr if NaM
 
 protected:

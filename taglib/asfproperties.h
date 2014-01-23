@@ -62,6 +62,7 @@ namespace TagLib
             void setChannels(int value);
             void setEncrypted(bool value);
 #endif
+
         private:
             class PropertiesPrivate;
             PropertiesPrivate *d;

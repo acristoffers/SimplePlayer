@@ -207,6 +207,7 @@ namespace TagLib
 
             friend class Attribute;
 #endif
+
         private:
             class PicturePrivate;
             PicturePrivate *d;

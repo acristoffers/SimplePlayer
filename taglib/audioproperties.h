@@ -94,6 +94,7 @@ namespace TagLib
          * \see ReadStyle
          */
         AudioProperties(ReadStyle style);
+
     private:
         AudioProperties(const AudioProperties &);
         AudioProperties &operator=(const AudioProperties &);

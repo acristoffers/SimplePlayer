@@ -12,9 +12,11 @@ LibraryManager *LibraryManagerPrivate::_self = nullptr;
 
 LibraryManagerPrivate::LibraryManagerPrivate()
 {
-    cancel    = false;
-    mustClean = true;
-    watcher   = nullptr;
+    cancel      = false;
+    mustClean   = true;
+    watcher     = nullptr;
+    totalFiles  = 0;
+    currentFile = 0;
 }
 
 LibraryManagerPrivate::~LibraryManagerPrivate()
@@ -52,6 +54,11 @@ void LibraryManagerPrivate::fileScan(QString file)
 
     Media *m = Media::specializedObjectForFile(file);
 
+    if ( totalFiles != 0 ) {
+        currentFile++;
+        emit processingFile(file, currentFile, totalFiles);
+    }
+
     if ( m && m->isValid() ) {
         QStringList paths = LibraryManager::searchPaths();
         QString     shortestPath;
@@ -72,6 +79,8 @@ void LibraryManagerPrivate::folderScan(QString path)
 {
     cancel = false;
 
+    emit scanningFolder(path);
+
     if ( mustClean ) {
         DataBase::instance()->clean();
     }
@@ -91,9 +100,22 @@ void LibraryManagerPrivate::fullScan()
     cancel    = false;
     mustClean = false;
 
+    totalFiles  = 0;
+    currentFile = 0;
+
+    emit scanStarted();
+
     DataBase::instance()->clean();
 
     QStringList paths = LibraryManager::searchPaths();
+
+    for ( QString path : paths ) {
+        QDirIterator it(path, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::FollowSymlinks | QDirIterator::Subdirectories);
+        while ( it.hasNext() ) {
+            totalFiles++;
+            it.next();
+        }
+    }
 
     for ( QString path : paths ) {
             folderScan(path);
@@ -102,6 +124,7 @@ void LibraryManagerPrivate::fullScan()
         while ( it.hasNext() ) {
             if ( cancel ) {
                 mustClean = true;
+                emit scanFinished();
                 return;
             }
 
@@ -109,7 +132,11 @@ void LibraryManagerPrivate::fullScan()
         }
     }
 
-    mustClean = true;
+    totalFiles  = 0;
+    currentFile = 0;
+    mustClean   = true;
+
+    emit scanFinished();
 }
 
 void LibraryManagerPrivate::stop()

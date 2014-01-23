@@ -24,6 +24,9 @@ private:
     volatile bool cancel;
     bool          mustClean;
 
+    unsigned long long totalFiles;
+    unsigned long long currentFile;
+
 public slots:
     void fileScan(QString);
     void folderScan(QString);

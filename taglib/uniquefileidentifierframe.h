@@ -43,6 +43,7 @@ namespace TagLib
         class TAGLIB_EXPORT UniqueFileIdentifierFrame : public ID3v2::Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * Creates a uniqe file identifier frame based on \a data.

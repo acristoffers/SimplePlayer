@@ -43,6 +43,7 @@ namespace TagLib
         class TAGLIB_EXPORT PopularimeterFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * Construct an empty popularimeter frame.

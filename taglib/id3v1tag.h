@@ -60,6 +60,7 @@ namespace TagLib
         class TAGLIB_EXPORT StringHandler
         {
             TAGLIB_IGNORE_MISSING_DESTRUCTOR
+
         public:
             // BIC: Add virtual destructor.
             StringHandler();

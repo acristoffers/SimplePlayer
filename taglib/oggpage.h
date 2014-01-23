@@ -187,6 +187,7 @@ namespace TagLib
              * for each page will be set to \a pageNumber.
              */
             Page(const ByteVectorList &packets, uint streamSerialNumber, int pageNumber, bool firstPacketContinued = false, bool lastPacketCompleted = true, bool containsLastPacket = false);
+
         private:
             Page(const Page &);
             Page &operator=(const Page &);

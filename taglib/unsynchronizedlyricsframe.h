@@ -41,6 +41,7 @@ namespace TagLib
         class TAGLIB_EXPORT UnsynchronizedLyricsFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * Construct an empty unsynchronized lyrics frame that will use the text encoding

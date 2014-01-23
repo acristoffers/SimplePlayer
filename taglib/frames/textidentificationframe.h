@@ -106,6 +106,7 @@ namespace TagLib
         class TAGLIB_EXPORT TextIdentificationFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * Construct an empty frame of type \a type.  Uses \a encoding as the
@@ -207,6 +208,7 @@ namespace TagLib
              * The constructor used by the FrameFactory.
              */
             TextIdentificationFrame(const ByteVector &data, Header *h);
+
         private:
             TextIdentificationFrame(const TextIdentificationFrame &);
             TextIdentificationFrame &operator=(const TextIdentificationFrame &);
@@ -240,6 +242,7 @@ namespace TagLib
         class TAGLIB_EXPORT UserTextIdentificationFrame : public TextIdentificationFrame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * Constructs an empty user defined text identification frame.  For this to be

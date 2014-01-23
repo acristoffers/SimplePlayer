@@ -187,6 +187,7 @@ namespace TagLib
          * through subclasses.
          */
         Tag();
+
     private:
         Tag(const Tag &);
         Tag &operator=(const Tag &);

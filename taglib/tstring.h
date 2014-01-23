@@ -463,6 +463,7 @@ namespace TagLib
          * A null string provided for convenience.
          */
         static String null;
+
     protected:
         /*!
          * If this String is being shared via implicit sharing, do a deep copy of the

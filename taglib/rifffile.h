@@ -50,6 +50,7 @@ namespace TagLib
              * Destroys this instance of the File.
              */
             virtual ~File();
+
         protected:
             enum Endianness {
                 BigEndian, LittleEndian

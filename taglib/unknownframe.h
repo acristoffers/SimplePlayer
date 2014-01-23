@@ -49,6 +49,7 @@ namespace TagLib
         class TAGLIB_EXPORT UnknownFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             UnknownFrame(const ByteVector &data);
             virtual ~UnknownFrame();

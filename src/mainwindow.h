@@ -18,6 +18,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected slots:
+    void statusForProcessingFile(QString, unsigned long long, unsigned long long);
+
 private slots:
     void on_actionQuit_triggered();
     void on_actionSettings_triggered();

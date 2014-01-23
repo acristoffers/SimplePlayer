@@ -43,6 +43,7 @@ namespace TagLib
         class TAGLIB_EXPORT OwnershipFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * Construct an empty ownership frame.

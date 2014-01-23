@@ -87,6 +87,7 @@ public:
 class ASF::File::UnknownObject : public ASF::File::BaseObject
 {
     ByteVector myGuid;
+
 public:
     UnknownObject(const ByteVector &guid);
     ByteVector guid();

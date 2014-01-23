@@ -39,6 +39,7 @@ namespace TagLib
         class TAGLIB_EXPORT PrivateFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * Construct an empty private frame.

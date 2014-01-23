@@ -43,6 +43,7 @@ namespace TagLib
         class TAGLIB_EXPORT CommentsFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * Construct an empty comment frame that will use the text encoding

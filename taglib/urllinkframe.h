@@ -41,6 +41,7 @@ namespace TagLib
         class TAGLIB_EXPORT UrlLinkFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * This is a dual purpose constructor.  \a data can either be binary data
@@ -77,6 +78,7 @@ namespace TagLib
              * The constructor used by the FrameFactory.
              */
             UrlLinkFrame(const ByteVector &data, Header *h);
+
         private:
             UrlLinkFrame(const UrlLinkFrame &);
             UrlLinkFrame &operator=(const UrlLinkFrame &);
@@ -97,6 +99,7 @@ namespace TagLib
         class TAGLIB_EXPORT UserUrlLinkFrame : public UrlLinkFrame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * Constructs an empty user defined URL link frame.  For this to be
@@ -172,6 +175,7 @@ namespace TagLib
              * The constructor used by the FrameFactory.
              */
             UserUrlLinkFrame(const ByteVector &data, Header *h);
+
         private:
             UserUrlLinkFrame(const UserUrlLinkFrame &);
             UserUrlLinkFrame &operator=(const UserUrlLinkFrame &);

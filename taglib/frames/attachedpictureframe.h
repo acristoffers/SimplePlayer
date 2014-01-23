@@ -46,6 +46,7 @@ namespace TagLib
         class TAGLIB_EXPORT AttachedPictureFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * This describes the function or content of the picture.
@@ -206,6 +207,7 @@ namespace TagLib
 
             class AttachedPictureFramePrivate;
             AttachedPictureFramePrivate *d;
+
         private:
             AttachedPictureFrame(const AttachedPictureFrame &);
             AttachedPictureFrame &operator=(const AttachedPictureFrame &);

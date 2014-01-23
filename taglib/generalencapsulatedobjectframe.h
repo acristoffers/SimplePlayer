@@ -50,6 +50,7 @@ namespace TagLib
         class TAGLIB_EXPORT GeneralEncapsulatedObjectFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * Constructs an empty object frame.  The description, file name and text

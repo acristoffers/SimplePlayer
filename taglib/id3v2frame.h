@@ -55,6 +55,7 @@ namespace TagLib
         {
             friend class Tag;
             friend class FrameFactory;
+
         public:
             /*!
              * Creates a textual frame which corresponds to a single key in the PropertyMap
@@ -154,6 +155,7 @@ namespace TagLib
              * frame for a non-standard key. In the current implementation, this is "URL:".
              */
             static const String urlPrefix;
+
         protected:
             class Header;
 

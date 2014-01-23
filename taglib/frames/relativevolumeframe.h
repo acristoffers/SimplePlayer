@@ -49,6 +49,7 @@ namespace TagLib
         class TAGLIB_EXPORT RelativeVolumeFrame : public Frame
         {
             friend class FrameFactory;
+
         public:
             /*!
              * This indicates the type of volume adjustment that should be applied.

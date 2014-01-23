@@ -42,6 +42,7 @@ namespace TagLib
         class TAGLIB_EXPORT Tag : public TagLib::Tag
         {
             friend class File;
+
         public:
             Tag();
 
