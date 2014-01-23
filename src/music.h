@@ -8,9 +8,11 @@ struct MusicPrivate;
 class Music : public Media
 {
     Q_OBJECT
+
 public:
     Music(QUrl file);
     ~Music();
+
 private:
     MusicPrivate *d;
 };

@@ -12,7 +12,6 @@
 
 struct SettingsPrivate
 {
-    QSettings    settings;
     QStringList  paths;
     Ui::Settings *ui;
 
@@ -27,9 +26,8 @@ Settings::Settings(QWidget *parent) :
     d->ui->setupUi(this);
     d->updatePathsWidget();
 
-    connect( this, SIGNAL( finished(int) ),     this,                       SIGNAL( settingsChanged() ) );
-    connect( this, SIGNAL( settingsChanged() ), LibraryManager::instance(), SLOT( scan() ) );
-    connect( this, SIGNAL( settingsChanged() ), LibraryManager::instance(), SLOT( changeWatchPaths() ) );
+    connect( this, SIGNAL( finished(int) ), this,                       SIGNAL( settingsChanged() ) );
+    connect( this, SIGNAL( finished(int) ), LibraryManager::instance(), SLOT( startScan() ) );
 }
 
 Settings::~Settings()
@@ -40,7 +38,7 @@ Settings::~Settings()
 
 bool Settings::hasPath()
 {
-    QStringList paths = d->settings.value("paths").toStringList();
+    QStringList paths = LibraryManager::searchPaths();
 
     return !paths.empty();
 }
@@ -58,10 +56,10 @@ void Settings::on_addPath_clicked()
         return;
     }
 
-    QStringList paths = d->settings.value("paths").toStringList();
+    QStringList paths = LibraryManager::searchPaths();
 
     paths.append(path);
-    d->settings.setValue("paths", paths);
+    LibraryManager::instance()->setSearchPaths(paths);
 
     d->updatePathsWidget();
 }
@@ -76,7 +74,7 @@ void Settings::on_removePath_clicked()
 
     QString path = items.first()->text();
 
-    QStringList paths = d->settings.value("paths").toStringList();
+    QStringList paths = LibraryManager::searchPaths();
     QStringList remaining;
 
     for ( auto p : paths ) {
@@ -85,7 +83,7 @@ void Settings::on_removePath_clicked()
         }
     }
 
-    d->settings.setValue("paths", remaining);
+    LibraryManager::instance()->setSearchPaths(remaining);
 
     d->updatePathsWidget();
 }
@@ -94,7 +92,7 @@ void SettingsPrivate::updatePathsWidget()
 {
     ui->paths->clear();
 
-    QStringList paths = settings.value("paths").toStringList();
+    QStringList paths = LibraryManager::searchPaths();
 
     ui->paths->addItems(paths);
 }

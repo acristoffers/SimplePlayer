@@ -9,6 +9,7 @@ struct MediaPrivate;
 class Media : public QObject
 {
     Q_OBJECT
+
 public:
     QUrl file();
     bool isValid();
@@ -27,6 +28,7 @@ public:
 protected:
     Media(QUrl file);
     ~Media();
+
 private:
     MediaPrivate *d;
 };

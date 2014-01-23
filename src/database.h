@@ -9,6 +9,7 @@ class Media;
 class DataBase : public QObject
 {
     Q_OBJECT
+
 public:
     static DataBase *instance();
 
@@ -18,6 +19,7 @@ public:
 protected:
     DataBase();
     ~DataBase();
+
 private:
     DataBasePrivate *d;
     static DataBase *_self;

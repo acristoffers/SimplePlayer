@@ -8,9 +8,11 @@ struct VideoPrivate;
 class Video : public Media
 {
     Q_OBJECT
+
 public:
     Video(QUrl file);
     ~Video();
+
 private:
     VideoPrivate *d;
 };

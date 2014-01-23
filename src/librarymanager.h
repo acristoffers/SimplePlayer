@@ -2,39 +2,35 @@
 #define LIBRARYMANAGER_H
 
 #include <QObject>
+#include <QStringList>
 
-struct LibraryManagerPrivate;
+class LibraryManagerPrivate;
 
 class LibraryManager : public QObject
 {
     Q_OBJECT
+
 public:
     static LibraryManager *instance();
+    static QStringList searchPaths();
 
-public slots:
-    void changeWatchPaths();
-    void scan();
-    void stopScan();
+    void setSearchPaths(QStringList);
 
 protected:
     LibraryManager();
     ~LibraryManager();
+
 private:
-    static LibraryManager *_self;
     LibraryManagerPrivate *d;
-protected slots:
-    void cancelScan();
 
-    void processFile(QString);
-    void rescanFolder(QString);
-
-    void scanFolders();
-    void stopped();
+public slots:
+    void startScan();
+    void stopScan();
 
 signals:
-    void scanStarted();
+    void processingFile(QString, unsigned long long, unsigned long long);
+    void scanningFolder(QString);
     void scanFinished();
-
-    void scanStarted(QString);
+    void scanStarted();
 };
 #endif // LIBRARYMANAGER_H

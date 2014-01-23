@@ -1,246 +1,80 @@
-﻿#include "src/librarymanager.h"
+﻿#include "librarymanager.h"
 
 #include <QDebug>
 
-#include <QApplication>
-#include <QDir>
 #include <QDirIterator>
-#include <QFileInfo>
-#include <QFileSystemWatcher>
-#include <QMimeDatabase>
-#include <QMimeType>
 #include <QSettings>
-#include <QStringList>
 #include <QThread>
-#include <QTimer>
-#include <QUrl>
 
-#include "database.h"
-#include "media.h"
+#include "librarymanagerprivate.h"
 
-LibraryManager *LibraryManager::_self = nullptr;
+QThread               *_thread;
+LibraryManagerPrivate *_worker;
 
 LibraryManager *LibraryManager::instance()
 {
-    if ( _self == nullptr ) {
-        _self = new LibraryManager;
+    if ( LibraryManagerPrivate::_self == nullptr ) {
+        LibraryManagerPrivate::_self = new LibraryManager;
     }
-    return _self;
+
+    return LibraryManagerPrivate::_self;
 }
-
-struct LibraryManagerPrivate
-{
-    volatile bool  cancelFlag;
-    LibraryManager *man;
-    QThread        *thread;
-
-    QFileSystemWatcher *watcher;
-
-    void        recurse(QDir, QString);
-    QStringList subfoldersList(QString);
-};
 
 LibraryManager::LibraryManager() :
     QObject(0),
     d(new LibraryManagerPrivate)
 {
-    d->thread     = nullptr;
-    d->man        = nullptr;
-    d->cancelFlag = false;
+    _thread = new QThread;
+    _worker = new LibraryManagerPrivate;
+
+    _worker->moveToThread(_thread);
+    _thread->start();
 
     d->watcher = new QFileSystemWatcher;
 
-    connect( d->watcher, SIGNAL( directoryChanged(QString) ), this, SLOT( rescanFolder(QString) ) );
-    connect( d->watcher, SIGNAL( fileChanged(QString) ),      this, SLOT( processFile(QString) ) );
+    connect( _worker,    SIGNAL( processingFile(QString, unsigned long long, unsigned long long) ), this,    SIGNAL( processingFile(QString, unsigned long long, unsigned long long) ) );
+    connect( _worker,    SIGNAL( scanFinished() ),                                                  this,    SIGNAL( scanFinished() ) );
+    connect( _worker,    SIGNAL( scanningFolder(QString) ),                                         this,    SIGNAL( scanningFolder(QString) ) );
+    connect( _worker,    SIGNAL( scanStarted() ),                                                   this,    SIGNAL( scanStarted() ) );
 
-    changeWatchPaths();
+    connect( _thread,    SIGNAL( finished() ),                                                      _worker, SLOT( deleteLater() ) );
+    connect( _thread,    SIGNAL( finished() ),                                                      _thread, SLOT( deleteLater() ) );
+
+    connect( d->watcher, SIGNAL( directoryChanged(QString) ),                                       _worker, SLOT( folderScan(QString) ) );
+    connect( d->watcher, SIGNAL( fileChanged(QString) ),                                            _worker, SLOT( fileScan(QString) ) );
+
+    d->updateWatcher();
 }
 
 LibraryManager::~LibraryManager()
 {
-    if ( d->thread ) {
-        stopScan();
-        d->thread->wait();
-        d->thread->deleteLater();
-    }
+    QMetaObject::invokeMethod( _worker, SLOT( stop() ) );
 
-    if ( d->man ) {
-        d->man->deleteLater();
-    }
-
-    d->watcher->removePaths( d->watcher->directories() );
-    d->watcher->deleteLater();
+    _thread->quit();
+    _thread->wait();
 
     delete d;
 }
 
-void LibraryManager::changeWatchPaths()
+QStringList LibraryManager::searchPaths()
 {
-    d->watcher->removePaths( d->watcher->directories() );
-    QStringList paths = QSettings().value("paths").toStringList();
-    for ( QString path : paths ) {
-        QStringList folders = d->subfoldersList(path);
-        folders << path;
-        d->watcher->addPaths(folders);
-
-        QDirIterator it(path, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::FollowSymlinks | QDirIterator::Subdirectories);
-        while ( it.hasNext() ) {
-            QString file = it.next();
-            d->watcher->addPath(file);
-        }
-    }
+    return QSettings().value("paths").toStringList();
 }
 
-void LibraryManager::scan()
+void LibraryManager::setSearchPaths(QStringList paths)
 {
-    if ( d->thread == nullptr ) {
-        d->thread = new QThread;
-        d->man    = new LibraryManager;
-    }
+    QSettings().setValue("paths", paths);
 
-    if ( d->thread->isRunning() ) {
-        stopScan();
-        QTimer::singleShot( 1000, this, SLOT( scan() ) );
-        return;
-    }
+    d->updateWatcher();
+}
 
-    d->man->deleteLater();
-    d->thread->deleteLater();
-
-    d->thread = new QThread;
-    d->man    = new LibraryManager;
-
-    d->man->moveToThread(d->thread);
-
-    connect( d->man, SIGNAL( scanFinished() ), this,   SLOT( stopped() ) );
-    connect( this,   SIGNAL( scanStarted() ),  d->man, SLOT( scanFolders() ) );
-
-    d->thread->start();
-    emit scanStarted();
+void LibraryManager::startScan()
+{
+    _worker->stop();
+    QMetaObject::invokeMethod(_worker, "fullScan");
 }
 
 void LibraryManager::stopScan()
 {
-    d->man->cancelScan();
-    d->thread->quit();
-}
-
-void LibraryManager::cancelScan()
-{
-    d->cancelFlag = true;
-}
-
-void LibraryManager::processFile(QString file)
-{
-    QStringList paths = QSettings().value("paths").toStringList();
-
-    for ( QString path : paths ) {
-        if ( file.startsWith(path) ) {
-            DataBase::instance()->save(Media::specializedObjectForFile(file), path);
-            return;
-        }
-    }
-}
-
-void LibraryManager::rescanFolder(QString folder)
-{
-    if ( QThread::currentThread() == qApp->thread() ) {
-        if ( d->thread == nullptr ) {
-            d->thread = new QThread;
-            d->man    = new LibraryManager;
-        }
-
-        if ( d->thread->isRunning() ) {
-            stopScan();
-            QTimer::singleShot( 1000, this, SLOT( scan() ) );
-            return;
-        }
-
-        d->man->deleteLater();
-        d->thread->deleteLater();
-
-        d->thread = new QThread;
-        d->man    = new LibraryManager;
-
-        d->man->moveToThread(d->thread);
-
-        connect( d->man, SIGNAL( scanFinished() ),       this,   SLOT( stopped() ) );
-        connect( this,   SIGNAL( scanStarted(QString) ), d->man, SLOT( rescanFolder(QString) ) );
-
-        d->thread->start();
-        emit scanStarted(folder);
-    } else {
-        DataBase::instance()->clean();
-
-        QStringList paths = QSettings().value("paths").toStringList();
-        QString     base;
-
-        for ( QString path : paths ) {
-            QStringList subdirs = d->subfoldersList(path);
-            subdirs << path;
-
-            for ( QString subdir : subdirs ) {
-                if ( QDir(folder).canonicalPath() == QDir(subdir).canonicalPath() ) {
-                    base = path;
-                }
-            }
-        }
-
-        d->recurse(folder, base);
-    }
-}
-
-void LibraryManager::scanFolders()
-{
-    DataBase::instance()->clean();
-
-    QSettings   settings;
-    QStringList paths = settings.value("paths").toStringList();
-
-    for ( auto path : paths ) {
-        d->recurse( path, QDir(path).canonicalPath() );
-
-        if ( d->cancelFlag ) {
-            break;
-        }
-    }
-
-    emit scanFinished();
-}
-
-void LibraryManager::stopped()
-{
-    d->thread->quit();
-    d->thread->wait();
-}
-
-void LibraryManagerPrivate::recurse(QDir path, QString basePath)
-{
-    for ( QFileInfo entry : path.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot) ) {
-        if ( cancelFlag ) {
-            return;
-        }
-
-        if ( entry.isDir() ) {
-            recurse(entry.absoluteFilePath(), basePath);
-        } else {
-            Media *m = Media::specializedObjectForFile( entry.canonicalFilePath() );
-
-            if ( m != nullptr ) {
-                DataBase::instance()->save(m, basePath);
-            }
-        }
-    }
-}
-
-QStringList LibraryManagerPrivate::subfoldersList(QString dir)
-{
-    QStringList  sl;
-    QDirIterator it(dir, QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
-
-    while ( it.hasNext() ) {
-        sl.append( it.next() );
-    }
-
-    return sl;
+    QMetaObject::invokeMethod(_worker, "stop");
 }

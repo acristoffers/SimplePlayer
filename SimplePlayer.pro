@@ -17,22 +17,24 @@ SOURCES += src/main.cpp\
         src/mainwindow.cpp \
         src/media.cpp \
         src/music.cpp \
-    src/image.cpp \
-    src/video.cpp \
-    src/database.cpp \
-    src/settings.cpp \
-    src/librarymanager.cpp
+        src/image.cpp \
+        src/video.cpp \
+        src/database.cpp \
+        src/settings.cpp \
+        src/librarymanager.cpp \
+        src/librarymanagerprivate.cpp
 
 HEADERS  += src/mainwindow.h \
             src/media.h \
             src/music.h \
-    src/image.h \
-    src/video.h \
-    src/database.h \
-    src/settings.h \
-    src/librarymanager.h
+            src/image.h \
+            src/video.h \
+            src/database.h \
+            src/settings.h \
+            src/librarymanager.h \
+            src/librarymanagerprivate.h
 
 FORMS    += ui/mainwindow.ui \
-    ui/settings.ui
+            ui/settings.ui
 
 include(taglib/taglib.pri)

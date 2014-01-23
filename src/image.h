@@ -8,9 +8,11 @@ struct ImagePrivate;
 class Image : public Media
 {
     Q_OBJECT
+
 public:
     Image(QUrl file);
     ~Image();
+
 private:
     ImagePrivate *d;
 };

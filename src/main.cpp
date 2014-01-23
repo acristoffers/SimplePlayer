@@ -1,4 +1,5 @@
 ﻿#include <QApplication>
+#include <QTimer>
 
 #include "database.h"
 #include "librarymanager.h"
@@ -18,15 +19,13 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
 
-    Settings settings;
+    Settings settings(&w);
     while ( !settings.hasPath() ) {
         settings.show();
         settings.requestToAddPath();
     }
 
-    DataBase::instance();
-
-    LibraryManager::instance()->scan();
+    QTimer::singleShot( 2000, LibraryManager::instance(), SLOT( startScan() ) );
 
     return a.exec();
 }

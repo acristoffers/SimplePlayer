@@ -2,6 +2,7 @@
 
 #include <QDebug>
 #include <QSqlError>
+#include <QTimer>
 
 #include <QDateTime>
 #include <QDir>
@@ -11,6 +12,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QStandardPaths>
+#include <QThread>
 #include <QVariant>
 
 #include "media.h"
@@ -65,23 +67,30 @@ void DataBase::save(Media *m, QString basePath)
     qint64    lastModified = info.lastModified().currentMSecsSinceEpoch();
     qint64    size         = info.size();
 
+    if ( size == 0 ) {
+        QThread::currentThread()->sleep(1);
+        save(Media::specializedObjectForFile( m->file().path() ), basePath);
+        m->deleteLater();
+        return;
+    }
+
     QMutexLocker locker(&mutex);
 
     d->query->prepare("SELECT id, size, last_modified FROM media WHERE file=?");
-    d->query->addBindValue( QFileInfo( m->file().path() ).canonicalFilePath() );
+    d->query->addBindValue( info.canonicalFilePath() );
     d->query->exec();
 
     if ( !d->query->next() ) {
         d->query->prepare("INSERT INTO media(type, base_path, file, size, last_modified) VALUES(?, ?, ?, ?, ?)");
         d->query->addBindValue( m->isA() );
         d->query->addBindValue(basePath);
-        d->query->addBindValue( m->file().path() );
-        d->query->addBindValue(lastModified);
+        d->query->addBindValue( info.canonicalFilePath() );
         d->query->addBindValue(size);
+        d->query->addBindValue(lastModified);
         d->query->exec();
 
         if ( m->isA() == "Music" ) {
-            d->query->exec("SELECT id FROM media WHERE file=\"" + QFileInfo( m->file().path() ).canonicalFilePath() + "\"");
+            d->query->exec("SELECT id FROM media WHERE file=\"" + info.canonicalFilePath() + "\"");
 
             if ( d->query->next() ) {
                 int id = d->query->value("id").toInt();
@@ -101,23 +110,28 @@ void DataBase::save(Media *m, QString basePath)
         qint64 mlm = d->query->value("last_modified").toLongLong();
         qint64 msz = d->query->value("size").toLongLong();
 
-        if ( (m->isA() == "Music") && ( (mlm != lastModified) || (msz != size) ) ) {
-            d->query->prepare("UPDATE music SET artist=?, album=?, title=?, track=?, year=? WHERE media=?");
-            d->query->addBindValue( m->artist() );
-            d->query->addBindValue( m->album() );
-            d->query->addBindValue( m->title() );
-            d->query->addBindValue( m->track() );
-            d->query->addBindValue( m->year() );
-            d->query->addBindValue(mid);
-            d->query->exec();
+        if ( (mlm != lastModified) || (msz != size) ) {
+            if ( m->isA() == "Music" ) {
+                d->query->prepare("UPDATE music SET artist=?, album=?, title=?, track=?, year=? WHERE media=?");
+                d->query->addBindValue( m->artist() );
+                d->query->addBindValue( m->album() );
+                d->query->addBindValue( m->title() );
+                d->query->addBindValue( m->track() );
+                d->query->addBindValue( m->year() );
+                d->query->addBindValue(mid);
+                d->query->exec();
+            }
 
-            d->query->prepare("UPDATE media SET size=?, last_modified=? WHERE id=?");
-            d->query->addBindValue(msz);
-            d->query->addBindValue(mlm);
+            d->query->prepare("UPDATE media SET base_path=?, size=?, last_modified=? WHERE id=?");
+            d->query->addBindValue(basePath);
+            d->query->addBindValue(size);
+            d->query->addBindValue(lastModified);
             d->query->addBindValue(mid);
             d->query->exec();
         }
     }
+
+    m->deleteLater();
 }
 
 void DataBase::clean()
@@ -145,7 +159,7 @@ void DataBase::clean()
         }
 
         if ( !found ) {
-            d->query->prepare("SELECT id FROM media WHERE base_path=?");
+            d->query->prepare("SELECT id FROM media WHERE base_path=? OR base_path is null");
             d->query->addBindValue(basePath);
             d->query->exec();
 
@@ -161,7 +175,7 @@ void DataBase::clean()
                 d->query->exec();
             }
 
-            d->query->prepare("DELETE FROM media WHERE base_path=?");
+            d->query->prepare("DELETE FROM media WHERE base_path=? OR base_path is null");
             d->query->addBindValue(basePath);
             d->query->exec();
         }
@@ -229,9 +243,11 @@ void DataBasePrivate::update()
         query->exec("INSERT INTO version VALUES (" + version + ")");
     } else {
         int ver = query->value("version").toInt();
+
         if ( ver == DBVERSION ) {
             return;
         }
+
         switch ( ver ) {
             case 1:
                 // add transition from DBVERSION 1 to 2

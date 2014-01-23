@@ -1,6 +1,9 @@
 ﻿#include "media.h"
 
+#include <QDebug>
+
 #include <QFile>
+#include <QFileInfo>
 #include <QImage>
 #include <QMimeDatabase>
 #include <QPixmap>
@@ -35,7 +38,7 @@ Media::Media(QUrl file) :
 {
     d->file = file;
 
-    TagLib::FileRef f( file.path().toLocal8Bit().data() );
+    TagLib::FileRef f( QFileInfo( file.path() ).canonicalFilePath().toLocal8Bit().data() );
 
     if ( !f.isNull() ) {
         d->artist = QString( f.tag()->artist().toCString() );
