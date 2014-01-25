@@ -49,7 +49,9 @@ void LibraryManagerPrivate::updateWatcher()
         }
     }
 
-    watcher->addPaths(sl);
+    if ( !paths.isEmpty() ) {
+        watcher->addPaths(sl);
+    }
 }
 
 void LibraryManagerPrivate::fileScan(QString file)
@@ -65,19 +67,23 @@ void LibraryManagerPrivate::fileScan(QString file)
         emit processingFile(file, currentFile, totalFiles);
     }
 
-    if ( m && m->isValid() ) {
-        QStringList paths = LibraryManager::searchPaths();
-        QString     shortestPath;
+    if ( m ) {
+        if ( m->isValid() ) {
+            QStringList paths = LibraryManager::searchPaths();
+            QString     shortestPath;
 
-        for ( QString dpath : paths ) {
-            dpath = QDir(dpath).canonicalPath();
+            for ( QString dpath : paths ) {
+                dpath = QDir(dpath).canonicalPath();
 
-            if ( file.startsWith(dpath) && ( ( dpath.size() < shortestPath.size() ) || shortestPath.isEmpty() ) ) {
-                shortestPath = dpath;
+                if ( file.startsWith(dpath) && ( ( dpath.size() < shortestPath.size() ) || shortestPath.isEmpty() ) ) {
+                    shortestPath = dpath;
+                }
             }
-        }
 
-        DataBase::instance()->save(m, shortestPath);
+            DataBase::instance()->save(m, shortestPath);
+        } else {
+            m->deleteLater();
+        }
     }
 }
 
