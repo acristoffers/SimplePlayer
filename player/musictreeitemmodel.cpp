@@ -235,26 +235,22 @@ QMimeData *MusicTreeItemModel::mimeData(const QModelIndexList &indexes) const
             QString type, file;
             d->getData(item->data, &type);
 
-            QStringList files;
-
             if ( type == "Artist" ) {
                 for ( Item *album : item->children ) {
                     for ( Item *music : album->children ) {
                         d->getData(music->data, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, &file);
-                        files << file;
+                        stream << file;
                     }
                 }
             } else if ( type == "Album" ) {
                 for ( Item *music : item->children ) {
                     d->getData(music->data, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, &file);
-                    files << file;
+                    stream << file;
                 }
             } else if ( type == "Music" ) {
                 d->getData(item->data, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, &file);
-                files << file;
+                stream << file;
             }
-
-            stream << files;
         }
     }
 
