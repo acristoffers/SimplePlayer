@@ -2,10 +2,13 @@
 
 #include <QDebug>
 
+#include <QAbstractEventDispatcher>
+#include <QApplication>
 #include <QDirIterator>
 #include <QSettings>
 #include <QThread>
 
+#include "database.h"
 #include "librarymanagerprivate.h"
 
 QThread               *_thread;
@@ -43,6 +46,8 @@ LibraryManager::LibraryManager() :
     connect( d->watcher, SIGNAL( directoryChanged(QString) ),                                       _worker, SLOT( folderScan(QString) ) );
     connect( d->watcher, SIGNAL( fileChanged(QString) ),                                            _worker, SLOT( fileScan(QString) ) );
 
+    connect( qApp,       SIGNAL( aboutToQuit() ),                                                   this,    SLOT( aboutToQuit() ) );
+
     d->updateWatcher();
 }
 
@@ -68,6 +73,21 @@ void LibraryManager::setSearchPaths(QStringList paths)
     d->updateWatcher();
 }
 
+unsigned long long LibraryManager::countImage()
+{
+    return DataBase::instance()->countType("Image");
+}
+
+unsigned long long LibraryManager::countMusic()
+{
+    return DataBase::instance()->countType("Music");
+}
+
+unsigned long long LibraryManager::countVideo()
+{
+    return DataBase::instance()->countType("Video");
+}
+
 void LibraryManager::startScan()
 {
     _worker->stop();
@@ -77,4 +97,11 @@ void LibraryManager::startScan()
 void LibraryManager::stopScan()
 {
     QMetaObject::invokeMethod(_worker, "stop");
+}
+
+void LibraryManager::aboutToQuit()
+{
+    _worker->stop();
+    _thread->eventDispatcher()->processEvents(QEventLoop::AllEvents);
+    _thread->quit();
 }

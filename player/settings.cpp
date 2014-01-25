@@ -18,9 +18,9 @@ struct SettingsPrivate
     void updatePathsWidget();
 };
 
-Settings::Settings(QWidget *parent) :
-    QDialog(parent),
-    d(new SettingsPrivate)
+Settings::Settings(QWidget *parent)
+    : QDialog(parent),
+      d(new SettingsPrivate)
 {
     d->ui = new Ui::Settings;
     d->ui->setupUi(this);

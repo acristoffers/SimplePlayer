@@ -18,6 +18,9 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void updateLibraries();
+
 protected slots:
     void statusForProcessingFile(QString, unsigned long long, unsigned long long);
 

@@ -10,8 +10,11 @@ class Image : public Media
     Q_OBJECT
 
 public:
-    Image(QUrl file);
+    Image(QString file);
     ~Image();
+
+    QString presentableName() override;
+    QPixmap snapshot() override;
 
 private:
     ImagePrivate *d;

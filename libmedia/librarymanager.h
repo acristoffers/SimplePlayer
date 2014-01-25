@@ -16,6 +16,10 @@ public:
 
     void setSearchPaths(QStringList);
 
+    unsigned long long countImage();
+    unsigned long long countMusic();
+    unsigned long long countVideo();
+
 protected:
     LibraryManager();
     ~LibraryManager();
@@ -26,6 +30,9 @@ private:
 public slots:
     void startScan();
     void stopScan();
+
+private slots:
+    void aboutToQuit();
 
 signals:
     void processingFile(QString, unsigned long long, unsigned long long);

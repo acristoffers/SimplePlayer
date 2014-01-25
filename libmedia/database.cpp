@@ -16,6 +16,7 @@
 #include <QVariant>
 
 #include "media.h"
+#include "music.h"
 
 #define DBVERSION 1
 #define xstr(s) str(s)
@@ -42,9 +43,9 @@ DataBase *DataBase::instance()
     return _self;
 }
 
-DataBase::DataBase() :
-    QObject(0),
-    d(new DataBasePrivate)
+DataBase::DataBase()
+    : QObject(0),
+      d(new DataBasePrivate)
 {
     d->open();
     d->update();
@@ -59,17 +60,17 @@ DataBase::~DataBase()
 void DataBase::save(Media *m, QString basePath)
 {
     if ( !m->isValid() ) {
-        qDebug() << m->file().path() << " is invalid";
+        qDebug() << m->file() << " is invalid";
         return;
     }
 
-    QFileInfo info( m->file().path() );
+    QFileInfo info( m->file() );
     qint64    lastModified = info.lastModified().currentMSecsSinceEpoch();
     qint64    size         = info.size();
 
     if ( size == 0 ) {
         QThread::currentThread()->sleep(1);
-        save(Media::specializedObjectForFile( m->file().path() ), basePath);
+        save(Media::specializedObjectForFile( m->file() ), basePath);
         m->deleteLater();
         return;
     }
@@ -95,13 +96,15 @@ void DataBase::save(Media *m, QString basePath)
             if ( d->query->next() ) {
                 int id = d->query->value("id").toInt();
 
+                Music *mu = static_cast<Music *> (m);
+
                 d->query->prepare("INSERT INTO music(media, artist, album, title, track, year) VALUES (?, ?, ?, ?, ?, ?)");
                 d->query->addBindValue(id);
-                d->query->addBindValue( m->artist() );
-                d->query->addBindValue( m->album() );
-                d->query->addBindValue( m->title() );
-                d->query->addBindValue( m->track() );
-                d->query->addBindValue( m->year() );
+                d->query->addBindValue( mu->artist() );
+                d->query->addBindValue( mu->album() );
+                d->query->addBindValue( mu->title() );
+                d->query->addBindValue( mu->track() );
+                d->query->addBindValue( mu->year() );
                 d->query->exec();
             }
         }
@@ -112,12 +115,14 @@ void DataBase::save(Media *m, QString basePath)
 
         if ( (mlm != lastModified) || (msz != size) ) {
             if ( m->isA() == "Music" ) {
+                Music *mu = static_cast<Music *> (m);
+
                 d->query->prepare("UPDATE music SET artist=?, album=?, title=?, track=?, year=? WHERE media=?");
-                d->query->addBindValue( m->artist() );
-                d->query->addBindValue( m->album() );
-                d->query->addBindValue( m->title() );
-                d->query->addBindValue( m->track() );
-                d->query->addBindValue( m->year() );
+                d->query->addBindValue( mu->artist() );
+                d->query->addBindValue( mu->album() );
+                d->query->addBindValue( mu->title() );
+                d->query->addBindValue( mu->track() );
+                d->query->addBindValue( mu->year() );
                 d->query->addBindValue(mid);
                 d->query->exec();
             }
@@ -203,6 +208,173 @@ void DataBase::clean()
         d->query->addBindValue(id);
         d->query->exec();
     }
+}
+
+QStringList DataBase::albumForArtist(QString artist)
+{
+    QMutexLocker locker(&mutex);
+
+    d->query->prepare("SELECT DISTINCT album FROM music WHERE artist=?");
+    d->query->addBindValue(artist);
+    d->query->exec();
+
+    QStringList albums;
+
+    while ( d->query->next() ) {
+        albums << d->query->value("album").toString();
+    }
+
+    return albums;
+}
+
+QStringList DataBase::allArtists()
+{
+    QMutexLocker locker(&mutex);
+
+    d->query->exec("SELECT DISTINCT artist FROM music");
+    QStringList artists;
+    while ( d->query->next() ) {
+        artists << d->query->value("artist").toString();
+    }
+    return artists;
+}
+
+unsigned long long DataBase::countType(QString w)
+{
+    QMutexLocker locker(&mutex);
+
+    d->query->prepare("SELECT COUNT(id) AS count FROM media WHERE type=?");
+    d->query->addBindValue(w);
+    d->query->exec();
+
+    if ( d->query->next() ) {
+        return d->query->value("count").toULongLong();
+    }
+
+    return 0;
+}
+
+QList<Music *> DataBase::musicWhere(QMap<Fields, QVariant> where)
+{
+    if ( where.isEmpty() ) {
+        // TODO: return all music
+    }
+
+    QString whereSQL;
+
+    QMapIterator<Fields, QVariant> i(where);
+    while ( i.hasNext() ) {
+        i.next();
+        Fields   field = i.key();
+        QVariant value = i.value();
+
+        if ( !whereSQL.isEmpty() ) {
+            whereSQL += " and ";
+        }
+
+        switch ( field ) {
+            case Artist:
+                whereSQL += "artist=\"" + value.toString() + "\"";
+                break;
+
+            case Album:
+                whereSQL += "album=\"" + value.toString() + "\"";
+                break;
+
+            case Title:
+                whereSQL += "title=\"" + value.toString() + "\"";
+                break;
+
+            case Track:
+                whereSQL += "track=\"" + QString::number( value.toInt() ) + "\"";
+                break;
+
+            case Year:
+                whereSQL += "year=\"" + QString::number( value.toInt() ) + "\"";
+        }
+    }
+
+    mutex.lock();
+
+    d->query->exec("SELECT media FROM music WHERE " + whereSQL + " ORDER BY track, title");
+
+    QList<int> ids;
+    while ( d->query->next() ) {
+        ids << d->query->value("media").toInt();
+    }
+
+    mutex.unlock();
+
+    QList<Music *> musics;
+    for ( int id : ids ) {
+        musics << new Music(id);
+    }
+
+    return musics;
+}
+
+bool DataBase::musicInfoForID(int id, QString *file, QString *artist, QString *album, QString *title, int *track, int *year)
+{
+    QMutexLocker locker(&mutex);
+
+    d->query->prepare("SELECT file FROM media WHERE id=?");
+    d->query->addBindValue(id);
+    d->query->exec();
+
+    if ( d->query->next() ) {
+        *file = d->query->value("file").toString();
+    } else {
+        return false;
+    }
+
+    d->query->prepare("SELECT * FROM music WHERE media=?");
+    d->query->addBindValue(id);
+    d->query->exec();
+
+    if ( d->query->next() ) {
+        *artist = d->query->value("artist").toString();
+        *album  = d->query->value("album").toString();
+        *title  = d->query->value("title").toString();
+        *track  = d->query->value("track").toInt();
+        *year   = d->query->value("year").toInt();
+    } else {
+        return false;
+    }
+
+    return true;
+}
+
+bool DataBase::musicInfoForFile(QString file, QString *artist, QString *album, QString *title, int *track, int *year)
+{
+    QMutexLocker locker(&mutex);
+
+    d->query->prepare("SELECT id FROM media WHERE file=?");
+    d->query->addBindValue(file);
+    d->query->exec();
+
+    int id;
+
+    if ( d->query->next() ) {
+        id = d->query->value("id").toInt();
+    } else {
+        return false;
+    }
+
+    d->query->prepare("SELECT * FROM music WHERE media=?");
+    d->query->addBindValue(id);
+    d->query->exec();
+
+    if ( d->query->next() ) {
+        *artist = d->query->value("artist").toString();
+        *album  = d->query->value("album").toString();
+        *title  = d->query->value("title").toString();
+        *track  = d->query->value("track").toInt();
+        *year   = d->query->value("year").toInt();
+    } else {
+        return false;
+    }
+
+    return true;
 }
 
 QString DataBasePrivate::dataFolder()

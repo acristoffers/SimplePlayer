@@ -10,8 +10,11 @@ class Video : public Media
     Q_OBJECT
 
 public:
-    Video(QUrl file);
+    Video(QString file);
     ~Video();
+
+    QString presentableName() override;
+    QPixmap snapshot() override;
 
 private:
     VideoPrivate *d;

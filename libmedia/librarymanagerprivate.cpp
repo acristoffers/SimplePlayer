@@ -11,6 +11,7 @@
 LibraryManager *LibraryManagerPrivate::_self = nullptr;
 
 LibraryManagerPrivate::LibraryManagerPrivate()
+    : QObject(0)
 {
     cancel      = false;
     mustClean   = true;
@@ -30,8 +31,13 @@ void LibraryManagerPrivate::updateWatcher()
 {
     QStringList paths = LibraryManager::searchPaths();
 
-    watcher->removePaths( watcher->directories() );
-    watcher->removePaths( watcher->files() );
+    if ( !watcher->directories().isEmpty() ) {
+        watcher->removePaths( watcher->directories() );
+    }
+
+    if ( !watcher->directories().isEmpty() ) {
+        watcher->removePaths( watcher->files() );
+    }
 
     QStringList sl = paths;
 

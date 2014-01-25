@@ -1,22 +1,20 @@
-﻿#include <QApplication>
-#include <QTimer>
+﻿#include <QTimer>
 
-#include "database.h"
-#include "librarymanager.h"
+#include <QDebug>
+
+#include <librarymanager.h>
+#include <music.h>
+
+#include "application.h"
 #include "mainwindow.h"
 #include "settings.h"
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-
-    a.setApplicationDisplayName("Simple Player");
-    a.setApplicationName("SimplePlayer");
-    a.setApplicationVersion("1.0.0");
-    a.setOrganizationDomain("br.cefetmg");
-    a.setOrganizationName("CEFET-MG");
+    Application a(argc, argv);
 
     MainWindow w;
+
     w.show();
 
     Settings settings(&w);
