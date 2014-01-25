@@ -2,7 +2,11 @@
 
 #include <QDebug>
 
+#include <QBuffer>
+#include <QByteArray>
+#include <QImage>
 #include <QMimeData>
+#include <QPixmap>
 
 #include <librarymanager.h>
 #include <music.h>
@@ -10,13 +14,13 @@
 /*
  * Data in QVariantList
  * put -1 or "" if not defined
- * 0 -> type   : Artist|Album|Music
- * 1 -> artist : string
- * 2 -> album  : string
- * 3 -> title  : string
- * 4 -> track  : int
- * 5 -> year   : int
- * 6 -> file   : string
+ * 0 -> type       : Artist|Album|Music
+ * 1 -> artist     : string
+ * 2 -> album      : string
+ * 3 -> title      : string
+ * 4 -> track      : int
+ * 5 -> year       : int
+ * 6 -> file       : string
  */
 
 #define DATASIZE 7
@@ -26,6 +30,20 @@ struct Item
     QVariantList  data;
     Item          *parent;
     QList<Item *> children;
+    QPixmap       *_pixmap;
+
+    QPixmap *pixmap()
+    {
+        if ( !_pixmap ) {
+            QPixmap p = Music( data[6].toString() ).cover();
+            if ( !p.isNull() ) {
+                p = p.scaledToHeight(48);
+            }
+            _pixmap = new QPixmap(p);
+        }
+
+        return _pixmap;
+    }
 
     int row() const
     {
@@ -34,6 +52,18 @@ struct Item
         }
 
         return 0;
+    }
+
+    Item()
+    {
+        _pixmap = nullptr;
+    }
+
+    ~Item()
+    {
+        if ( _pixmap ) {
+            delete _pixmap;
+        }
     }
 };
 
@@ -46,7 +76,7 @@ struct MusicTreeItemModelPrivate
     {
         QVariantList vl;
 
-        vl.reserve(7);
+        vl.reserve(8);
 
         vl << type;
         vl << artist;
@@ -133,6 +163,7 @@ QVariant MusicTreeItemModel::data(const QModelIndex &index, int role) const
 
     QString type, artist, album, title;
     int     track;
+
     d->getData(item->data, &type, &artist, &album, &title, &track);
 
     if ( type == "Artist" ) {
@@ -150,6 +181,9 @@ QVariant MusicTreeItemModel::data(const QModelIndex &index, int role) const
         switch ( role ) {
             case Qt::DisplayRole:
                 return album;
+
+            case Qt::DecorationRole:
+                return item->children.first()->pixmap()->copy();
 
             case Qt::UserRole:
                 return item->data;
