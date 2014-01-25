@@ -60,7 +60,7 @@ DataBase::~DataBase()
 void DataBase::save(Media *m, QString basePath)
 {
     if ( !m->isValid() ) {
-        qDebug() << m->file() << " is invalid";
+        m->deleteLater();
         return;
     }
 
@@ -257,7 +257,21 @@ unsigned long long DataBase::countType(QString w)
 QList<Music *> DataBase::musicWhere(QMap<Fields, QVariant> where)
 {
     if ( where.isEmpty() ) {
-        // TODO: return all music
+        mutex.lock();
+        d->query->exec("SELECT media FROM music");
+
+        QList<int> ids;
+        while ( d->query->next() ) {
+            ids << d->query->value("media").toInt();
+        }
+        mutex.unlock();
+
+        QList<Music *> musics;
+        for ( int id : ids ) {
+            musics << new Music(id);
+        }
+
+        return musics;
     }
 
     QString whereSQL;
