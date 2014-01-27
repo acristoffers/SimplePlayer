@@ -11,6 +11,7 @@
 #include <video.h>
 
 #include "musictreeitemmodel.h"
+#include "playercontrols.h"
 #include "playlistmodel.h"
 #include "settings.h"
 #include "videowidget.h"
@@ -45,11 +46,16 @@ MainWindow::MainWindow(QWidget *parent)
     d->player->setPlaylist(d->playlist);
     d->player->setVideoOutput(d->videoWidget);
 
+    d->ui->playercontrols->setPlayer(d->player);
+
     connect( d->ui->actionAbout_Qt,      SIGNAL( triggered() ),                                                     qApp,             SLOT( aboutQt() ) );
 
     connect( LibraryManager::instance(), SIGNAL( processingFile(QString, unsigned long long, unsigned long long) ), this,             SLOT( statusForProcessingFile(QString, unsigned long long, unsigned long long) ) );
     connect( LibraryManager::instance(), SIGNAL( scanFinished() ),                                                  d->ui->statusBar, SLOT( clearMessage() ) );
     connect( LibraryManager::instance(), SIGNAL( scanFinished() ),                                                  this,             SLOT( updateLibraries() ) );
+
+    connect( d->ui->playlist,            SIGNAL( doubleClicked(QModelIndex) ),                                      d->playlistModel, SLOT( playIndex(QModelIndex) ) );
+    connect( d->ui->playlist,            SIGNAL( doubleClicked(QModelIndex) ),                                      d->player,        SLOT( play() ) );
 }
 
 MainWindow::~MainWindow()
@@ -90,4 +96,9 @@ void MainWindow::on_actionAdd_Path_triggered()
 
     s->show();
     s->requestToAddPath();
+}
+
+void MainWindow::on_actionRescan_triggered()
+{
+    LibraryManager::instance()->startScan();
 }

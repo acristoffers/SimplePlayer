@@ -1,5 +1,7 @@
 ﻿#include "player/application.h"
 
+#include <QIcon>
+
 #include <librarymanager.h>
 
 Application::Application(int argc, char **argv) :
@@ -10,6 +12,8 @@ Application::Application(int argc, char **argv) :
     setApplicationVersion("1.0.0");
     setOrganizationDomain("br.cefetmg");
     setOrganizationName("CEFET-MG");
+
+    setWindowIcon( QIcon(":/icon.png") );
 }
 
 void Application::aboutToQuit()

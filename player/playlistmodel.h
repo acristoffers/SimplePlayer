@@ -20,6 +20,12 @@ public:
 private:
     PlaylistModelPrivate *d;
 
+public slots:
+    void playIndex(QModelIndex);
+
+protected slots:
+    void findModifiedModel(int);
+
     // QAbstractItemModel interface
 
 public:
@@ -33,7 +39,9 @@ public:
     bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent);
     Qt::DropActions supportedDropActions() const;
     Qt::DropActions supportedDragActions() const;
-    bool removeRows(QList<int> rows);
+
+    using QAbstractItemModel::removeRows; // silence warning
+    void removeRows(QList<int> rows);
     Qt::ItemFlags flags(const QModelIndex &index) const;
 };
 #endif // PLAYLISTMODEL_H

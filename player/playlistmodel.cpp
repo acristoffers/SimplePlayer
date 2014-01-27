@@ -7,6 +7,7 @@
 #include <QMediaContent>
 #include <QMediaPlaylist>
 #include <QMimeData>
+#include <QVector>
 
 #include <music.h>
 
@@ -20,12 +21,25 @@ PlaylistModel::PlaylistModel(QMediaPlaylist *playlist)
       d(new PlaylistModelPrivate)
 {
     d->playlist = playlist;
+    connect( playlist, SIGNAL( currentIndexChanged(int) ), this, SLOT( findModifiedModel(int) ) );
 }
 
 PlaylistModel::~PlaylistModel()
 {
     d->playlist->deleteLater();
     delete d;
+}
+
+void PlaylistModel::playIndex(QModelIndex index)
+{
+    if ( index.isValid() ) {
+        d->playlist->setCurrentIndex( index.row() );
+    }
+}
+
+void PlaylistModel::findModifiedModel(int row)
+{
+    emit dataChanged(createIndex(row, 0), createIndex(row, 0), QVector<int> () << Qt::BackgroundColorRole);
 }
 
 QModelIndex PlaylistModel::index(int row, int column, const QModelIndex &parent) const
@@ -47,10 +61,17 @@ int PlaylistModel::rowCount(const QModelIndex &parent) const
 
 QVariant PlaylistModel::data(const QModelIndex &index, int role) const
 {
-    if ( index.isValid() && (role == Qt::DisplayRole) ) {
-        QString file = d->playlist->media( index.row() ).canonicalUrl().path();
-        Music   m(file);
-        return m.title();
+    if ( index.isValid() ) {
+        if ( role == Qt::DisplayRole ) {
+            QString file = d->playlist->media( index.row() ).canonicalUrl().path();
+            Music   m(file);
+            return m.title();
+        } else if ( role == Qt::BackgroundColorRole ) {
+            if ( d->playlist->media( index.row() ) == d->playlist->currentMedia() ) {
+                return QColor(Qt::lightGray);
+            }
+            return QColor(Qt::white);
+        }
     }
 
     return QVariant();
@@ -178,19 +199,17 @@ Qt::DropActions PlaylistModel::supportedDragActions() const
     return Qt::MoveAction;
 }
 
-bool PlaylistModel::removeRows(QList<int> rows)
+void PlaylistModel::removeRows(QList<int> rows)
 {
     beginResetModel();
 
     int fix = 0;
     for ( int row : rows ) {
-        d->playlist->removeMedia(row-fix);
+        d->playlist->removeMedia(row - fix);
         fix++;
     }
 
     endResetModel();
-
-    return true;
 }
 
 Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const

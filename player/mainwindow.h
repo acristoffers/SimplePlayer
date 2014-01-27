@@ -28,6 +28,7 @@ private slots:
     void on_actionQuit_triggered();
     void on_actionSettings_triggered();
     void on_actionAdd_Path_triggered();
+    void on_actionRescan_triggered();
 
 private:
     MainWindowPrivate *d;

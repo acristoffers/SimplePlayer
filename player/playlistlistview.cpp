@@ -21,7 +21,8 @@ PlaylistListView::PlaylistListView(QWidget *parent) :
 void PlaylistListView::removeSelected()
 {
     QModelIndexList indexes = selectedIndexes();
-    QList<int>      ids;
+
+    QList<int> ids;
 
     for ( QModelIndex index : indexes ) {
         ids << index.row();
