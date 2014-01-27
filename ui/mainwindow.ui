@@ -65,7 +65,7 @@
             <bool>false</bool>
            </attribute>
           </widget>
-          <widget class="QListView" name="playlist">
+          <widget class="PlaylistListView" name="playlist">
            <property name="acceptDrops">
             <bool>true</bool>
            </property>
@@ -83,6 +83,9 @@
            </property>
            <property name="selectionBehavior">
             <enum>QAbstractItemView::SelectRows</enum>
+           </property>
+           <property name="uniformItemSizes">
+            <bool>true</bool>
            </property>
           </widget>
          </widget>
@@ -161,6 +164,13 @@
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>PlaylistListView</class>
+   <extends>QListView</extends>
+   <header location="global">player/playlistlistview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

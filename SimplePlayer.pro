@@ -23,14 +23,16 @@ SOURCES += player/main.cpp\
            player/playlistmodel.cpp \
            player/videowidget.cpp \
     player/application.cpp \
-    player/musictreeitemmodel.cpp
+    player/musictreeitemmodel.cpp \
+    player/playlistlistview.cpp
 
 HEADERS  += player/mainwindow.h \
             player/settings.h \
             player/playlistmodel.h \
             player/videowidget.h \
     player/application.h \
-    player/musictreeitemmodel.h
+    player/musictreeitemmodel.h \
+    player/playlistlistview.h
 
 FORMS    += ui/mainwindow.ui \
             ui/settings.ui

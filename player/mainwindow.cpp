@@ -36,12 +36,10 @@ MainWindow::MainWindow(QWidget *parent)
     d->player        = new QMediaPlayer;
     d->playlist      = new QMediaPlaylist;
     d->videoWidget   = new VideoWidget;
-    d->playlistModel = new PlaylistModel;
+    d->playlistModel = new PlaylistModel(d->playlist);
     d->musicModel    = new MusicTreeItemModel;
 
-    d->playlistModel->setPlaylist(d->playlist);
     d->ui->playlist->setModel(d->playlistModel);
-
     d->ui->musicTree->setModel(d->musicModel);
 
     d->player->setPlaylist(d->playlist);
