@@ -36,15 +36,17 @@ void PlayerControls::setPlayer(QMediaPlayer *player)
     d->ui->volume->setMaximum(100);
     d->ui->volume->setValue( d->player->volume() );
 
-    connect( d->player,       SIGNAL( positionChanged(qint64) ),           this,          SLOT( updatePosition(qint64) ) );
-    connect( d->player,       SIGNAL( stateChanged(QMediaPlayer::State) ), this,          SLOT( switchState(QMediaPlayer::State) ) );
-    connect( d->player,       SIGNAL( volumeChanged(int) ),                d->ui->volume, SLOT( setValue(int) ) );
+    connect( d->player,       SIGNAL( positionChanged(qint64) ),           this,                  SLOT( updatePosition(qint64) ) );
+    connect( d->player,       SIGNAL( stateChanged(QMediaPlayer::State) ), this,                  SLOT( switchState(QMediaPlayer::State) ) );
+    connect( d->player,       SIGNAL( volumeChanged(int) ),                d->ui->volume,         SLOT( setValue(int) ) );
 
-    connect( d->ui->play,     SIGNAL( clicked() ),                         this,          SLOT( switchPlayPause() ) );
+    connect( d->ui->play,     SIGNAL( clicked() ),                         this,                  SLOT( switchPlayPause() ) );
+    connect( d->ui->next,     SIGNAL( clicked() ),                         d->player->playlist(), SLOT( next() ) );
+    connect( d->ui->prev,     SIGNAL( clicked() ),                         d->player->playlist(), SLOT( previous() ) );
 
-    connect( d->ui->position, SIGNAL( valueChanged(int) ),                 this,          SLOT( setPosition(int) ) );
+    connect( d->ui->position, SIGNAL( valueChanged(int) ),                 this,                  SLOT( setPosition(int) ) );
 
-    connect( d->ui->volume,   SIGNAL( valueChanged(int) ),                 d->player,     SLOT( setVolume(int) ) );
+    connect( d->ui->volume,   SIGNAL( valueChanged(int) ),                 d->player,             SLOT( setVolume(int) ) );
 }
 
 void PlayerControls::switchPlayPause()
