@@ -15,6 +15,7 @@
 #include <QThread>
 #include <QVariant>
 
+#include "image.h"
 #include "media.h"
 #include "music.h"
 
@@ -356,6 +357,20 @@ bool DataBase::musicInfoForID(int id, QString *file, QString *artist, QString *a
     }
 
     return true;
+}
+
+QList<Image *> DataBase::allImages()
+{
+    QMutexLocker locker(&mutex);
+
+    QList<Image *> images;
+
+    d->query->exec("SELECT file FROM media WHERE type=\"Image\"");
+    while ( d->query->next() ) {
+        images << new Image( d->query->value("file").toString() );
+    }
+
+    return images;
 }
 
 bool DataBase::musicInfoForFile(QString file, QString *artist, QString *album, QString *title, int *track, int *year)

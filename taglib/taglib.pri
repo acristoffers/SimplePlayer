@@ -4,6 +4,8 @@
 
 INCLUDEPATH += $$PWD frames
 
+DEFINES += TAGLIB_STATIC TAGLIB_WITH_ASF TAGLIB_WITH_MP4
+
 # Input
 HEADERS += $$PWD/aifffile.h \
            $$PWD/aiffproperties.h \

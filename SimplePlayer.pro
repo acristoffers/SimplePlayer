@@ -40,7 +40,9 @@ SOURCES += player/main.cpp\
            player/application.cpp \
            player/musictreeitemmodel.cpp \
            player/playlistlistview.cpp \
-           player/playercontrols.cpp
+           player/playercontrols.cpp \
+           player/videomodel.cpp \
+           player/imagemodel.cpp
 
 HEADERS  += player/mainwindow.h \
             player/settings.h \
@@ -49,7 +51,9 @@ HEADERS  += player/mainwindow.h \
             player/application.h \
             player/musictreeitemmodel.h \
             player/playlistlistview.h \
-            player/playercontrols.h
+            player/playercontrols.h \
+            player/videomodel.h \
+            player/imagemodel.h
 
 FORMS    += ui/mainwindow.ui \
             ui/settings.ui \

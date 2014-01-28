@@ -7,6 +7,7 @@
 struct DataBasePrivate;
 class Media;
 class Music;
+class Image;
 
 enum Fields {
     Artist = 0x0,
@@ -35,6 +36,8 @@ public:
 
     bool musicInfoForFile(QString file, QString *artist, QString *album, QString *title, int *track, int *year);
     bool musicInfoForID(int id, QString *file, QString *artist, QString *album, QString *title, int *track, int *year);
+
+    QList<Image *> allImages();
 
 protected:
     DataBase();

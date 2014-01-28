@@ -16,6 +16,8 @@ public:
     QString presentableName() override;
     QPixmap snapshot() override;
 
+    static QList<Image *> allImages();
+
 private:
     ImagePrivate *d;
 };

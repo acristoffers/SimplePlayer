@@ -5,11 +5,9 @@
 #include <QMediaPlaylist>
 #include <QVideoWidget>
 
-#include <image.h>
 #include <librarymanager.h>
-#include <music.h>
-#include <video.h>
 
+#include "imagemodel.h"
 #include "musictreeitemmodel.h"
 #include "playercontrols.h"
 #include "playlistmodel.h"
@@ -25,6 +23,7 @@ struct MainWindowPrivate
     VideoWidget        *videoWidget;
     PlaylistModel      *playlistModel;
     MusicTreeItemModel *musicModel;
+    ImageModel         *imageModel;
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -39,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     d->videoWidget   = new VideoWidget;
     d->playlistModel = new PlaylistModel(d->playlist);
     d->musicModel    = new MusicTreeItemModel;
+    d->imageModel    = new ImageModel;
 
     d->ui->playlist->setModel(d->playlistModel);
     d->ui->musicTree->setModel(d->musicModel);
@@ -48,14 +48,23 @@ MainWindow::MainWindow(QWidget *parent)
 
     d->ui->playercontrols->setPlayer(d->player);
 
+    d->ui->imageView->setModel(d->imageModel);
+
+    d->ui->tabs->setCurrentIndex(0);
+
     connect( d->ui->actionAbout_Qt,      SIGNAL( triggered() ),                                                     qApp,             SLOT( aboutQt() ) );
 
     connect( LibraryManager::instance(), SIGNAL( processingFile(QString, unsigned long long, unsigned long long) ), this,             SLOT( statusForProcessingFile(QString, unsigned long long, unsigned long long) ) );
     connect( LibraryManager::instance(), SIGNAL( scanFinished() ),                                                  d->ui->statusBar, SLOT( clearMessage() ) );
-    connect( LibraryManager::instance(), SIGNAL( scanFinished() ),                                                  this,             SLOT( updateLibraries() ) );
 
     connect( d->ui->playlist,            SIGNAL( doubleClicked(QModelIndex) ),                                      d->playlistModel, SLOT( playIndex(QModelIndex) ) );
     connect( d->ui->playlist,            SIGNAL( doubleClicked(QModelIndex) ),                                      d->player,        SLOT( play() ) );
+
+    Settings settings(this);
+    while ( !settings.hasPath() ) {
+        settings.show();
+        settings.requestToAddPath();
+    }
 }
 
 MainWindow::~MainWindow()
@@ -69,13 +78,9 @@ MainWindow::~MainWindow()
     delete d;
 }
 
-void MainWindow::updateLibraries()
-{
-}
-
 void MainWindow::statusForProcessingFile(QString file, unsigned long long count, unsigned long long total)
 {
-    d->ui->statusBar->showMessage("Processing file (" + QString::number(count) + "/" + QString::number(total) + ") " + file);
+    d->ui->statusBar->showMessage(tr("Processing file (") + QString::number(count) + "/" + QString::number(total) + ") " + file);
 }
 
 void MainWindow::on_actionQuit_triggered()
