@@ -47,7 +47,7 @@ struct Item
 
     int row() const
     {
-        if ( parent ) {
+        if ( parent && parent->children.count() > 0 ) {
             return parent->children.indexOf( const_cast<Item *> (this) );
         }
 
@@ -248,7 +248,7 @@ QModelIndex MusicTreeItemModel::index(int row, int column, const QModelIndex &pa
         parentItem = static_cast<Item *> ( parent.internalPointer() );
     }
 
-    if ( parentItem->children.size() < row ) {
+    if ( parentItem->children.size() < row || parentItem->children.size() == 0) {
         return QModelIndex();
     }
 
@@ -333,7 +333,10 @@ void MusicTreeItemModel::reloadData()
 {
     beginResetModel();
 
-    qDeleteAll(d->items);
+    if(d->items.count()>0) {
+        qDeleteAll(d->items);
+    }
+
     d->items.clear();
     d->root->children.clear();
 
@@ -345,6 +348,7 @@ void MusicTreeItemModel::reloadData()
 
         artistItem->data   = d->makeData("Artist", artist);
         artistItem->parent = d->root;
+
         d->root->children.append(artistItem);
         d->items.append(artistItem);
 

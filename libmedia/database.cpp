@@ -195,7 +195,7 @@ void DataBase::clean()
         int     id   = d->query->value("id").toInt();
         QString file = d->query->value("file").toString();
 
-        if ( !QFileInfo::exists(file) ) {
+        if ( !QFileInfo(file).exists() ) {
             ids << id;
         }
     }
@@ -233,10 +233,12 @@ QStringList DataBase::allArtists()
     QMutexLocker locker(&mutex);
 
     d->query->exec("SELECT DISTINCT artist FROM music");
+
     QStringList artists;
     while ( d->query->next() ) {
         artists << d->query->value("artist").toString();
     }
+
     return artists;
 }
 
