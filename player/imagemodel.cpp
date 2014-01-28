@@ -28,7 +28,10 @@ void ImageModel::reloadData()
 {
     beginResetModel();
 
-    qDeleteAll(d->images);
+    if(d->images.count() > 0) {
+        qDeleteAll(d->images);
+    }
+
     d->images.clear();
     d->images = Image::allImages();
 
@@ -39,7 +42,7 @@ QModelIndex ImageModel::index(int row, int column, const QModelIndex &parent) co
 {
     Q_UNUSED(parent);
 
-    if ( (column != 0) || ( (unsigned) row > LibraryManager::instance()->countImage() ) ) {
+    if ( (column != 0) || ( row > d->images.count() ) || (d->images.count()==0) ) {
         return QModelIndex();
     }
 
