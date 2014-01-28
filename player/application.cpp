@@ -4,7 +4,7 @@
 
 #include <librarymanager.h>
 
-Application::Application(int argc, char **argv) :
+Application::Application(int &argc, char **argv) :
     QApplication(argc, argv)
 {
     setApplicationDisplayName("Simple Player");
