@@ -4,8 +4,10 @@
 #include <QSqlError>
 #include <QTimer>
 
+#include <QApplication>
 #include <QDateTime>
 #include <QDir>
+#include <QMessageBox>
 #include <QMutex>
 #include <QMutexLocker>
 #include <QSettings>
@@ -448,6 +450,12 @@ void DataBasePrivate::update()
         int ver = query->value("version").toInt();
 
         if ( ver == DBVERSION ) {
+            return;
+        }
+
+        if ( ver > DBVERSION ) {
+            QMessageBox::critical( 0, tr("Database error"), tr("The database was created by a newer version of this application. Update the application or remove the database.") );
+            qApp->quit();
             return;
         }
 
