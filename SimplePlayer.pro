@@ -5,16 +5,24 @@
 #-------------------------------------------------
 
 # Requires Qt5
-# Tested with Qt 5.2.0
 
-macx:QMAKE_CXX = "ccache clang -Qunused-arguments -fcolor-diagnostics"
-linux-g++:QMAKE_CXX = "ccache g++"
-
-QT       += core gui multimedia sql widgets multimediawidgets
+QT += core gui multimedia sql widgets multimediawidgets
 
 CONFIG += c++11
 
-CONFIG(release) {
+CONFIG(release, debug|release) {
+    macx {
+        QMAKE_CXX       = "ccache clang++"
+        QMAKE_CXXFLAGS += "-Qunused-arguments -fcolor-diagnostics"
+        QMAKE_CC        = "ccache clang"
+        QMAKE_CFLAGS   += "-Qunused-arguments -fcolor-diagnostics"
+    }
+
+    linux-g++ {
+        QMAKE_CXX = "ccache g++"
+        QMAKE_CC  = "ccache gcc"
+    }
+
     QMAKE_CFLAGS_RELEASE -= -O
     QMAKE_CFLAGS_RELEASE -= -O1
     QMAKE_CFLAGS_RELEASE -= -O2
@@ -26,38 +34,35 @@ CONFIG(release) {
     QMAKE_CXXFLAGS_RELEASE += -O3
 }
 
-TARGET = SimplePlayer
-TEMPLATE = app
-
 include(taglib/taglib.pri)
 include(libmedia/libmedia.pri)
+
+TARGET = SimplePlayer
+TEMPLATE = app
 
 SOURCES += player/main.cpp\
            player/mainwindow.cpp \
            player/settings.cpp \
            player/playlistmodel.cpp \
-           player/videowidget.cpp \
            player/application.cpp \
            player/musictreeitemmodel.cpp \
            player/playlistlistview.cpp \
            player/playercontrols.cpp \
-           player/videomodel.cpp \
-           player/imagemodel.cpp
+           player/about.cpp
 
 HEADERS  += player/mainwindow.h \
             player/settings.h \
             player/playlistmodel.h \
-            player/videowidget.h \
             player/application.h \
             player/musictreeitemmodel.h \
             player/playlistlistview.h \
             player/playercontrols.h \
-            player/videomodel.h \
-            player/imagemodel.h
+            player/about.h
 
 FORMS    += ui/mainwindow.ui \
             ui/settings.ui \
-            ui/playercontrols.ui
+            ui/playercontrols.ui \
+            ui/about.ui
 
 RESOURCES += res/Resources.qrc
 

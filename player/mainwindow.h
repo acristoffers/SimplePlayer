@@ -19,6 +19,8 @@ public:
     ~MainWindow();
 
 protected slots:
+    void about();
+
     void statusForProcessingFile(QString, unsigned long long, unsigned long long);
 
 private slots:

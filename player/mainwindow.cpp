@@ -7,12 +7,11 @@
 
 #include <librarymanager.h>
 
-#include "imagemodel.h"
+#include "about.h"
 #include "musictreeitemmodel.h"
 #include "playercontrols.h"
 #include "playlistmodel.h"
 #include "settings.h"
-#include "videowidget.h"
 
 struct MainWindowPrivate
 {
@@ -20,10 +19,8 @@ struct MainWindowPrivate
 
     QMediaPlayer       *player;
     QMediaPlaylist     *playlist;
-    VideoWidget        *videoWidget;
     PlaylistModel      *playlistModel;
     MusicTreeItemModel *musicModel;
-    ImageModel         *imageModel;
 };
 
 MainWindow::MainWindow(QWidget *parent)
@@ -33,26 +30,22 @@ MainWindow::MainWindow(QWidget *parent)
     d->ui = new Ui::MainWindow;
     d->ui->setupUi(this);
 
-    d->player        = new QMediaPlayer;
-    d->playlist      = new QMediaPlaylist;
-    d->videoWidget   = new VideoWidget;
-    d->playlistModel = new PlaylistModel(d->playlist);
-    d->musicModel    = new MusicTreeItemModel;
-    d->imageModel    = new ImageModel;
+    d->player           = new QMediaPlayer;
+    d->playlist         = new QMediaPlaylist;
+    d->playlistModel    = new PlaylistModel(d->playlist);
+    d->musicModel       = new MusicTreeItemModel;
 
     d->ui->playlist->setModel(d->playlistModel);
     d->ui->musicTree->setModel(d->musicModel);
 
     d->player->setPlaylist(d->playlist);
-    d->player->setVideoOutput(d->videoWidget);
 
     d->ui->playercontrols->setPlayer(d->player);
 
-    d->ui->imageView->setModel(d->imageModel);
-
-    d->ui->tabs->setCurrentIndex(0);
+    d->ui->splitter->setStretchFactor(1, 3);
 
     connect( d->ui->actionAbout_Qt,      SIGNAL( triggered() ),                                                     qApp,             SLOT( aboutQt() ) );
+    connect( d->ui->actionAbout,         SIGNAL( triggered() ),                                                     this,             SLOT( about() ) );
 
     connect( LibraryManager::instance(), SIGNAL( processingFile(QString, unsigned long long, unsigned long long) ), this,             SLOT( statusForProcessingFile(QString, unsigned long long, unsigned long long) ) );
     connect( LibraryManager::instance(), SIGNAL( scanFinished() ),                                                  d->ui->statusBar, SLOT( clearMessage() ) );
@@ -72,10 +65,22 @@ MainWindow::~MainWindow()
     d->player->deleteLater();
     d->playlist->deleteLater();
     d->playlistModel->deleteLater();
-    d->videoWidget->deleteLater();
 
     delete d->ui;
     delete d;
+}
+
+void MainWindow::about()
+{
+    About *about = new About;
+
+    about->setModal(true);
+    about->show();
+    about->setGeometry( QRect( about->pos(), about->sizeHint() ) );
+    about->setMinimumSize( about->size() );
+    about->setMaximumSize( about->size() );
+
+    connect( about, SIGNAL( finished(int) ), about, SLOT( deleteLater() ) );
 }
 
 void MainWindow::statusForProcessingFile(QString file, unsigned long long count, unsigned long long total)

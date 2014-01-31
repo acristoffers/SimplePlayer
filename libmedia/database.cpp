@@ -1,9 +1,5 @@
 ﻿#include "database.h"
 
-#include <QDebug>
-#include <QSqlError>
-#include <QTimer>
-
 #include <QApplication>
 #include <QDateTime>
 #include <QDir>
@@ -17,7 +13,6 @@
 #include <QThread>
 #include <QVariant>
 
-#include "image.h"
 #include "media.h"
 #include "music.h"
 
@@ -363,20 +358,6 @@ bool DataBase::musicInfoForID(int id, QString *file, QString *artist, QString *a
     return true;
 }
 
-QList<Image *> DataBase::allImages()
-{
-    QMutexLocker locker(&mutex);
-
-    QList<Image *> images;
-
-    d->query->exec("SELECT file FROM media WHERE type=\"Image\"");
-    while ( d->query->next() ) {
-        images << new Image( d->query->value("file").toString() );
-    }
-
-    return images;
-}
-
 bool DataBase::musicInfoForFile(QString file, QString *artist, QString *album, QString *title, int *track, int *year)
 {
     QMutexLocker locker(&mutex);
@@ -454,7 +435,7 @@ void DataBasePrivate::update()
         }
 
         if ( ver > DBVERSION ) {
-            QMessageBox::critical( 0, tr("Database error"), tr("The database was created by a newer version of this application. Update the application or remove the database.") );
+            QMessageBox::critical( 0, QObject::tr("Database error"), QObject::tr("The database was created by a newer version of this application. Update the application or remove the database.") );
             qApp->quit();
             return;
         }

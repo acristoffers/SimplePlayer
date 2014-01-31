@@ -62,15 +62,22 @@ int PlaylistModel::rowCount(const QModelIndex &parent) const
 QVariant PlaylistModel::data(const QModelIndex &index, int role) const
 {
     if ( index.isValid() ) {
-        if ( role == Qt::DisplayRole ) {
-            QString file = d->playlist->media( index.row() ).canonicalUrl().path();
-            Music   m(file);
-            return m.title();
-        } else if ( role == Qt::BackgroundColorRole ) {
-            if ( d->playlist->media( index.row() ) == d->playlist->currentMedia() ) {
-                return QColor(Qt::lightGray);
+        switch ( role ) {
+            case Qt::DisplayRole:
+            case Qt::ToolTipRole:
+            {
+                QString file = d->playlist->media( index.row() ).canonicalUrl().path();
+                Music   m(file);
+                return m.title();
             }
-            return QColor(Qt::white);
+
+            case Qt::BackgroundColorRole:
+            {
+                if ( d->playlist->media( index.row() ) == d->playlist->currentMedia() ) {
+                    return QColor(Qt::lightGray);
+                }
+                return QColor(Qt::white);
+            }
         }
     }
 

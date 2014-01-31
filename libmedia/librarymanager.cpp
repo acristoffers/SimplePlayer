@@ -68,7 +68,25 @@ QStringList LibraryManager::searchPaths()
 
 void LibraryManager::setSearchPaths(QStringList paths)
 {
-    QSettings().setValue("paths", paths);
+    paths.removeDuplicates();
+
+    QStringList pathsToAdd;
+
+    for ( QString path : paths ) {
+        QString shortestPath;
+
+        for ( QString p : paths ) {
+            if ( path.startsWith(p) && ( ( p.size() < shortestPath.size() ) || shortestPath.isEmpty() ) ) {
+                shortestPath = p;
+            }
+        }
+
+        pathsToAdd << shortestPath;
+    }
+
+    pathsToAdd.removeDuplicates();
+
+    QSettings().setValue("paths", pathsToAdd);
 
     d->updateWatcher();
 }

@@ -7,9 +7,7 @@
 #include <QMimeDatabase>
 #include <QUrl>
 
-#include "image.h"
 #include "music.h"
-#include "video.h"
 
 struct MediaPrivate
 {
@@ -66,10 +64,6 @@ Media *Media::specializedObjectForFile(QString file)
 
     if ( mime.startsWith("audio/") && !file.endsWith(".m3u") ) {
         return new Music(file, false);
-    } else if ( mime.startsWith("video/") ) {
-        return new Video(file);
-    } else if ( mime.startsWith("image/") ) {
-        return new Image(file);
     }
 
     return nullptr;

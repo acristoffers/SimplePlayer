@@ -6,17 +6,13 @@ INCLUDEPATH += $$PWD .
 
 # Input
 HEADERS += $$PWD/database.h \
-           $$PWD/image.h \
            $$PWD/librarymanager.h \
            $$PWD/librarymanagerprivate.h \
            $$PWD/media.h \
-           $$PWD/music.h \
-           $$PWD/video.h
+           $$PWD/music.h
 
 SOURCES += $$PWD/database.cpp \
-           $$PWD/image.cpp \
            $$PWD/librarymanager.cpp \
            $$PWD/librarymanagerprivate.cpp \
            $$PWD/media.cpp \
-           $$PWD/music.cpp \
-           $$PWD/video.cpp
+           $$PWD/music.cpp

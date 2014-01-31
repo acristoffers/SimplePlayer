@@ -47,7 +47,7 @@ struct Item
 
     int row() const
     {
-        if ( parent && parent->children.count() > 0 ) {
+        if ( parent && (parent->children.count() > 0) ) {
             return parent->children.indexOf( const_cast<Item *> (this) );
         }
 
@@ -169,6 +169,7 @@ QVariant MusicTreeItemModel::data(const QModelIndex &index, int role) const
     if ( type == "Artist" ) {
         switch ( role ) {
             case Qt::DisplayRole:
+            case Qt::ToolTipRole:
                 return artist;
 
             case Qt::UserRole:
@@ -180,6 +181,7 @@ QVariant MusicTreeItemModel::data(const QModelIndex &index, int role) const
     } else if ( type == "Album" ) {
         switch ( role ) {
             case Qt::DisplayRole:
+            case Qt::ToolTipRole:
                 return album;
 
             case Qt::DecorationRole:
@@ -194,6 +196,7 @@ QVariant MusicTreeItemModel::data(const QModelIndex &index, int role) const
     } else if ( type == "Music" ) {
         switch ( role ) {
             case Qt::DisplayRole:
+            case Qt::ToolTipRole:
                 return QString::number(track) + " - " + title;
 
             case Qt::UserRole:
@@ -248,7 +251,7 @@ QModelIndex MusicTreeItemModel::index(int row, int column, const QModelIndex &pa
         parentItem = static_cast<Item *> ( parent.internalPointer() );
     }
 
-    if ( parentItem->children.size() < row || parentItem->children.size() == 0) {
+    if ( (parentItem->children.size() < row) || (parentItem->children.size() == 0) ) {
         return QModelIndex();
     }
 
@@ -333,7 +336,7 @@ void MusicTreeItemModel::reloadData()
 {
     beginResetModel();
 
-    if(d->items.count()>0) {
+    if ( d->items.count() > 0 ) {
         qDeleteAll(d->items);
     }
 

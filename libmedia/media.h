@@ -17,8 +17,8 @@ public:
     virtual QString presentableName() = 0;
     virtual QPixmap snapshot()        = 0;
 
-    virtual QString isA();                                // returns Image, Music, Video or NaM
-    static Media *specializedObjectForFile(QString file); // returns a Image*, Music* or Video* for the given file. nullptr if NaM
+    virtual QString isA();
+    static Media *specializedObjectForFile(QString file);
 
 protected:
     Media(QString file);
