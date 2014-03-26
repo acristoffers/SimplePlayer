@@ -10,6 +10,10 @@ QT += core gui multimedia sql widgets multimediawidgets
 
 CONFIG += c++11
 
+macx {
+    LIBS += -framework Cocoa
+}
+
 CONFIG(release, debug|release) {
     macx {
         QMAKE_CXX       = "ccache clang++"

@@ -9,9 +9,7 @@ int main(int argc, char *argv[])
 {
     Application a(argc, argv);
 
-    MainWindow w;
-
-    w.show();
+    MainWindow::instance()->show();
 
     QTimer::singleShot( 2000, LibraryManager::instance(), SLOT( startScan() ) );
 

@@ -15,6 +15,9 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    static MainWindow *instance();
+
+protected:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
@@ -29,7 +32,10 @@ private slots:
     void on_actionAdd_Path_triggered();
     void on_actionRescan_triggered();
 
+    void updateTextPosition(qint64);
+
 private:
     MainWindowPrivate *d;
+    static MainWindow *_self;
 };
 #endif // MAINWINDOW_H
