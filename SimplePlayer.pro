@@ -16,7 +16,7 @@ macx {
 
 CONFIG(release, debug|release) {
     macx {
-        QMAKE_CXX       = "ccache clang++"
+        QMAKE_CXX       = "clang++"
         QMAKE_CXXFLAGS += "-Qunused-arguments -fcolor-diagnostics"
         QMAKE_CC        = "ccache clang"
         QMAKE_CFLAGS   += "-Qunused-arguments -fcolor-diagnostics"
