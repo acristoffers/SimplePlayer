@@ -1,8 +1,9 @@
-﻿#include "player/playercontrols.h"
+#include "player/playercontrols.h"
 #include "ui_playercontrols.h"
 
 #include <QIcon>
 #include <QMediaPlaylist>
+#include <QStyle>
 
 struct PlayerControlsPrivate
 {
