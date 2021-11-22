@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2013 by Tsuda Kageyu
-*    email                : tsuda.kageyu@gmail.com
+/***************************************************************************
+*    copyright            : (C) 2013 by Tsuda Kageyu email                : tsuda.kageyu@gmail.com
 ***************************************************************************/
 
 /***************************************************************************
@@ -44,13 +43,12 @@ namespace
 #ifdef _WIN32
             const wstring wstr = msg.toWString();
             const int     len  = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, NULL, 0, NULL, NULL);
-            if ( len != 0 ) {
+            if (len != 0) {
                 std::vector<char> buf(len);
                 WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, &buf[0], len, NULL, NULL);
 
                 std::cerr << std::string(&buf[0]);
             }
-
 #else
             std::cerr << msg;
 #endif
@@ -74,7 +72,7 @@ namespace TagLib
 
     void setDebugListener(DebugListener *listener)
     {
-        if ( listener ) {
+        if (listener) {
             debugListener = listener;
         } else {
             debugListener = &defaultListener;

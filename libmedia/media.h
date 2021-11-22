@@ -1,4 +1,4 @@
-﻿#ifndef MEDIA_H
+#ifndef MEDIA_H
 #define MEDIA_H
 
 #include <QObject>
@@ -9,7 +9,6 @@ struct MediaPrivate;
 class Media : public QObject
 {
     Q_OBJECT
-
 public:
     QString file();
     bool isValid();
@@ -19,13 +18,11 @@ public:
 
     virtual QString isA();
     static Media *specializedObjectForFile(QString file);
-
 protected:
     Media(QString file);
     ~Media();
 
     void setFile(QString);
-
 private:
     MediaPrivate *d;
 };

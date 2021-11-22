@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2004 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.com
+/***************************************************************************
+*    copyright            : (C) 2004 by Allan Sandfeld Jensen email                : kde@carewolf.com
 ***************************************************************************/
 
 /***************************************************************************
@@ -39,10 +38,10 @@ public:
     }
 
     Item::ItemTypes type;
-    String          key;
-    ByteVector      value;
-    StringList      text;
-    bool            readOnly;
+    String key;
+    ByteVector value;
+    StringList text;
+    bool readOnly;
 };
 
 APE::Item::Item()
@@ -68,7 +67,7 @@ APE::Item::Item(const String &key, const ByteVector &value, bool binary)
 {
     d      = new ItemPrivate;
     d->key = key;
-    if ( binary ) {
+    if (binary) {
         d->type  = Binary;
         d->value = value;
     } else {
@@ -86,7 +85,7 @@ APE::Item::~Item()
     delete d;
 }
 
-Item &APE::Item::operator=(const Item &item)
+Item &APE::Item::operator =(const Item &item)
 {
     delete d;
     d = new ItemPrivate(*item.d);
@@ -176,14 +175,14 @@ int APE::Item::size() const
     // SFB: Why is d->key.size() used when size() returns the length in UniChars and not UTF-8?
     int result = 8 + d->key.size() /* d->key.data(String::UTF8).size() */ + 1;
 
-    switch ( d->type ) {
+    switch (d->type) {
         case Text:
-            if ( d->text.size() ) {
+            if (d->text.size()) {
                 StringList::ConstIterator it = d->text.begin();
 
                 result += it->data(String::UTF8).size();
                 it++;
-                for ( ; it != d->text.end(); ++it ) {
+                for ( ; it != d->text.end(); ++it) {
                     result += 1 + it->data(String::UTF8).size();
                 }
             }
@@ -209,7 +208,7 @@ StringList APE::Item::values() const
 
 String APE::Item::toString() const
 {
-    if ( (d->type == Text) && !isEmpty() ) {
+    if ((d->type == Text) && !isEmpty()) {
         return d->text.front();
     } else {
         return String::null;
@@ -218,12 +217,12 @@ String APE::Item::toString() const
 
 bool APE::Item::isEmpty() const
 {
-    switch ( d->type ) {
+    switch (d->type) {
         case Text:
-            if ( d->text.isEmpty() ) {
+            if (d->text.isEmpty()) {
                 return true;
             }
-            if ( (d->text.size() == 1) && d->text.front().isEmpty() ) {
+            if ((d->text.size() == 1) && d->text.front().isEmpty()) {
                 return true;
             }
             return false;
@@ -241,7 +240,7 @@ void APE::Item::parse(const ByteVector &data)
 {
     // 11 bytes is the minimum size for an APE item
 
-    if ( data.size() < 11 ) {
+    if (data.size() < 11) {
         debug("APE::Item::parse() -- no data in item");
         return;
     }
@@ -254,9 +253,9 @@ void APE::Item::parse(const ByteVector &data)
     const ByteVector value = data.mid(8 + d->key.size() + 1, valueLength);
 
     setReadOnly(flags & 1);
-    setType( ItemTypes( (flags >> 1) & 3 ) );
+    setType(ItemTypes((flags >> 1) & 3));
 
-    if ( Text == d->type ) {
+    if (Text == d->type) {
         d->text = StringList(ByteVectorList::split(value, '\0'), String::UTF8);
     } else {
         d->value = value;
@@ -266,31 +265,31 @@ void APE::Item::parse(const ByteVector &data)
 ByteVector APE::Item::render() const
 {
     ByteVector   data;
-    TagLib::uint flags = ( (d->readOnly) ? 1 : 0 ) | (d->type << 1);
+    TagLib::uint flags = ((d->readOnly) ? 1 : 0) | (d->type << 1);
     ByteVector   value;
 
-    if ( isEmpty() ) {
+    if (isEmpty()) {
         return data;
     }
 
-    if ( d->type == Text ) {
+    if (d->type == Text) {
         StringList::ConstIterator it = d->text.begin();
 
-        value.append( it->data(String::UTF8) );
+        value.append(it->data(String::UTF8));
         it++;
-        for ( ; it != d->text.end(); ++it ) {
+        for ( ; it != d->text.end(); ++it) {
             value.append('\0');
-            value.append( it->data(String::UTF8) );
+            value.append(it->data(String::UTF8));
         }
         d->value = value;
     } else {
         value.append(d->value);
     }
 
-    data.append( ByteVector::fromUInt(value.size(), false) );
-    data.append( ByteVector::fromUInt(flags, false) );
-    data.append( d->key.data(String::UTF8) );
-    data.append( ByteVector('\0') );
+    data.append(ByteVector::fromUInt(value.size(), false));
+    data.append(ByteVector::fromUInt(flags, false));
+    data.append(d->key.data(String::UTF8));
+    data.append(ByteVector('\0'));
     data.append(value);
 
     return data;

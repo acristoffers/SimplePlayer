@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -38,13 +37,9 @@ namespace TagLib
         // ! ID3v2 footer implementation
 
         /*!
-         * Per the ID3v2 specification, the tag's footer is just a copy of the
-         * information in the header.  As such there is no API for reading the
-         * data from the header, it can just as easily be done from the header.
+         * Per the ID3v2 specification, the tag's footer is just a copy of the information in the header.  As such there is no API for reading the data from the header, it can just as easily be done from the header.
          *
-         * In fact, at this point, TagLib does not even parse the footer since
-         * it is not useful internally.  However, if the flag to include a footer
-         * has been set in the ID3v2::Tag, TagLib will render a footer.
+         * In fact, at this point, TagLib does not even parse the footer since it is not useful internally.  However, if the flag to include a footer has been set in the ID3v2::Tag, TagLib will render a footer.
          */
 
         class TAGLIB_EXPORT Footer
@@ -68,10 +63,9 @@ namespace TagLib
              * Renders the footer based on the data in \a header.
              */
             ByteVector render(const Header *header) const;
-
         private:
             Footer(const Footer &);
-            Footer &operator=(const Footer &);
+            Footer &operator =(const Footer &);
 
             class FooterPrivate;
             FooterPrivate *d;

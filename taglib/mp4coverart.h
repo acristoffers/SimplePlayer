@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2009 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -53,14 +53,13 @@ namespace TagLib
             ~CoverArt();
 
             CoverArt(const CoverArt &item);
-            CoverArt &operator=(const CoverArt &item);
+            CoverArt &operator =(const CoverArt &item);
 
             // ! Format of the image
             Format format() const;
 
             // ! The image data
             ByteVector data() const;
-
         private:
             class CoverArtPrivate;
             CoverArtPrivate *d;

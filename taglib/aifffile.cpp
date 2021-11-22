@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -61,7 +60,7 @@ public:
 RIFF::AIFF::File::File(FileName file, bool readProperties, Properties::ReadStyle propertiesStyle) : RIFF::File(file, BigEndian)
 {
     d = new FilePrivate;
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties, propertiesStyle);
     }
 }
@@ -69,7 +68,7 @@ RIFF::AIFF::File::File(FileName file, bool readProperties, Properties::ReadStyle
 RIFF::AIFF::File::File(IOStream *stream, bool readProperties, Properties::ReadStyle propertiesStyle) : RIFF::File(stream, BigEndian)
 {
     d = new FilePrivate;
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties, propertiesStyle);
     }
 }
@@ -79,7 +78,7 @@ RIFF::AIFF::File::~File()
     delete d;
 }
 
-ID3v2::Tag *RIFF::AIFF::File::tag() const
+ID3v2::Tag*RIFF::AIFF::File::tag() const
 {
     return d->tag;
 }
@@ -99,24 +98,24 @@ PropertyMap RIFF::AIFF::File::setProperties(const PropertyMap &properties)
     return d->tag->setProperties(properties);
 }
 
-RIFF::AIFF::Properties *RIFF::AIFF::File::audioProperties() const
+RIFF::AIFF::Properties*RIFF::AIFF::File::audioProperties() const
 {
     return d->properties;
 }
 
 bool RIFF::AIFF::File::save()
 {
-    if ( readOnly() ) {
+    if (readOnly()) {
         debug("RIFF::AIFF::File::save() -- File is read only.");
         return false;
     }
 
-    if ( !isValid() ) {
+    if (!isValid()) {
         debug("RIFF::AIFF::File::save() -- Trying to save invalid file.");
         return false;
     }
 
-    setChunkData( d->tagChunkID, d->tag->render() );
+    setChunkData(d->tagChunkID, d->tag->render());
 
     return true;
 }
@@ -127,16 +126,16 @@ bool RIFF::AIFF::File::save()
 
 void RIFF::AIFF::File::read(bool readProperties, Properties::ReadStyle propertiesStyle)
 {
-    for ( uint i = 0; i < chunkCount(); i++ ) {
-        if ( (chunkName(i) == "ID3 ") || (chunkName(i) == "id3 ") ) {
+    for (uint i = 0; i < chunkCount(); i++) {
+        if ((chunkName(i) == "ID3 ") || (chunkName(i) == "id3 ")) {
             d->tagChunkID = chunkName(i);
-            d->tag        = new ID3v2::Tag( this, chunkOffset(i) );
-        } else if ( (chunkName(i) == "COMM") && readProperties ) {
+            d->tag        = new ID3v2::Tag(this, chunkOffset(i));
+        } else if ((chunkName(i) == "COMM") && readProperties) {
             d->properties = new Properties(chunkData(i), propertiesStyle);
         }
     }
 
-    if ( !d->tag ) {
+    if (!d->tag) {
         d->tag = new ID3v2::Tag;
     }
 }

@@ -1,4 +1,4 @@
-﻿#include "database.h"
+#include "database.h"
 
 #include <QApplication>
 #include <QDateTime>
@@ -26,16 +26,16 @@ struct DataBasePrivate
     QSqlQuery    *query;
 
     QString dataFolder();
-    void    open();
-    void    update();
+    void open();
+    void update();
 };
 
-QMutex   mutex;
-DataBase *DataBase::_self = nullptr;
+QMutex  mutex;
+DataBase*DataBase::_self = nullptr;
 
-DataBase *DataBase::instance()
+DataBase*DataBase::instance()
 {
-    if ( _self == nullptr ) {
+    if (_self == nullptr) {
         _self = new DataBase;
     }
     return _self;
@@ -43,7 +43,7 @@ DataBase *DataBase::instance()
 
 DataBase::DataBase()
     : QObject(0),
-      d(new DataBasePrivate)
+    d(new DataBasePrivate)
 {
     d->open();
     d->update();
@@ -57,18 +57,18 @@ DataBase::~DataBase()
 
 void DataBase::save(Media *m, QString basePath)
 {
-    if ( !m->isValid() ) {
+    if (!m->isValid()) {
         m->deleteLater();
         return;
     }
 
-    QFileInfo info( m->file() );
+    QFileInfo info(m->file());
     qint64    lastModified = info.lastModified().currentMSecsSinceEpoch();
     qint64    size         = info.size();
 
-    if ( size == 0 ) {
+    if (size == 0) {
         QThread::currentThread()->sleep(1);
-        save(Media::specializedObjectForFile( m->file() ), basePath);
+        save(Media::specializedObjectForFile(m->file()), basePath);
         m->deleteLater();
         return;
     }
@@ -76,33 +76,33 @@ void DataBase::save(Media *m, QString basePath)
     QMutexLocker locker(&mutex);
 
     d->query->prepare("SELECT id, size, last_modified FROM media WHERE file=?");
-    d->query->addBindValue( info.canonicalFilePath() );
+    d->query->addBindValue(info.canonicalFilePath());
     d->query->exec();
 
-    if ( !d->query->next() ) {
+    if (!d->query->next()) {
         d->query->prepare("INSERT INTO media(type, base_path, file, size, last_modified) VALUES(?, ?, ?, ?, ?)");
-        d->query->addBindValue( m->isA() );
+        d->query->addBindValue(m->isA());
         d->query->addBindValue(basePath);
-        d->query->addBindValue( info.canonicalFilePath() );
+        d->query->addBindValue(info.canonicalFilePath());
         d->query->addBindValue(size);
         d->query->addBindValue(lastModified);
         d->query->exec();
 
-        if ( m->isA() == "Music" ) {
+        if (m->isA() == "Music") {
             d->query->exec("SELECT id FROM media WHERE file=\"" + info.canonicalFilePath() + "\"");
 
-            if ( d->query->next() ) {
+            if (d->query->next()) {
                 int id = d->query->value("id").toInt();
 
-                Music *mu = static_cast<Music *> (m);
+                Music *mu = static_cast<Music*>(m);
 
                 d->query->prepare("INSERT INTO music(media, artist, album, title, track, year) VALUES (?, ?, ?, ?, ?, ?)");
                 d->query->addBindValue(id);
-                d->query->addBindValue( mu->artist() );
-                d->query->addBindValue( mu->album() );
-                d->query->addBindValue( mu->title() );
-                d->query->addBindValue( mu->track() );
-                d->query->addBindValue( mu->year() );
+                d->query->addBindValue(mu->artist());
+                d->query->addBindValue(mu->album());
+                d->query->addBindValue(mu->title());
+                d->query->addBindValue(mu->track());
+                d->query->addBindValue(mu->year());
                 d->query->exec();
             }
         }
@@ -111,16 +111,16 @@ void DataBase::save(Media *m, QString basePath)
         qint64 mlm = d->query->value("last_modified").toLongLong();
         qint64 msz = d->query->value("size").toLongLong();
 
-        if ( (mlm != lastModified) || (msz != size) ) {
-            if ( m->isA() == "Music" ) {
-                Music *mu = static_cast<Music *> (m);
+        if ((mlm != lastModified) || (msz != size)) {
+            if (m->isA() == "Music") {
+                Music *mu = static_cast<Music*>(m);
 
                 d->query->prepare("UPDATE music SET artist=?, album=?, title=?, track=?, year=? WHERE media=?");
-                d->query->addBindValue( mu->artist() );
-                d->query->addBindValue( mu->album() );
-                d->query->addBindValue( mu->title() );
-                d->query->addBindValue( mu->track() );
-                d->query->addBindValue( mu->year() );
+                d->query->addBindValue(mu->artist());
+                d->query->addBindValue(mu->album());
+                d->query->addBindValue(mu->title());
+                d->query->addBindValue(mu->track());
+                d->query->addBindValue(mu->year());
                 d->query->addBindValue(mid);
                 d->query->exec();
             }
@@ -148,31 +148,31 @@ void DataBase::clean()
 
     QStringList basePaths;
 
-    while ( d->query->next() ) {
+    while (d->query->next()) {
         basePaths << d->query->value("base_path").toString();
     }
 
-    for ( QString basePath : basePaths ) {
+    for (QString basePath : basePaths) {
         bool found = false;
 
-        for ( QString p : paths ) {
-            if ( p == basePath ) {
+        for (QString p : paths) {
+            if (p == basePath) {
                 found = true;
             }
         }
 
-        if ( !found ) {
+        if (!found) {
             d->query->prepare("SELECT id FROM media WHERE base_path=? OR base_path is null");
             d->query->addBindValue(basePath);
             d->query->exec();
 
             QList<int> ids;
 
-            while ( d->query->next() ) {
+            while (d->query->next()) {
                 ids << d->query->value("id").toInt();
             }
 
-            for ( int id : ids ) {
+            for (int id : ids) {
                 d->query->prepare("DELETE FROM music WHERE media=?");
                 d->query->addBindValue(id);
                 d->query->exec();
@@ -188,16 +188,16 @@ void DataBase::clean()
 
     QList<int> ids;
 
-    while ( d->query->next() ) {
+    while (d->query->next()) {
         int     id   = d->query->value("id").toInt();
         QString file = d->query->value("file").toString();
 
-        if ( !QFileInfo(file).exists() ) {
+        if (!QFileInfo(file).exists()) {
             ids << id;
         }
     }
 
-    for ( int id : ids ) {
+    for (int id : ids) {
         d->query->prepare("DELETE FROM media WHERE id=?");
         d->query->addBindValue(id);
         d->query->exec();
@@ -218,7 +218,7 @@ QStringList DataBase::albumForArtist(QString artist)
 
     QStringList albums;
 
-    while ( d->query->next() ) {
+    while (d->query->next()) {
         albums << d->query->value("album").toString();
     }
 
@@ -232,7 +232,8 @@ QStringList DataBase::allArtists()
     d->query->exec("SELECT DISTINCT artist FROM music");
 
     QStringList artists;
-    while ( d->query->next() ) {
+
+    while (d->query->next()) {
         artists << d->query->value("artist").toString();
     }
 
@@ -247,27 +248,27 @@ unsigned long long DataBase::countType(QString w)
     d->query->addBindValue(w);
     d->query->exec();
 
-    if ( d->query->next() ) {
+    if (d->query->next()) {
         return d->query->value("count").toULongLong();
     }
 
     return 0;
 }
 
-QList<Music *> DataBase::musicWhere(QMap<Fields, QVariant> where)
+QList<Music*> DataBase::musicWhere(QMap<Fields, QVariant> where)
 {
-    if ( where.isEmpty() ) {
+    if (where.isEmpty()) {
         mutex.lock();
         d->query->exec("SELECT media FROM music");
 
         QList<int> ids;
-        while ( d->query->next() ) {
+        while (d->query->next()) {
             ids << d->query->value("media").toInt();
         }
         mutex.unlock();
 
-        QList<Music *> musics;
-        for ( int id : ids ) {
+        QList<Music*> musics;
+        for (int id : ids) {
             musics << new Music(id);
         }
 
@@ -277,16 +278,17 @@ QList<Music *> DataBase::musicWhere(QMap<Fields, QVariant> where)
     QString whereSQL;
 
     QMapIterator<Fields, QVariant> i(where);
-    while ( i.hasNext() ) {
+
+    while (i.hasNext()) {
         i.next();
         Fields   field = i.key();
         QVariant value = i.value();
 
-        if ( !whereSQL.isEmpty() ) {
+        if (!whereSQL.isEmpty()) {
             whereSQL += " and ";
         }
 
-        switch ( field ) {
+        switch (field) {
             case Artist:
                 whereSQL += "artist=\"" + value.toString() + "\"";
                 break;
@@ -300,11 +302,11 @@ QList<Music *> DataBase::musicWhere(QMap<Fields, QVariant> where)
                 break;
 
             case Track:
-                whereSQL += "track=\"" + QString::number( value.toInt() ) + "\"";
+                whereSQL += "track=\"" + QString::number(value.toInt()) + "\"";
                 break;
 
             case Year:
-                whereSQL += "year=\"" + QString::number( value.toInt() ) + "\"";
+                whereSQL += "year=\"" + QString::number(value.toInt()) + "\"";
         }
     }
 
@@ -313,14 +315,16 @@ QList<Music *> DataBase::musicWhere(QMap<Fields, QVariant> where)
     d->query->exec("SELECT media FROM music WHERE " + whereSQL + " ORDER BY track, title");
 
     QList<int> ids;
-    while ( d->query->next() ) {
+
+    while (d->query->next()) {
         ids << d->query->value("media").toInt();
     }
 
     mutex.unlock();
 
-    QList<Music *> musics;
-    for ( int id : ids ) {
+    QList<Music*> musics;
+
+    for (int id : ids) {
         musics << new Music(id);
     }
 
@@ -335,7 +339,7 @@ bool DataBase::musicInfoForID(int id, QString *file, QString *artist, QString *a
     d->query->addBindValue(id);
     d->query->exec();
 
-    if ( d->query->next() ) {
+    if (d->query->next()) {
         *file = d->query->value("file").toString();
     } else {
         return false;
@@ -345,7 +349,7 @@ bool DataBase::musicInfoForID(int id, QString *file, QString *artist, QString *a
     d->query->addBindValue(id);
     d->query->exec();
 
-    if ( d->query->next() ) {
+    if (d->query->next()) {
         *artist = d->query->value("artist").toString();
         *album  = d->query->value("album").toString();
         *title  = d->query->value("title").toString();
@@ -368,7 +372,7 @@ bool DataBase::musicInfoForFile(QString file, QString *artist, QString *album, Q
 
     int id;
 
-    if ( d->query->next() ) {
+    if (d->query->next()) {
         id = d->query->value("id").toInt();
     } else {
         return false;
@@ -378,7 +382,7 @@ bool DataBase::musicInfoForFile(QString file, QString *artist, QString *album, Q
     d->query->addBindValue(id);
     d->query->exec();
 
-    if ( d->query->next() ) {
+    if (d->query->next()) {
         *artist = d->query->value("artist").toString();
         *album  = d->query->value("album").toString();
         *title  = d->query->value("title").toString();
@@ -395,7 +399,7 @@ QString DataBasePrivate::dataFolder()
 {
     QStringList list = QStandardPaths::standardLocations(QStandardPaths::DataLocation);
 
-    if ( list.empty() ) {
+    if (list.empty()) {
         return "";
     } else {
         return list.first();
@@ -404,8 +408,8 @@ QString DataBasePrivate::dataFolder()
 
 void DataBasePrivate::open()
 {
-    QDir().mkpath( dataFolder() );
-    QString path = dataFolder().append( QDir::separator() ).append("SimplePlayer.db");
+    QDir().mkpath(dataFolder());
+    QString path = dataFolder().append(QDir::separator()).append("SimplePlayer.db");
 
     db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(path);
@@ -422,7 +426,7 @@ void DataBasePrivate::update()
 
     query->exec("SELECT version FROM version");
 
-    if ( !query->next() ) {
+    if (!query->next()) {
         query->exec("CREATE TABLE version (version INT)");
         query->exec("CREATE TABLE media (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT, base_path TEXT, file TEXT NOT NULL, size INT, last_modified INT)");
         query->exec("CREATE TABLE music (id INTEGER PRIMARY KEY AUTOINCREMENT, media INT, artist TEXT, album TEXT, title TEXT, track INT, year INT)");
@@ -430,17 +434,17 @@ void DataBasePrivate::update()
     } else {
         int ver = query->value("version").toInt();
 
-        if ( ver == DBVERSION ) {
+        if (ver == DBVERSION) {
             return;
         }
 
-        if ( ver > DBVERSION ) {
-            QMessageBox::critical( 0, QObject::tr("Database error"), QObject::tr("The database was created by a newer version of this application. Update the application or remove the database.") );
+        if (ver > DBVERSION) {
+            QMessageBox::critical(0, QObject::tr("Database error"), QObject::tr("The database was created by a newer version of this application. Update the application or remove the database."));
             qApp->quit();
             return;
         }
 
-        switch ( ver ) {
+        switch (ver) {
             case 1:
                 // add transition from DBVERSION 1 to 2
                 break; // no breaks, its here because this place is empty.

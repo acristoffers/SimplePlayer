@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -39,18 +38,14 @@ namespace TagLib
         // ! An implementation of the page headers associated with each Ogg::Page
 
         /*!
-         * This class implements Ogg page headers which contain the information
-         * about Ogg pages needed to break them into packets which can be passed on
-         * to the codecs.
+         * This class implements Ogg page headers which contain the information about Ogg pages needed to break them into packets which can be passed on to the codecs.
          */
 
         class TAGLIB_EXPORT PageHeader
         {
         public:
             /*!
-             * Reads a PageHeader from \a file starting at \a pageOffset.  The defaults
-             * create a page with no (and as such, invalid) data that must be set
-             * later.
+             * Reads a PageHeader from \a file starting at \a pageOffset.  The defaults create a page with no (and as such, invalid) data that must be set later.
              */
             PageHeader(File *file = 0, long pageOffset = -1);
 
@@ -65,26 +60,21 @@ namespace TagLib
             bool isValid() const;
 
             /*!
-             * Ogg pages contain a list of packets (which are used by the contained
-             * codecs).  The sizes of these pages is encoded in the page header.  This
-             * returns a list of the packet sizes in bytes.
+             * Ogg pages contain a list of packets (which are used by the contained codecs).  The sizes of these pages is encoded in the page header.  This returns a list of the packet sizes in bytes.
              *
              * \see setPacketSizes()
              */
             List<int> packetSizes() const;
 
             /*!
-             * Sets the sizes of the packets in this page to \a sizes.  Internally this
-             * updates the lacing values in the header.
+             * Sets the sizes of the packets in this page to \a sizes.  Internally this updates the lacing values in the header.
              *
              * \see packetSizes()
              */
             void setPacketSizes(const List<int> &sizes);
 
             /*!
-             * Some packets can be <i>continued</i> across multiple pages.  If the
-             * first packet in the current page is a continuation this will return
-             * true.  If this is page starts with a new packet this will return false.
+             * Some packets can be <i>continued</i> across multiple pages.  If the first packet in the current page is a continuation this will return true.  If this is page starts with a new packet this will return false.
              *
              * \see lastPacketCompleted()
              * \see setFirstPacketContinued()
@@ -92,16 +82,14 @@ namespace TagLib
             bool firstPacketContinued() const;
 
             /*!
-             * Sets the internal flag indicating if the first packet in this page is
-             * continued to \a continued.
+             * Sets the internal flag indicating if the first packet in this page is continued to \a continued.
              *
              * \see firstPacketContinued()
              */
             void setFirstPacketContinued(bool continued);
 
             /*!
-             * Returns true if the last packet of this page is completely contained in
-             * this page.
+             * Returns true if the last packet of this page is completely contained in this page.
              *
              * \see firstPacketContinued()
              * \see setLastPacketCompleted()
@@ -109,8 +97,7 @@ namespace TagLib
             bool lastPacketCompleted() const;
 
             /*!
-             * Sets the internal flag indicating if the last packet in this page is
-             * complete to \a completed.
+             * Sets the internal flag indicating if the last packet in this page is complete to \a completed.
              *
              * \see lastPacketCompleted()
              */
@@ -145,45 +132,35 @@ namespace TagLib
             void setLastPageOfStream(bool last);
 
             /*!
-             * A special value of containing the position of the packet to be
-             * interpreted by the codec.  In the case of Vorbis this contains the PCM
-             * value and is used to calculate the length of the stream.
+             * A special value of containing the position of the packet to be interpreted by the codec.  In the case of Vorbis this contains the PCM value and is used to calculate the length of the stream.
              *
              * \see setAbsoluteGranularPosition()
              */
             long long absoluteGranularPosition() const;
 
             /*!
-             * A special value of containing the position of the packet to be
-             * interpreted by the codec.  It is only supported here so that it may be
-             * coppied from one page to another.
+             * A special value of containing the position of the packet to be interpreted by the codec.  It is only supported here so that it may be coppied from one page to another.
              *
              * \see absoluteGranularPosition()
              */
             void setAbsoluteGranularPosition(long long agp);
 
             /*!
-             * Every Ogg logical stream is given a random serial number which is common
-             * to every page in that logical stream.  This returns the serial number of
-             * the stream associated with this packet.
+             * Every Ogg logical stream is given a random serial number which is common to every page in that logical stream.  This returns the serial number of the stream associated with this packet.
              *
              * \see setStreamSerialNumber()
              */
             uint streamSerialNumber() const;
 
             /*!
-             * Every Ogg logical stream is given a random serial number which is common
-             * to every page in that logical stream.  This sets this pages serial
-             * number.  This method should be used when adding new pages to a logical
-             * stream.
+             * Every Ogg logical stream is given a random serial number which is common to every page in that logical stream.  This sets this pages serial number.  This method should be used when adding new pages to a logical stream.
              *
              * \see streamSerialNumber()
              */
             void setStreamSerialNumber(uint n);
 
             /*!
-             * Returns the index of the page within the Ogg stream.  This helps make it
-             * possible to determine if pages have been lost.
+             * Returns the index of the page within the Ogg stream.  This helps make it possible to determine if pages have been lost.
              *
              * \see setPageSequenceNumber()
              */
@@ -202,22 +179,19 @@ namespace TagLib
             int size() const;
 
             /*!
-             * Returns the size of the data portion of the page -- i.e. the size of the
-             * page less the header size.
+             * Returns the size of the data portion of the page -- i.e. the size of the page less the header size.
              */
             int dataSize() const;
 
             /*!
              * Render the page header to binary data.
              *
-             * \note The checksum -- bytes 22 - 25 -- will be left empty and must be
-             * filled in when rendering the entire page.
+             * \note The checksum -- bytes 22 - 25 -- will be left empty and must be filled in when rendering the entire page.
              */
             ByteVector render() const;
-
         private:
             PageHeader(const PageHeader &);
-            PageHeader &operator=(const PageHeader &);
+            PageHeader &operator =(const PageHeader &);
 
             void read();
             ByteVector lacingValues() const;

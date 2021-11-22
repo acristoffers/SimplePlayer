@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -58,7 +58,6 @@ namespace TagLib
 
             // ! Audio codec used in the MP4 file
             Codec codec() const;
-
         private:
             class PropertiesPrivate;
             PropertiesPrivate *d;

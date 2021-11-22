@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -37,16 +36,12 @@ namespace TagLib
         // ! An ID3v2 attached picture frame implementation
 
         /*!
-         * This is an implementation of ID3v2 attached pictures.  Pictures may be
-         * included in tags, one per APIC frame (but there may be multiple APIC
-         * frames in a single tag).  These pictures are usually in either JPEG or
-         * PNG format.
+         * This is an implementation of ID3v2 attached pictures.  Pictures may be included in tags, one per APIC frame (but there may be multiple APIC frames in a single tag).  These pictures are usually in either JPEG or PNG format.
          */
 
         class TAGLIB_EXPORT AttachedPictureFrame : public Frame
         {
             friend class FrameFactory;
-
         public:
             /*!
              * This describes the function or content of the picture.
@@ -97,8 +92,7 @@ namespace TagLib
             };
 
             /*!
-             * Constructs an empty picture frame.  The description, content and text
-             * encoding should be set manually.
+             * Constructs an empty picture frame.  The description, content and text encoding should be set manually.
              */
             AttachedPictureFrame();
 
@@ -183,8 +177,7 @@ namespace TagLib
             /*!
              * Returns the image data as a ByteVector.
              *
-             * \note ByteVector has a data() method that returns a const char * which
-             * should make it easy to export this data to external programs.
+             * \note ByteVector has a data() method that returns a const char * which should make it easy to export this data to external programs.
              *
              * \see setPicture()
              * \see mimeType()
@@ -192,25 +185,22 @@ namespace TagLib
             ByteVector picture() const;
 
             /*!
-             * Sets the image data to \a p.  \a p should be of the type specified in
-             * this frame's mime-type specification.
+             * Sets the image data to \a p.  \a p should be of the type specified in this frame's mime-type specification.
              *
              * \see picture()
              * \see mimeType()
              * \see setMimeType()
              */
             void setPicture(const ByteVector &p);
-
         protected:
             virtual void parseFields(const ByteVector &data);
             virtual ByteVector renderFields() const;
 
             class AttachedPictureFramePrivate;
             AttachedPictureFramePrivate *d;
-
         private:
             AttachedPictureFrame(const AttachedPictureFrame &);
-            AttachedPictureFrame &operator=(const AttachedPictureFrame &);
+            AttachedPictureFrame &operator =(const AttachedPictureFrame &);
 
             AttachedPictureFrame(const ByteVector &data, Header *h);
         };
@@ -220,7 +210,6 @@ namespace TagLib
         {
         protected:
             virtual void parseFields(const ByteVector &data);
-
         private:
             AttachedPictureFrameV22(const ByteVector &data, Header *h);
             friend class FrameFactory;

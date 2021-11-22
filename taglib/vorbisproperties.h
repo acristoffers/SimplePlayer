@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -32,10 +31,7 @@
 namespace TagLib
 {
     /*
-     * This is just to make this appear to be in the Ogg namespace in the
-     * documentation.  The typedef below will make this work with the current code.
-     * In the next BIC version of TagLib this will be really moved into the Ogg
-     * namespace.
+     * This is just to make this appear to be in the Ogg namespace in the documentation.  The typedef below will make this work with the current code. In the next BIC version of TagLib this will be really moved into the Ogg namespace.
      */
 
 #ifdef DOXYGEN
@@ -50,16 +46,14 @@ namespace TagLib
         // ! An implementation of audio property reading for Ogg Vorbis
 
         /*!
-         * This reads the data from an Ogg Vorbis stream found in the AudioProperties
-         * API.
+         * This reads the data from an Ogg Vorbis stream found in the AudioProperties API.
          */
 
         class TAGLIB_EXPORT Properties : public AudioProperties
         {
         public:
             /*!
-             * Create an instance of Vorbis::Properties with the data read from the
-             * Vorbis::File \a file.
+             * Create an instance of Vorbis::Properties with the data read from the Vorbis::File \a file.
              */
             Properties(File *file, ReadStyle style = Average);
 
@@ -81,26 +75,22 @@ namespace TagLib
             int vorbisVersion() const;
 
             /*!
-             * Returns the maximum bitrate as read from the Vorbis identification
-             * header.
+             * Returns the maximum bitrate as read from the Vorbis identification header.
              */
             int bitrateMaximum() const;
 
             /*!
-             * Returns the nominal bitrate as read from the Vorbis identification
-             * header.
+             * Returns the nominal bitrate as read from the Vorbis identification header.
              */
             int bitrateNominal() const;
 
             /*!
-             * Returns the minimum bitrate as read from the Vorbis identification
-             * header.
+             * Returns the minimum bitrate as read from the Vorbis identification header.
              */
             int bitrateMinimum() const;
-
         private:
             Properties(const Properties &);
-            Properties &operator=(const Properties &);
+            Properties &operator =(const Properties &);
 
             void read();
 
@@ -110,9 +100,7 @@ namespace TagLib
     }
 
     /*
-     * To keep compatibility with the current version put Vorbis in the Ogg namespace
-     * only in the docs and provide a typedef to make it work.  In the next BIC
-     * version this will be removed and it will only exist in the Ogg namespace.
+     * To keep compatibility with the current version put Vorbis in the Ogg namespace only in the docs and provide a typedef to make it work.  In the next BIC version this will be removed and it will only exist in the Ogg namespace.
      */
 
 #ifdef DOXYGEN

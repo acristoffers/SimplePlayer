@@ -1,4 +1,4 @@
-﻿#include "settings.h"
+#include "settings.h"
 #include "ui_settings.h"
 
 #include <QDebug>
@@ -20,14 +20,14 @@ struct SettingsPrivate
 
 Settings::Settings(QWidget *parent)
     : QDialog(parent),
-      d(new SettingsPrivate)
+    d(new SettingsPrivate)
 {
     d->ui = new Ui::Settings;
     d->ui->setupUi(this);
     d->updatePathsWidget();
 
-    connect( this, SIGNAL( finished(int) ), this,                       SIGNAL( settingsChanged() ) );
-    connect( this, SIGNAL( finished(int) ), LibraryManager::instance(), SLOT( startScan() ) );
+    connect(this, SIGNAL(finished(int)), this,                       SIGNAL(settingsChanged()));
+    connect(this, SIGNAL(finished(int)), LibraryManager::instance(), SLOT(startScan()));
 }
 
 Settings::~Settings()
@@ -50,9 +50,9 @@ void Settings::requestToAddPath()
 
 void Settings::on_addPath_clicked()
 {
-    QString path = QFileDialog::getExistingDirectory( 0, tr("Media directory"), QDir::homePath() );
+    QString path = QFileDialog::getExistingDirectory(0, tr("Media directory"), QDir::homePath());
 
-    if ( path.isEmpty() ) {
+    if (path.isEmpty()) {
         return;
     }
 
@@ -66,9 +66,9 @@ void Settings::on_addPath_clicked()
 
 void Settings::on_removePath_clicked()
 {
-    QList<QListWidgetItem *> items = d->ui->paths->selectedItems();
+    QList<QListWidgetItem*> items = d->ui->paths->selectedItems();
 
-    if ( items.empty() ) {
+    if (items.empty()) {
         return;
     }
 
@@ -77,8 +77,8 @@ void Settings::on_removePath_clicked()
     QStringList paths = LibraryManager::searchPaths();
     QStringList remaining;
 
-    for ( auto p : paths ) {
-        if ( p != path ) {
+    for (auto p : paths) {
+        if (p != path) {
             remaining.append(p);
         }
     }

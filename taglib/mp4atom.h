@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2007,2011 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -38,7 +38,7 @@ namespace TagLib
     namespace MP4
     {
         class Atom;
-        typedef TagLib::List<Atom *> AtomList;
+        typedef TagLib::List<Atom*> AtomList;
 
         enum AtomDataType {
             TypeImplicit  = 0,  // for use with tags for which no type needs to be indicated because only one type is allowed
@@ -82,17 +82,16 @@ namespace TagLib
         public:
             Atom(File *file);
             ~Atom();
-            Atom *find(const char *name1, const char *name2 = 0, const char *name3 = 0, const char *name4 = 0);
+            Atom *find(const char *name1, const char *name2                = 0, const char *name3 = 0, const char *name4 = 0);
             bool path(AtomList &path, const char *name1, const char *name2 = 0, const char *name3 = 0);
-            AtomList findall(const char *name, bool recursive = false);
+            AtomList findall(const char *name, bool recursive              = false);
 
-            long               offset;
-            long               length;
+            long offset;
+            long length;
             TagLib::ByteVector name;
-            AtomList           children;
-
+            AtomList children;
         private:
-            static const int  numContainers = 11;
+            static const int numContainers = 11;
             static const char *containers[11];
         };
 
@@ -102,7 +101,7 @@ namespace TagLib
         public:
             Atoms(File *file);
             ~Atoms();
-            Atom *find(const char *name1, const char *name2 = 0, const char *name3 = 0, const char *name4 = 0);
+            Atom *find(const char *name1, const char *name2    = 0, const char *name3 = 0, const char *name4 = 0);
             AtomList path(const char *name1, const char *name2 = 0, const char *name3 = 0, const char *name4 = 0);
 
             AtomList atoms;

@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -70,12 +69,12 @@ namespace
 {
     bool isValidFrameID(const ByteVector &frameID)
     {
-        if ( frameID.size() != 4 ) {
+        if (frameID.size() != 4) {
             return false;
         }
 
-        for ( ByteVector::ConstIterator it = frameID.begin(); it != frameID.end(); it++ ) {
-            if ( ( (*it < 'A') || (*it > 'Z') ) && ( (*it < '0') || (*it > '9') ) ) {
+        for (ByteVector::ConstIterator it = frameID.begin(); it != frameID.end(); it++) {
+            if (((*it < 'A') || (*it > 'Z')) && ((*it < '0') || (*it > '9'))) {
                 return false;
             }
         }
@@ -99,10 +98,10 @@ TagLib::uint Frame::headerSize(uint version)
 
 ByteVector Frame::textDelimiter(String::Type t)
 {
-    ByteVector d = char (0);
+    ByteVector d = char(0);
 
-    if ( (t == String::UTF16) || (t == String::UTF16BE) || (t == String::UTF16LE) ) {
-        d.append( char (0) );
+    if ((t == String::UTF16) || (t == String::UTF16BE) || (t == String::UTF16LE)) {
+        d.append(char(0));
     }
     return d;
 }
@@ -116,48 +115,48 @@ const String Frame::urlPrefix("URL:");
 // public members
 ////////////////////////////////////////////////////////////////////////////////
 
-Frame *Frame::createTextualFrame(const String &key, const StringList &values) // static
+Frame*Frame::createTextualFrame(const String &key, const StringList &values)  // static
 {
     // check if the key is contained in the key<=>frameID mapping
     ByteVector frameID = keyToFrameID(key);
 
-    if ( !frameID.isNull() ) {
-        if ( frameID[0] == 'T' ) { // text frame
+    if (!frameID.isNull()) {
+        if (frameID[0] == 'T') {   // text frame
             TextIdentificationFrame *frame = new TextIdentificationFrame(frameID, String::UTF8);
             frame->setText(values);
             return frame;
-        } else if ( (frameID[0] == 'W') && (values.size() == 1) ) { // URL frame (not WXXX); support only one value
+        } else if ((frameID[0] == 'W') && (values.size() == 1)) {   // URL frame (not WXXX); support only one value
             UrlLinkFrame *frame = new UrlLinkFrame(frameID);
-            frame->setUrl( values.front() );
+            frame->setUrl(values.front());
             return frame;
         }
     }
-    if ( (key == "MUSICBRAINZ_TRACKID") && (values.size() == 1) ) {
-        UniqueFileIdentifierFrame *frame = new UniqueFileIdentifierFrame( "http://musicbrainz.org", values.front().data(String::UTF8) );
+    if ((key == "MUSICBRAINZ_TRACKID") && (values.size() == 1)) {
+        UniqueFileIdentifierFrame *frame = new UniqueFileIdentifierFrame("http://musicbrainz.org", values.front().data(String::UTF8));
         return frame;
     }
     // now we check if it's one of the "special" cases:
     // -LYRICS: depending on the number of values, use USLT or TXXX (with description=LYRICS)
-    if ( ( (key == "LYRICS") || key.startsWith(lyricsPrefix) ) && (values.size() == 1) ) {
+    if (((key == "LYRICS") || key.startsWith(lyricsPrefix)) && (values.size() == 1)) {
         UnsynchronizedLyricsFrame *frame = new UnsynchronizedLyricsFrame(String::UTF8);
-        frame->setDescription( key == "LYRICS" ? key : key.substr( lyricsPrefix.size() ) );
-        frame->setText( values.front() );
+        frame->setDescription(key == "LYRICS" ? key : key.substr(lyricsPrefix.size()));
+        frame->setText(values.front());
         return frame;
     }
     // -URL: depending on the number of values, use WXXX or TXXX (with description=URL)
-    if ( ( (key == "URL") || key.startsWith(urlPrefix) ) && (values.size() == 1) ) {
+    if (((key == "URL") || key.startsWith(urlPrefix)) && (values.size() == 1)) {
         UserUrlLinkFrame *frame = new UserUrlLinkFrame(String::UTF8);
-        frame->setDescription( key == "URL" ? key : key.substr( urlPrefix.size() ) );
-        frame->setUrl( values.front() );
+        frame->setDescription(key == "URL" ? key : key.substr(urlPrefix.size()));
+        frame->setUrl(values.front());
         return frame;
     }
     // -COMMENT: depending on the number of values, use COMM or TXXX (with description=COMMENT)
-    if ( ( (key == "COMMENT") || key.startsWith(commentPrefix) ) && (values.size() == 1) ) {
+    if (((key == "COMMENT") || key.startsWith(commentPrefix)) && (values.size() == 1)) {
         CommentsFrame *frame = new CommentsFrame(String::UTF8);
-        if ( key != "COMMENT" ) {
-            frame->setDescription( key.substr( commentPrefix.size() ) );
+        if (key != "COMMENT") {
+            frame->setDescription(key.substr(commentPrefix.size()));
         }
-        frame->setText( values.front() );
+        frame->setText(values.front());
         return frame;
     }
     // if non of the above cases apply, we use a TXXX frame with the key as description
@@ -171,7 +170,7 @@ Frame::~Frame()
 
 ByteVector Frame::frameID() const
 {
-    if ( d->header ) {
+    if (d->header) {
         return d->header->frameID();
     } else {
         return ByteVector::null;
@@ -180,7 +179,7 @@ ByteVector Frame::frameID() const
 
 TagLib::uint Frame::size() const
 {
-    if ( d->header ) {
+    if (d->header) {
         return d->header->frameSize();
     } else {
         return 0;
@@ -200,7 +199,7 @@ ByteVector Frame::render() const
 {
     ByteVector fieldData = renderFields();
 
-    d->header->setFrameSize( fieldData.size() );
+    d->header->setFrameSize(fieldData.size());
     ByteVector headerData = d->header->render();
 
     return headerData + fieldData;
@@ -222,14 +221,14 @@ Frame::Frame(Header *h)
     d->header = h;
 }
 
-Frame::Header *Frame::header() const
+Frame::Header*Frame::header() const
 {
     return d->header;
 }
 
 void Frame::setHeader(Header *h, bool deleteCurrent)
 {
-    if ( deleteCurrent ) {
+    if (deleteCurrent) {
         delete d->header;
     }
 
@@ -238,36 +237,36 @@ void Frame::setHeader(Header *h, bool deleteCurrent)
 
 void Frame::parse(const ByteVector &data)
 {
-    if ( d->header ) {
+    if (d->header) {
         d->header->setData(data);
     } else {
         d->header = new Header(data);
     }
 
-    parseFields( fieldData(data) );
+    parseFields(fieldData(data));
 }
 
 ByteVector Frame::fieldData(const ByteVector &frameData) const
 {
-    uint headerSize = Header::size( d->header->version() );
+    uint headerSize = Header::size(d->header->version());
 
     uint frameDataOffset = headerSize;
     uint frameDataLength = size();
 
-    if ( d->header->compression() || d->header->dataLengthIndicator() ) {
-        frameDataLength  = SynchData::toUInt( frameData.mid(headerSize, 4) );
+    if (d->header->compression() || d->header->dataLengthIndicator()) {
+        frameDataLength  = SynchData::toUInt(frameData.mid(headerSize, 4));
         frameDataOffset += 4;
     }
 
 #if HAVE_ZLIB
-    if ( d->header->compression() &&
-         !d->header->encryption() ) {
+    if (d->header->compression() &&
+        !d->header->encryption()) {
         ByteVector data(frameDataLength);
         uLongf     uLongTmp = frameDataLength;
-        ::uncompress( (Bytef *) data.data(),
-                      (uLongf *) &uLongTmp,
-                      (Bytef *) frameData.data() + frameDataOffset,
-                      size() );
+        ::uncompress((Bytef*) data.data(),
+                     (uLongf*) &uLongTmp,
+                     (Bytef*) frameData.data() + frameDataOffset,
+                     size());
         return data;
     } else
 #endif
@@ -278,21 +277,22 @@ String Frame::readStringField(const ByteVector &data, String::Type encoding, int
 {
     int start = 0;
 
-    if ( !position ) {
+    if (!position) {
         position = &start;
     }
 
     ByteVector delimiter = textDelimiter(encoding);
 
-    int end = data.find( delimiter, *position, delimiter.size() );
+    int end = data.find(delimiter, *position, delimiter.size());
 
-    if ( end < *position ) {
+    if (end < *position) {
         return String::null;
     }
 
     String str;
-    if ( encoding == String::Latin1 ) {
-        str = Tag::latin1StringHandler()->parse( data.mid(*position, end - *position) );
+
+    if (encoding == String::Latin1) {
+        str = Tag::latin1StringHandler()->parse(data.mid(*position, end - *position));
     } else {
         str = String(data.mid(*position, end - *position), encoding);
     }
@@ -309,17 +309,17 @@ String::Type Frame::checkEncoding(const StringList &fields, String::Type encodin
 
 String::Type Frame::checkEncoding(const StringList &fields, String::Type encoding, uint version) // static
 {
-    if ( ( (encoding == String::UTF8) || (encoding == String::UTF16BE) ) && (version != 4) ) {
+    if (((encoding == String::UTF8) || (encoding == String::UTF16BE)) && (version != 4)) {
         return String::UTF16;
     }
 
-    if ( encoding != String::Latin1 ) {
+    if (encoding != String::Latin1) {
         return encoding;
     }
 
-    for ( StringList::ConstIterator it = fields.begin(); it != fields.end(); ++it ) {
-        if ( !(*it).isLatin1() ) {
-            if ( version == 4 ) {
+    for (StringList::ConstIterator it = fields.begin(); it != fields.end(); ++it) {
+        if (!(*it).isLatin1()) {
+            if (version == 4) {
                 debug("Frame::checkEncoding() -- Rendering using UTF8.");
                 return String::UTF8;
             } else {
@@ -334,7 +334,7 @@ String::Type Frame::checkEncoding(const StringList &fields, String::Type encodin
 
 String::Type Frame::checkTextEncoding(const StringList &fields, String::Type encoding) const
 {
-    return checkEncoding( fields, encoding, header()->version() );
+    return checkEncoding(fields, encoding, header()->version());
 }
 
 static const TagLib::uint frameTranslationSize   = 51;
@@ -419,8 +419,8 @@ Map<ByteVector, String> &idMap()
 {
     static Map<ByteVector, String> m;
 
-    if ( m.isEmpty() ) {
-        for ( size_t i = 0; i < frameTranslationSize; ++i ) {
+    if (m.isEmpty()) {
+        for (size_t i = 0; i < frameTranslationSize; ++i) {
             m[frameTranslation[i][0]] = frameTranslation[i][1];
         }
     }
@@ -431,8 +431,8 @@ Map<String, String> &txxxMap()
 {
     static Map<String, String> m;
 
-    if ( m.isEmpty() ) {
-        for ( size_t i = 0; i < txxxFrameTranslationSize; ++i ) {
+    if (m.isEmpty()) {
+        for (size_t i = 0; i < txxxFrameTranslationSize; ++i) {
             String key = String(txxxFrameTranslation[i][0]).upper();
             m[key] = txxxFrameTranslation[i][1];
         }
@@ -453,8 +453,8 @@ Map<ByteVector, ByteVector> &deprecationMap()
 {
     static Map<ByteVector, ByteVector> depMap;
 
-    if ( depMap.isEmpty() ) {
-        for ( TagLib::uint i = 0; i < deprecatedFramesSize; ++i ) {
+    if (depMap.isEmpty()) {
+        for (TagLib::uint i = 0; i < deprecatedFramesSize; ++i) {
             depMap[deprecatedFrames[i][0]] = deprecatedFrames[i][1];
         }
     }
@@ -464,10 +464,11 @@ Map<ByteVector, ByteVector> &deprecationMap()
 String Frame::frameIDToKey(const ByteVector &id)
 {
     Map<ByteVector, String> &m = idMap();
-    if ( m.contains(id) ) {
+
+    if (m.contains(id)) {
         return m[id];
     }
-    if ( deprecationMap().contains(id) ) {
+    if (deprecationMap().contains(id)) {
         return m[deprecationMap()[id]];
     }
     return String::null;
@@ -477,12 +478,12 @@ ByteVector Frame::keyToFrameID(const String &s)
 {
     static Map<String, ByteVector> m;
 
-    if ( m.isEmpty() ) {
-        for ( size_t i = 0; i < frameTranslationSize; ++i ) {
+    if (m.isEmpty()) {
+        for (size_t i = 0; i < frameTranslationSize; ++i) {
             m[frameTranslation[i][1]] = frameTranslation[i][0];
         }
     }
-    if ( m.contains( s.upper() ) ) {
+    if (m.contains(s.upper())) {
         return m[s];
     }
     return ByteVector::null;
@@ -492,7 +493,8 @@ String Frame::txxxToKey(const String &description)
 {
     Map<String, String> &m = txxxMap();
     String              d  = description.upper();
-    if ( m.contains(d) ) {
+
+    if (m.contains(d)) {
         return m[d];
     }
     return d;
@@ -502,12 +504,12 @@ String Frame::keyToTXXX(const String &s)
 {
     static Map<String, String> m;
 
-    if ( m.isEmpty() ) {
-        for ( size_t i = 0; i < txxxFrameTranslationSize; ++i ) {
+    if (m.isEmpty()) {
+        for (size_t i = 0; i < txxxFrameTranslationSize; ++i) {
             m[txxxFrameTranslation[i][1]] = txxxFrameTranslation[i][0];
         }
     }
-    if ( m.contains( s.upper() ) ) {
+    if (m.contains(s.upper())) {
         return m[s];
     }
     return s;
@@ -515,29 +517,31 @@ String Frame::keyToTXXX(const String &s)
 
 PropertyMap Frame::asProperties() const
 {
-    if ( dynamic_cast<const UnknownFrame *> (this) ) {
+    if (dynamic_cast<const UnknownFrame*>(this)) {
         PropertyMap m;
-        m.unsupportedData().append( "UNKNOWN/" + frameID() );
+        m.unsupportedData().append("UNKNOWN/" + frameID());
         return m;
     }
     const ByteVector &id = frameID();
+
     // workaround until this function is virtual
-    if ( id == "TXXX" ) {
-        return dynamic_cast<const UserTextIdentificationFrame *> (this)->asProperties();
-    } else if ( id[0] == 'T' ) {
-        return dynamic_cast<const TextIdentificationFrame *> (this)->asProperties();
-    } else if ( id == "WXXX" ) {
-        return dynamic_cast<const UserUrlLinkFrame *> (this)->asProperties();
-    } else if ( id[0] == 'W' ) {
-        return dynamic_cast<const UrlLinkFrame *> (this)->asProperties();
-    } else if ( id == "COMM" ) {
-        return dynamic_cast<const CommentsFrame *> (this)->asProperties();
-    } else if ( id == "USLT" ) {
-        return dynamic_cast<const UnsynchronizedLyricsFrame *> (this)->asProperties();
-    } else if ( id == "UFID" ) {
-        return dynamic_cast<const UniqueFileIdentifierFrame *> (this)->asProperties();
+    if (id == "TXXX") {
+        return dynamic_cast<const UserTextIdentificationFrame*>(this)->asProperties();
+    } else if (id[0] == 'T') {
+        return dynamic_cast<const TextIdentificationFrame*>(this)->asProperties();
+    } else if (id == "WXXX") {
+        return dynamic_cast<const UserUrlLinkFrame*>(this)->asProperties();
+    } else if (id[0] == 'W') {
+        return dynamic_cast<const UrlLinkFrame*>(this)->asProperties();
+    } else if (id == "COMM") {
+        return dynamic_cast<const CommentsFrame*>(this)->asProperties();
+    } else if (id == "USLT") {
+        return dynamic_cast<const UnsynchronizedLyricsFrame*>(this)->asProperties();
+    } else if (id == "UFID") {
+        return dynamic_cast<const UniqueFileIdentifierFrame*>(this)->asProperties();
     }
     PropertyMap m;
+
     m.unsupportedData().append(id);
     return m;
 }
@@ -547,10 +551,10 @@ void Frame::splitProperties(const PropertyMap &original, PropertyMap &singleFram
     singleFrameProperties.clear();
     tiplProperties.clear();
     tmclProperties.clear();
-    for ( PropertyMap::ConstIterator it = original.begin(); it != original.end(); ++it ) {
-        if ( TextIdentificationFrame::involvedPeopleMap().contains(it->first) ) {
+    for (PropertyMap::ConstIterator it = original.begin(); it != original.end(); ++it) {
+        if (TextIdentificationFrame::involvedPeopleMap().contains(it->first)) {
             tiplProperties.insert(it->first, it->second);
-        } else if ( it->first.startsWith(TextIdentificationFrame::instrumentPrefix) ) {
+        } else if (it->first.startsWith(TextIdentificationFrame::instrumentPrefix)) {
             tmclProperties.insert(it->first, it->second);
         } else {
             singleFrameProperties.insert(it->first, it->second);
@@ -580,8 +584,8 @@ public:
     }
 
     ByteVector frameID;
-    uint       frameSize;
-    uint       version;
+    uint frameSize;
+    uint version;
 
     // flags
 
@@ -606,7 +610,7 @@ TagLib::uint Frame::Header::size()
 
 TagLib::uint Frame::Header::size(uint version)
 {
-    switch ( version ) {
+    switch (version) {
         case 0:
         case 1:
         case 2:
@@ -642,20 +646,20 @@ Frame::Header::~Header()
 
 void Frame::Header::setData(const ByteVector &data, bool synchSafeInts)
 {
-    setData( data, uint(synchSafeInts ? 4 : 3) );
+    setData(data, uint(synchSafeInts ? 4 : 3));
 }
 
 void Frame::Header::setData(const ByteVector &data, uint version)
 {
     d->version = version;
 
-    switch ( version ) {
+    switch (version) {
         case 0:
         case 1:
         case 2:
             // ID3v2.2
 
-            if ( data.size() < 3 ) {
+            if (data.size() < 3) {
                 debug("You must at least specify a frame ID.");
                 return;
             }
@@ -667,7 +671,7 @@ void Frame::Header::setData(const ByteVector &data, uint version)
             // If the full header information was not passed in, do not continue to the
             // steps to parse the frame size and flags.
 
-            if ( data.size() < 6 ) {
+            if (data.size() < 6) {
                 d->frameSize = 0;
                 return;
             }
@@ -679,7 +683,7 @@ void Frame::Header::setData(const ByteVector &data, uint version)
         case 3:
             // ID3v2.3
 
-            if ( data.size() < 4 ) {
+            if (data.size() < 4) {
                 debug("You must at least specify a frame ID.");
                 return;
             }
@@ -691,7 +695,7 @@ void Frame::Header::setData(const ByteVector &data, uint version)
             // If the full header information was not passed in, do not continue to the
             // steps to parse the frame size and flags.
 
-            if ( data.size() < 10 ) {
+            if (data.size() < 10) {
                 d->frameSize = 0;
                 return;
             }
@@ -720,7 +724,7 @@ void Frame::Header::setData(const ByteVector &data, uint version)
         default:
             // ID3v2.4
 
-            if ( data.size() < 4 ) {
+            if (data.size() < 4) {
                 debug("You must at least specify a frame ID.");
                 return;
             }
@@ -732,7 +736,7 @@ void Frame::Header::setData(const ByteVector &data, uint version)
             // If the full header information was not passed in, do not continue to the
             // steps to parse the frame size and flags.
 
-            if ( data.size() < 10 ) {
+            if (data.size() < 10) {
                 d->frameSize = 0;
                 return;
             }
@@ -740,13 +744,13 @@ void Frame::Header::setData(const ByteVector &data, uint version)
             // Set the size -- the frame size is the four bytes starting at byte four in
             // the frame header (structure 4)
 
-            d->frameSize = SynchData::toUInt( data.mid(4, 4) );
+            d->frameSize = SynchData::toUInt(data.mid(4, 4));
 #ifndef NO_ITUNES_HACKS
             // iTunes writes v2.4 tags with v2.3-like frame sizes
-            if ( d->frameSize > 127 ) {
-                if ( !isValidFrameID( data.mid(d->frameSize + 10, 4) ) ) {
+            if (d->frameSize > 127) {
+                if (!isValidFrameID(data.mid(d->frameSize + 10, 4))) {
                     unsigned int uintSize = data.toUInt(4U);
-                    if ( isValidFrameID( data.mid(uintSize + 10, 4) ) ) {
+                    if (isValidFrameID(data.mid(uintSize + 10, 4))) {
                         d->frameSize = uintSize;
                     }
                 }
@@ -854,12 +858,12 @@ bool Frame::Header::dataLengthIndicator() const
 
 ByteVector Frame::Header::render() const
 {
-    ByteVector flags( 2, char (0) ); // just blank for the moment
+    ByteVector flags(2, char(0));    // just blank for the moment
 
     ByteVector v = d->frameID +
-                   ( d->version == 3
+                   (d->version == 3
                      ? ByteVector::fromUInt(d->frameSize)
-                     : SynchData::fromUInt(d->frameSize) ) +
+                     : SynchData::fromUInt(d->frameSize)) +
                    flags;
 
     return v;

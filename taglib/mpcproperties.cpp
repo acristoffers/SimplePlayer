@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2004 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
+/***************************************************************************
+*    copyright            : (C) 2004 by Allan Sandfeld Jensen email                : kde@carewolf.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -53,20 +52,20 @@ public:
     {
     }
 
-    long      streamLength;
+    long streamLength;
     ReadStyle style;
-    int       version;
-    int       length;
-    int       bitrate;
-    int       sampleRate;
-    int       channels;
-    uint      totalFrames;
-    uint      sampleFrames;
-    uint      trackGain;
-    uint      trackPeak;
-    uint      albumGain;
-    uint      albumPeak;
-    String    flags;
+    int version;
+    int length;
+    int bitrate;
+    int sampleRate;
+    int channels;
+    uint totalFrames;
+    uint sampleFrames;
+    uint trackGain;
+    uint trackPeak;
+    uint albumGain;
+    uint albumPeak;
+    String flags;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,12 +82,13 @@ MPC::Properties::Properties(File *file, long streamLength, ReadStyle style) : Au
 {
     d = new PropertiesPrivate(streamLength, style);
     ByteVector magic = file->readBlock(4);
-    if ( magic == "MPCK" ) {
+
+    if (magic == "MPCK") {
         // Musepack version 8
         readSV8(file);
     } else {
         // Musepack version 7 or older, fixed size header
-        readSV7( magic + file->readBlock(MPC::HeaderSize - 4) );
+        readSV7(magic + file->readBlock(MPC::HeaderSize - 4));
     }
 }
 
@@ -166,7 +166,7 @@ unsigned long readSize(File *file, TagLib::uint &sizelength)
         tmp  = b[0];
         size = (size << 7) | (tmp & 0x7F);
         sizelength++;
-    } while ( (tmp & 0x80) );
+    } while ((tmp & 0x80));
     return size;
 }
 
@@ -180,7 +180,7 @@ unsigned long readSize(const ByteVector &data, TagLib::uint &sizelength)
         tmp  = data[pos++];
         size = (size << 7) | (tmp & 0x7F);
         sizelength++;
-    } while ( (tmp & 0x80) && ( pos < data.size() ) );
+    } while ((tmp & 0x80) && (pos < data.size()));
     return size;
 }
 
@@ -192,13 +192,13 @@ void MPC::Properties::readSV8(File *file)
 {
     bool readSH = false, readRG = false;
 
-    while ( !readSH && !readRG ) {
+    while (!readSH && !readRG) {
         ByteVector    packetType       = file->readBlock(2);
         uint          packetSizeLength = 0;
         unsigned long packetSize       = readSize(file, packetSizeLength);
         unsigned long dataSize         = packetSize - 2 - packetSizeLength;
 
-        if ( packetType == "SH" ) {
+        if (packetType == "SH") {
             // Stream Header
             // http://trac.musepack.net/wiki/SV8Specification#StreamHeaderPacket
             ByteVector data = file->readBlock(dataSize);
@@ -210,32 +210,32 @@ void MPC::Properties::readSV8(File *file)
             d->sampleFrames = readSize(data.mid(pos), pos);
             ulong begSilence = readSize(data.mid(pos), pos);
 
-            std::bitset<16> flags( TAGLIB_CONSTRUCT_BITSET( data.toUShort(pos, true) ) );
+            std::bitset<16> flags(TAGLIB_CONSTRUCT_BITSET(data.toUShort(pos, true)));
             pos += 2;
 
             d->sampleRate = sftable[flags[15] * 4 + flags[14] * 2 + flags[13]];
             d->channels   = flags[7] * 8 + flags[6] * 4 + flags[5] * 2 + flags[4] + 1;
 
-            if ( (d->sampleFrames - begSilence) != 0 ) {
-                d->bitrate = (int) ( d->streamLength * 8.0 * d->sampleRate / (d->sampleFrames - begSilence) );
+            if ((d->sampleFrames - begSilence) != 0) {
+                d->bitrate = (int) (d->streamLength * 8.0 * d->sampleRate / (d->sampleFrames - begSilence));
             }
             d->bitrate = d->bitrate / 1000;
 
             d->length = (d->sampleFrames - begSilence) / d->sampleRate;
-        } else if ( packetType == "RG" ) {
+        } else if (packetType == "RG") {
             // Replay Gain
             // http://trac.musepack.net/wiki/SV8Specification#ReplaygainPacket
             ByteVector data = file->readBlock(dataSize);
             readRG = true;
 
             int replayGainVersion = data[0];
-            if ( replayGainVersion == 1 ) {
+            if (replayGainVersion == 1) {
                 d->trackGain = data.toShort(1, true);
                 d->trackPeak = data.toShort(3, true);
                 d->albumGain = data.toShort(5, true);
                 d->albumPeak = data.toShort(7, true);
             }
-        } else if ( packetType == "SE" ) {
+        } else if (packetType == "SE") {
             break;
         } else {
             file->seek(dataSize, File::Current);
@@ -245,15 +245,15 @@ void MPC::Properties::readSV8(File *file)
 
 void MPC::Properties::readSV7(const ByteVector &data)
 {
-    if ( data.startsWith("MP+") ) {
+    if (data.startsWith("MP+")) {
         d->version = data[3] & 15;
-        if ( d->version < 7 ) {
+        if (d->version < 7) {
             return;
         }
 
         d->totalFrames = data.toUInt(4, false);
 
-        std::bitset<32> flags( TAGLIB_CONSTRUCT_BITSET( data.toUInt(8, false) ) );
+        std::bitset<32> flags(TAGLIB_CONSTRUCT_BITSET(data.toUInt(8, false)));
         d->sampleRate = sftable[flags[17] * 2 + flags[16]];
         d->channels   = 2;
 
@@ -265,32 +265,32 @@ void MPC::Properties::readSV7(const ByteVector &data)
         d->albumPeak = data.toShort(16, false);
 
         // convert gain info
-        if ( d->trackGain != 0 ) {
-            int tmp = (int) ( (64.82 - (short) d->trackGain / 100.) * 256. + .5 );
-            if ( ( tmp >= (1 << 16) ) || (tmp < 0) ) {
+        if (d->trackGain != 0) {
+            int tmp = (int) ((64.82 - (short) d->trackGain / 100.) * 256. + .5);
+            if ((tmp >= (1 << 16)) || (tmp < 0)) {
                 tmp = 0;
             }
             d->trackGain = tmp;
         }
 
-        if ( d->albumGain != 0 ) {
-            int tmp = (int) ( (64.82 - d->albumGain / 100.) * 256. + .5 );
-            if ( ( tmp >= (1 << 16) ) || (tmp < 0) ) {
+        if (d->albumGain != 0) {
+            int tmp = (int) ((64.82 - d->albumGain / 100.) * 256. + .5);
+            if ((tmp >= (1 << 16)) || (tmp < 0)) {
                 tmp = 0;
             }
             d->albumGain = tmp;
         }
 
-        if ( d->trackPeak != 0 ) {
-            d->trackPeak = (int) (log10( (double) d->trackPeak ) * 20 * 256 + .5);
+        if (d->trackPeak != 0) {
+            d->trackPeak = (int) (log10((double) d->trackPeak) * 20 * 256 + .5);
         }
 
-        if ( d->albumPeak != 0 ) {
-            d->albumPeak = (int) (log10( (double) d->albumPeak ) * 20 * 256 + .5);
+        if (d->albumPeak != 0) {
+            d->albumPeak = (int) (log10((double) d->albumPeak) * 20 * 256 + .5);
         }
 
         bool trueGapless = (gapless >> 31) & 0x0001;
-        if ( trueGapless ) {
+        if (trueGapless) {
             uint lastFrameSamples = (gapless >> 20) & 0x07FF;
             d->sampleFrames = d->totalFrames * 1152 - lastFrameSamples;
         } else {
@@ -304,7 +304,7 @@ void MPC::Properties::readSV7(const ByteVector &data)
         d->sampleRate = 44100;
         d->channels   = 2;
 
-        if ( d->version >= 5 ) {
+        if (d->version >= 5) {
             d->totalFrames = data.toUInt(4, false);
         } else {
             d->totalFrames = data.toUShort(6, false);
@@ -313,9 +313,9 @@ void MPC::Properties::readSV7(const ByteVector &data)
         d->sampleFrames = d->totalFrames * 1152 - 576;
     }
 
-    d->length = d->sampleRate > 0 ? ( d->sampleFrames + (d->sampleRate / 2) ) / d->sampleRate : 0;
+    d->length = d->sampleRate > 0 ? (d->sampleFrames + (d->sampleRate / 2)) / d->sampleRate : 0;
 
-    if ( !d->bitrate ) {
-        d->bitrate = d->length > 0 ? ( (d->streamLength * 8L) / d->length ) / 1000 : 0;
+    if (!d->bitrate) {
+        d->bitrate = d->length > 0 ? ((d->streamLength * 8L) / d->length) / 1000 : 0;
     }
 }

@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2003 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
+/***************************************************************************
+*    copyright            : (C) 2003 by Allan Sandfeld Jensen email                : kde@carewolf.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -38,23 +37,20 @@ namespace TagLib
         // ! An implementation of audio property reading for FLAC
 
         /*!
-         * This reads the data from an FLAC stream found in the AudioProperties
-         * API.
+         * This reads the data from an FLAC stream found in the AudioProperties API.
          */
 
         class TAGLIB_EXPORT Properties : public AudioProperties
         {
         public:
             /*!
-             * Create an instance of FLAC::Properties with the data read from the
-             * ByteVector \a data.
+             * Create an instance of FLAC::Properties with the data read from the ByteVector \a data.
              */
             // BIC: switch to const reference
             Properties(ByteVector data, long streamLength, ReadStyle style = Average);
 
             /*!
-             * Create an instance of FLAC::Properties with the data read from the
-             * FLAC::File \a file.
+             * Create an instance of FLAC::Properties with the data read from the FLAC::File \a file.
              */
             // BIC: remove
             Properties(File *file, ReadStyle style = Average);
@@ -72,8 +68,7 @@ namespace TagLib
             virtual int channels() const;
 
             /*!
-             * Returns the sample width as read from the FLAC identification
-             * header.
+             * Returns the sample width as read from the FLAC identification header.
              */
             int sampleWidth() const;
 
@@ -83,14 +78,12 @@ namespace TagLib
             unsigned long long sampleFrames() const;
 
             /*!
-             * Returns the MD5 signature of the uncompressed audio stream as read
-             * from the stream info header header.
+             * Returns the MD5 signature of the uncompressed audio stream as read from the stream info header header.
              */
             ByteVector signature() const;
-
         private:
             Properties(const Properties &);
-            Properties &operator=(const Properties &);
+            Properties &operator =(const Properties &);
 
             void read();
 

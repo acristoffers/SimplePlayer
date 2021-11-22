@@ -1,4 +1,4 @@
-﻿#ifndef DATABASE_H
+#ifndef DATABASE_H
 #define DATABASE_H
 
 #include <QObject>
@@ -20,11 +20,10 @@ enum Fields {
 class DataBase : public QObject
 {
     Q_OBJECT
-
 public:
     static DataBase *instance();
 
-    void save(Media *, QString basePath);
+    void save(Media*, QString basePath);
     void clean();
 
     QStringList albumForArtist(QString);
@@ -32,15 +31,13 @@ public:
 
     unsigned long long countType(QString);
 
-    QList<Music *> musicWhere(QMap<Fields, QVariant> );
+    QList<Music*> musicWhere(QMap<Fields, QVariant>);
 
     bool musicInfoForFile(QString file, QString *artist, QString *album, QString *title, int *track, int *year);
     bool musicInfoForID(int id, QString *file, QString *artist, QString *album, QString *title, int *track, int *year);
-
 protected:
     DataBase();
     ~DataBase();
-
 private:
     DataBasePrivate *d;
     static DataBase *_self;

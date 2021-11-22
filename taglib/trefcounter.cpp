@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2013 by Tsuda Kageyu
-*    email                : tsuda.kageyu@gmail.com
+/***************************************************************************
+*    copyright            : (C) 2013 by Tsuda Kageyu email                : tsuda.kageyu@gmail.com
 ***************************************************************************/
 
 /***************************************************************************
@@ -29,34 +28,34 @@
 
 #include "trefcounter.h"
 
-#if defined (HAVE_STD_ATOMIC)
+#if defined(HAVE_STD_ATOMIC)
  #include <atomic>
- #define ATOMIC_INT std::atomic < unsigned int >
+ #define ATOMIC_INT std::atomic<unsigned int>
  #define ATOMIC_INC(x) x.fetch_add(1)
  #define ATOMIC_DEC(x) (x.fetch_sub(1) - 1)
-#elif defined (HAVE_BOOST_ATOMIC)
+#elif defined(HAVE_BOOST_ATOMIC)
  #include <boost/atomic.hpp>
- #define ATOMIC_INT boost::atomic < unsigned int >
+ #define ATOMIC_INT boost::atomic<unsigned int>
  #define ATOMIC_INC(x) x.fetch_add(1)
  #define ATOMIC_DEC(x) (x.fetch_sub(1) - 1)
-#elif defined (HAVE_GCC_ATOMIC)
+#elif defined(HAVE_GCC_ATOMIC)
  #define ATOMIC_INT int
  #define ATOMIC_INC(x) __sync_add_and_fetch(&x, 1)
  #define ATOMIC_DEC(x) __sync_sub_and_fetch(&x, 1)
-#elif defined (HAVE_WIN_ATOMIC)
- #if !defined (NOMINMAX)
+#elif defined(HAVE_WIN_ATOMIC)
+ #if !defined(NOMINMAX)
   #define NOMINMAX
  #endif
  #include <windows.h>
  #define ATOMIC_INT long
  #define ATOMIC_INC(x) InterlockedIncrement(&x)
  #define ATOMIC_DEC(x) InterlockedDecrement(&x)
-#elif defined (HAVE_MAC_ATOMIC)
+#elif defined(HAVE_MAC_ATOMIC)
  #include <libkern/OSAtomic.h>
  #define ATOMIC_INT int32_t
  #define ATOMIC_INC(x) OSAtomicIncrement32Barrier(&x)
  #define ATOMIC_DEC(x) OSAtomicDecrement32Barrier(&x)
-#elif defined (HAVE_IA64_ATOMIC)
+#elif defined(HAVE_IA64_ATOMIC)
  #include <ia64intrin.h>
  #define ATOMIC_INT int
  #define ATOMIC_INC(x) __sync_add_and_fetch(&x, 1)
@@ -95,7 +94,7 @@ namespace TagLib
     };
 
     RefCounter::RefCounter()
-        : d( new RefCounterPrivate() )
+        : d(new RefCounterPrivate())
     {
     }
 

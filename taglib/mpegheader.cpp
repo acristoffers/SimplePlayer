@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -52,18 +51,18 @@ public:
     {
     }
 
-    bool        isValid;
-    Version     version;
-    int         layer;
-    bool        protectionEnabled;
-    int         bitrate;
-    int         sampleRate;
-    bool        isPadded;
+    bool isValid;
+    Version version;
+    int layer;
+    bool protectionEnabled;
+    int bitrate;
+    int sampleRate;
+    bool isPadded;
     ChannelMode channelMode;
-    bool        isCopyrighted;
-    bool        isOriginal;
-    int         frameLength;
-    int         samplesPerFrame;
+    bool isCopyrighted;
+    bool isOriginal;
+    int frameLength;
+    int samplesPerFrame;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -83,7 +82,7 @@ MPEG::Header::Header(const Header &h) : d(h.d)
 
 MPEG::Header::~Header()
 {
-    if ( d->deref() ) {
+    if (d->deref()) {
         delete d;
     }
 }
@@ -148,13 +147,13 @@ int MPEG::Header::samplesPerFrame() const
     return d->samplesPerFrame;
 }
 
-MPEG::Header &MPEG::Header::operator=(const Header &h)
+MPEG::Header &MPEG::Header::operator =(const Header &h)
 {
-    if ( &h == this ) {
+    if (&h == this) {
         return *this;
     }
 
-    if ( d->deref() ) {
+    if (d->deref()) {
         delete d;
     }
 
@@ -169,37 +168,37 @@ MPEG::Header &MPEG::Header::operator=(const Header &h)
 
 void MPEG::Header::parse(const ByteVector &data)
 {
-    if ( (data.size() < 4) || (uchar(data[0]) != 0xff) ) {
+    if ((data.size() < 4) || (uchar(data[0]) != 0xff)) {
         debug("MPEG::Header::parse() -- First byte did not match MPEG synch.");
         return;
     }
 
-    std::bitset<32> flags( TAGLIB_CONSTRUCT_BITSET( data.toUInt() ) );
+    std::bitset<32> flags(TAGLIB_CONSTRUCT_BITSET(data.toUInt()));
 
     // Check for the second byte's part of the MPEG synch
 
-    if ( !flags[23] || !flags[22] || !flags[21] ) {
+    if (!flags[23] || !flags[22] || !flags[21]) {
         debug("MPEG::Header::parse() -- Second byte did not match MPEG synch.");
         return;
     }
 
     // Set the MPEG version
 
-    if ( !flags[20] && !flags[19] ) {
+    if (!flags[20] && !flags[19]) {
         d->version = Version2_5;
-    } else if ( flags[20] && !flags[19] ) {
+    } else if (flags[20] && !flags[19]) {
         d->version = Version2;
-    } else if ( flags[20] && flags[19] ) {
+    } else if (flags[20] && flags[19]) {
         d->version = Version1;
     }
 
     // Set the MPEG layer
 
-    if ( !flags[18] && flags[17] ) {
+    if (!flags[18] && flags[17]) {
         d->layer = 3;
-    } else if ( flags[18] && !flags[17] ) {
+    } else if (flags[18] && !flags[17]) {
         d->layer = 2;
-    } else if ( flags[18] && flags[17] ) {
+    } else if (flags[18] && flags[17]) {
         d->layer = 1;
     }
 
@@ -244,7 +243,7 @@ void MPEG::Header::parse(const ByteVector &data)
 
     d->sampleRate = sampleRates[d->version][i];
 
-    if ( d->sampleRate == 0 ) {
+    if (d->sampleRate == 0) {
         debug("MPEG::Header::parse() -- Invalid sample rate.");
         return;
     }
@@ -252,7 +251,7 @@ void MPEG::Header::parse(const ByteVector &data)
     // The channel mode is encoded as a 2 bit value at the end of the 3nd byte,
     // i.e. xxxxxx11
 
-    d->channelMode = ChannelMode( (uchar(data[3]) & 0xC0) >> 6 );
+    d->channelMode = ChannelMode((uchar(data[3]) & 0xC0) >> 6);
 
     // TODO: Add mode extension for completeness
 
@@ -262,10 +261,10 @@ void MPEG::Header::parse(const ByteVector &data)
 
     // Calculate the frame length
 
-    if ( d->layer == 1 ) {
-        d->frameLength = 24000 * 2 * d->bitrate / d->sampleRate + int (d->isPadded);
+    if (d->layer == 1) {
+        d->frameLength = 24000 * 2 * d->bitrate / d->sampleRate + int(d->isPadded);
     } else {
-        d->frameLength = 72000 * d->bitrate / d->sampleRate + int (d->isPadded);
+        d->frameLength = 72000 * d->bitrate / d->sampleRate + int(d->isPadded);
     }
 
     // Samples per frame

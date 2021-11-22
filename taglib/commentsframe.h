@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -36,14 +35,12 @@ namespace TagLib
         // ! An implementation of ID3v2 comments
 
         /*!
-         * This implements the ID3v2 comment format.  An ID3v2 comment concists of
-         * a language encoding, a description and a single text field.
+         * This implements the ID3v2 comment format.  An ID3v2 comment concists of a language encoding, a description and a single text field.
          */
 
         class TAGLIB_EXPORT CommentsFrame : public Frame
         {
             friend class FrameFactory;
-
         public:
             /*!
              * Construct an empty comment frame that will use the text encoding
@@ -118,9 +115,7 @@ namespace TagLib
             virtual void setText(const String &s);
 
             /*!
-             * Returns the text encoding that will be used in rendering this frame.
-             * This defaults to the type that was either specified in the constructor
-             * or read from the frame when parsed.
+             * Returns the text encoding that will be used in rendering this frame. This defaults to the type that was either specified in the constructor or read from the frame when parsed.
              *
              * \see setTextEncoding()
              * \see render()
@@ -139,36 +134,30 @@ namespace TagLib
             /*!
              * Parses this frame as PropertyMap with a single key.
              * - if description() is empty or "COMMENT", the key will be "COMMENT"
-             * - if description() is not a valid PropertyMap key, the frame will be
-             *   marked unsupported by an entry "COMM/<description>" in the unsupportedData()
-             *   attribute of the returned map.
+             * - if description() is not a valid PropertyMap key, the frame will be marked unsupported by an entry "COMM/<description>" in the unsupportedData() attribute of the returned map.
              * - otherwise, the key will be "COMMENT:<description>"
              * - The single value will be the frame's text().
              */
             PropertyMap asProperties() const;
 
             /*!
-             * Comments each have a unique description.  This searches for a comment
-             * frame with the decription \a d and returns a pointer to it.  If no
-             * frame is found that matches the given description null is returned.
+             * Comments each have a unique description.  This searches for a comment frame with the decription \a d and returns a pointer to it.  If no frame is found that matches the given description null is returned.
              *
              * \see description()
              */
             static CommentsFrame *findByDescription(const Tag *tag, const String &d);
-
         protected:
             // Reimplementations.
 
             virtual void parseFields(const ByteVector &data);
             virtual ByteVector renderFields() const;
-
         private:
             /*!
              * The constructor used by the FrameFactory.
              */
             CommentsFrame(const ByteVector &data, Header *h);
             CommentsFrame(const CommentsFrame &);
-            CommentsFrame &operator=(const CommentsFrame &);
+            CommentsFrame &operator =(const CommentsFrame &);
 
             class CommentsFramePrivate;
             CommentsFramePrivate *d;

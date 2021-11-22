@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright           :(C) 2011 by Mathias Panzenböck
-*    email               : grosser.meister.morti@gmx.net
+/***************************************************************************
+*    copyright           :(C) 2011 by Mathias Panzenböck email               : grosser.meister.morti@gmx.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -46,7 +45,7 @@ public:
     {
     }
 
-    int    channels;
+    int channels;
     ushort lengthInPatterns;
     ushort instrumentCount;
     ushort sampleCount;
@@ -55,12 +54,12 @@ public:
     ushort compatibleVersion;
     ushort flags;
     ushort special;
-    uchar  globalVolume;
-    uchar  mixVolume;
-    uchar  tempo;
-    uchar  bpmSpeed;
-    uchar  panningSeparation;
-    uchar  pitchWheelDepth;
+    uchar globalVolume;
+    uchar mixVolume;
+    uchar tempo;
+    uchar bpmSpeed;
+    uchar panningSeparation;
+    uchar pitchWheelDepth;
 };
 
 IT::Properties::Properties(AudioProperties::ReadStyle propertiesStyle) :

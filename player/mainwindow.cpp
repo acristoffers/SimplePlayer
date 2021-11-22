@@ -1,4 +1,4 @@
-﻿#include "mainwindow.h"
+#include "mainwindow.h"
 #include "ui_mainwindow.h"
 
 #include <QMediaPlayer>
@@ -23,13 +23,13 @@ struct MainWindowPrivate
     MusicTreeItemModel *musicModel;
 };
 
-extern void qt_mac_set_dock_menu(QMenu *);
+extern void qt_mac_set_dock_menu(QMenu*);
 
-MainWindow *MainWindow::_self = nullptr;
+MainWindow*MainWindow::_self = nullptr;
 
-MainWindow *MainWindow::instance()
+MainWindow*MainWindow::instance()
 {
-    if ( _self == nullptr ) {
+    if (_self == nullptr) {
         _self = new MainWindow;
     }
 
@@ -38,7 +38,7 @@ MainWindow *MainWindow::instance()
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      d(new MainWindowPrivate)
+    d(new MainWindowPrivate)
 {
     d->ui = new Ui::MainWindow;
     d->ui->setupUi(this);
@@ -58,19 +58,20 @@ MainWindow::MainWindow(QWidget *parent)
 
     d->ui->splitter->setStretchFactor(1, 3);
 
-    connect( d->ui->actionAbout_Qt,      SIGNAL( triggered() ),                                                     qApp,             SLOT( aboutQt() ) );
-    connect( d->ui->actionAbout,         SIGNAL( triggered() ),                                                     this,             SLOT( about() ) );
+    connect(d->ui->actionAbout_Qt,      SIGNAL(triggered()),                                                   qApp,             SLOT(aboutQt()));
+    connect(d->ui->actionAbout,         SIGNAL(triggered()),                                                   this,             SLOT(about()));
 
-    connect( LibraryManager::instance(), SIGNAL( processingFile(QString, unsigned long long, unsigned long long) ), this,             SLOT( statusForProcessingFile(QString, unsigned long long, unsigned long long) ) );
-    connect( LibraryManager::instance(), SIGNAL( scanFinished() ),                                                  d->ui->statusBar, SLOT( clearMessage() ) );
+    connect(LibraryManager::instance(), SIGNAL(processingFile(QString,unsigned long long,unsigned long long)), this,             SLOT(statusForProcessingFile(QString, unsigned long long, unsigned long long)));
+    connect(LibraryManager::instance(), SIGNAL(scanFinished()),                                                d->ui->statusBar, SLOT(clearMessage()));
 
-    connect( d->ui->playlist,            SIGNAL( doubleClicked(QModelIndex) ),                                      d->playlistModel, SLOT( playIndex(QModelIndex) ) );
-    connect( d->ui->playlist,            SIGNAL( doubleClicked(QModelIndex) ),                                      d->player,        SLOT( play() ) );
+    connect(d->ui->playlist,            SIGNAL(doubleClicked(QModelIndex)),                                    d->playlistModel, SLOT(playIndex(QModelIndex)));
+    connect(d->ui->playlist,            SIGNAL(doubleClicked(QModelIndex)),                                    d->player,        SLOT(play()));
 
-    connect( d->player,                  SIGNAL( positionChanged(qint64) ),                                         this,             SLOT( updateTextPosition(qint64) ) );
+    connect(d->player,                  SIGNAL(positionChanged(qint64)),                                       this,             SLOT(updateTextPosition(qint64)));
 
     Settings settings(this);
-    while ( !settings.hasPath() ) {
+
+    while (!settings.hasPath()) {
         settings.show();
         settings.requestToAddPath();
     }
@@ -81,9 +82,9 @@ MainWindow::MainWindow(QWidget *parent)
     QAction *prev      = new QAction(tr("Previous"), dock);
     QAction *playpause = new QAction(tr("Play/Pause"), dock);
 
-    connect( next,      SIGNAL( triggered() ), d->playlist,           SLOT( next() ) );
-    connect( prev,      SIGNAL( triggered() ), d->playlist,           SLOT( previous() ) );
-    connect( playpause, SIGNAL( triggered() ), d->ui->playercontrols, SLOT( switchPlayPause() ) );
+    connect(next,      SIGNAL(triggered()), d->playlist,           SLOT(next()));
+    connect(prev,      SIGNAL(triggered()), d->playlist,           SLOT(previous()));
+    connect(playpause, SIGNAL(triggered()), d->ui->playercontrols, SLOT(switchPlayPause()));
 
     dock->addAction(prev);
     dock->addAction(playpause);
@@ -109,11 +110,11 @@ void MainWindow::about()
 
     about->setModal(true);
     about->show();
-    about->setGeometry( QRect( about->pos(), about->sizeHint() ) );
-    about->setMinimumSize( about->size() );
-    about->setMaximumSize( about->size() );
+    about->setGeometry(QRect(about->pos(), about->sizeHint()));
+    about->setMinimumSize(about->size());
+    about->setMaximumSize(about->size());
 
-    connect( about, SIGNAL( finished(int) ), about, SLOT( deleteLater() ) );
+    connect(about, SIGNAL(finished(int)), about, SLOT(deleteLater()));
 }
 
 void MainWindow::statusForProcessingFile(QString file, unsigned long long count, unsigned long long total)
@@ -151,29 +152,30 @@ QString millisecondsToReadableTime(qint64 value)
     value /= 1000; // go to seconds
 
     int h, m;
+
     h = m = 0;
 
-    while ( value >= 3600 ) {
+    while (value >= 3600) {
         value -= 3600;
         h++;
     }
 
-    while ( value >= 60 ) {
+    while (value >= 60) {
         value -= 60;
         m++;
     }
 
     QString hours, minutes, seconds;
 
-    if ( h < 10 ) {
+    if (h < 10) {
         hours = "0";
     }
 
-    if ( m < 10 ) {
+    if (m < 10) {
         minutes = "0";
     }
 
-    if ( value < 10 ) {
+    if (value < 10) {
         seconds = "0";
     }
 
@@ -183,7 +185,7 @@ QString millisecondsToReadableTime(qint64 value)
 
     QString time;
 
-    if ( h == 0 ) {
+    if (h == 0) {
         hours = "";
     } else {
         hours += ":";

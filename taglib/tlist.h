@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -35,8 +34,7 @@ namespace TagLib
     // ! A generic, implicitly shared list.
 
     /*!
-     * This is basic generic list that's somewhere between a std::list and a
-     * QValueList.  This class is implicitly shared.  For example:
+     * This is basic generic list that's somewhere between a std::list and a QValueList.  This class is implicitly shared.  For example:
      *
      * \code
      *
@@ -44,10 +42,7 @@ namespace TagLib
      *
      * \endcode
      *
-     * The above example is very cheap.  This also makes lists suitable for the
-     * return types of functions.  The above example will just copy a pointer rather
-     * than copying the data in the list.  When your \e shared list's data changes,
-     * only \e then will the data be copied.
+     * The above example is very cheap.  This also makes lists suitable for the return types of functions.  The above example will just copy a pointer rather than copying the data in the list.  When your \e shared list's data changes, only \e then will the data be copied.
      */
 
     template<class T>
@@ -65,39 +60,32 @@ namespace TagLib
         List();
 
         /*!
-         * Make a shallow, implicitly shared, copy of \a l.  Because this is
-         * implicitly shared, this method is lightweight and suitable for
-         * pass-by-value usage.
+         * Make a shallow, implicitly shared, copy of \a l.  Because this is implicitly shared, this method is lightweight and suitable for pass-by-value usage.
          */
         List(const List<T> &l);
 
         /*!
-         * Destroys this List instance.  If auto deletion is enabled and this list
-         * contains a pointer type all of the memebers are also deleted.
+         * Destroys this List instance.  If auto deletion is enabled and this list contains a pointer type all of the memebers are also deleted.
          */
         virtual ~List();
 
         /*!
-         * Returns an STL style iterator to the beginning of the list.  See
-         * std::list::const_iterator for the semantics.
+         * Returns an STL style iterator to the beginning of the list.  See std::list::const_iterator for the semantics.
          */
         Iterator begin();
 
         /*!
-         * Returns an STL style constant iterator to the beginning of the list.  See
-         * std::list::iterator for the semantics.
+         * Returns an STL style constant iterator to the beginning of the list.  See std::list::iterator for the semantics.
          */
         ConstIterator begin() const;
 
         /*!
-         * Returns an STL style iterator to the end of the list.  See
-         * std::list::iterator for the semantics.
+         * Returns an STL style iterator to the end of the list.  See std::list::iterator for the semantics.
          */
         Iterator end();
 
         /*!
-         * Returns an STL style constant iterator to the end of the list.  See
-         * std::list::const_iterator for the semantics.
+         * Returns an STL style constant iterator to the end of the list.  See std::list::const_iterator for the semantics.
          */
         ConstIterator end() const;
 
@@ -107,39 +95,32 @@ namespace TagLib
         Iterator insert(Iterator it, const T &value);
 
         /*!
-         * Inserts the \a value into the list.  This assumes that the list is
-         * currently sorted.  If \a unique is true then the value will not
-         * be inserted if it is already in the list.
+         * Inserts the \a value into the list.  This assumes that the list is currently sorted.  If \a unique is true then the value will not be inserted if it is already in the list.
          */
         List<T> &sortedInsert(const T &value, bool unique = false);
 
         /*!
-         * Appends \a item to the end of the list and returns a reference to the
-         * list.
+         * Appends \a item to the end of the list and returns a reference to the list.
          */
         List<T> &append(const T &item);
 
         /*!
-         * Appends all of the values in \a l to the end of the list and returns a
-         * reference to the list.
+         * Appends all of the values in \a l to the end of the list and returns a reference to the list.
          */
         List<T> &append(const List<T> &l);
 
         /*!
-         * Prepends \a item to the beginning list and returns a reference to the
-         * list.
+         * Prepends \a item to the beginning list and returns a reference to the list.
          */
         List<T> &prepend(const T &item);
 
         /*!
-         * Prepends all of the items in \a l to the beginning list and returns a
-         * reference to the list.
+         * Prepends all of the items in \a l to the beginning list and returns a reference to the list.
          */
         List<T> &prepend(const List<T> &l);
 
         /*!
-         * Clears the list.  If auto deletion is enabled and this list contains a
-         * pointer type the members are also deleted.
+         * Clears the list.  If auto deletion is enabled and this list contains a pointer type the members are also deleted.
          *
          * \see setAutoDelete()
          */
@@ -192,9 +173,7 @@ namespace TagLib
         T &back();
 
         /*!
-         * Auto delete the members of the list when the last reference to the list
-         * passes out of scope.  This will have no effect on lists which do not
-         * contain a pointer type.
+         * Auto delete the members of the list when the last reference to the list passes out of scope.  This will have no effect on lists which do not contain a pointer type.
          *
          * \note This relies on partial template instantiation -- most modern C++
          * compilers should now support this.
@@ -206,41 +185,34 @@ namespace TagLib
          *
          * \warning This method is slow.  Use iterators to loop through the list.
          */
-        T &operator[](uint i);
+        T &operator [](uint i);
 
         /*!
          * Returns a const reference to item \a i in the list.
          *
          * \warning This method is slow.  Use iterators to loop through the list.
          */
-        const T &operator[](uint i) const;
+        const T &operator [](uint i) const;
 
         /*!
-         * Make a shallow, implicitly shared, copy of \a l.  Because this is
-         * implicitly shared, this method is lightweight and suitable for
-         * pass-by-value usage.
+         * Make a shallow, implicitly shared, copy of \a l.  Because this is implicitly shared, this method is lightweight and suitable for pass-by-value usage.
          */
-        List<T> &operator=(const List<T> &l);
+        List<T> &operator =(const List<T> &l);
 
         /*!
-         * Compares this list with \a l and returns true if all of the elements are
-         * the same.
+         * Compares this list with \a l and returns true if all of the elements are the same.
          */
-        bool operator==(const List<T> &l) const;
+        bool operator ==(const List<T> &l) const;
 
         /*!
          * Compares this list with \a l and returns true if the lists differ.
          */
-        bool operator!=(const List<T> &l) const;
-
+        bool operator !=(const List<T> &l) const;
     protected:
         /*
-         * If this List is being shared via implicit sharing, do a deep copy of the
-         * data and separate from the shared members.  This should be called by all
-         * non-const subclass members.
+         * If this List is being shared via implicit sharing, do a deep copy of the data and separate from the shared members.  This should be called by all non-const subclass members.
          */
         void detach();
-
     private:
 #ifndef DO_NOT_DOCUMENT
         template<class TP>

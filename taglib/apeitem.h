@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2004 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
+/***************************************************************************
+*    copyright            : (C) 2004 by Allan Sandfeld Jensen email                : kde@carewolf.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -71,8 +70,7 @@ namespace TagLib
             Item(const String &key, const StringList &values);
 
             /*!
-             * Constructs an item with \a key and \a value.
-             * If \a binary is true a Binary item will be created, otherwise \a value will be interpreted as text
+             * Constructs an item with \a key and \a value. If \a binary is true a Binary item will be created, otherwise \a value will be interpreted as text
              */
             Item(const String &key, const ByteVector &value, bool binary);
 
@@ -89,7 +87,7 @@ namespace TagLib
             /*!
              * Copies the contents of \a item into this item.
              */
-            Item &operator=(const Item &item);
+            Item &operator =(const Item &item);
 
             /*!
              * Returns the key.
@@ -97,14 +95,12 @@ namespace TagLib
             String key() const;
 
             /*!
-             * Returns the binary value.
-             * If the item type is not \a Binary, always returns an empty ByteVector.
+             * Returns the binary value. If the item type is not \a Binary, always returns an empty ByteVector.
              */
             ByteVector binaryData() const;
 
             /*!
-             * Set the binary value to \a value
-             * The item's type will also be set to \a Binary
+             * Set the binary value to \a value The item's type will also be set to \a Binary
              */
             void setBinaryData(const ByteVector &value);
 
@@ -126,8 +122,7 @@ namespace TagLib
             void setValue(const String &value);
 
             /*!
-             * Sets the text value of the item to the list of values in \a value and clears
-             * any previous contents.
+             * Sets the text value of the item to the list of values in \a value and clears any previous contents.
              *
              * \see toStringList()
              */
@@ -153,9 +148,7 @@ namespace TagLib
             int size() const;
 
             /*!
-             * Returns the value as a single string.  In case of multiple strings,
-             * the first is returned.  If the data type is not \a Text, always returns
-             * an empty String.
+             * Returns the value as a single string.  In case of multiple strings, the first is returned.  If the data type is not \a Text, always returns an empty String.
              */
             String toString() const;
 
@@ -165,8 +158,7 @@ namespace TagLib
 #endif
 
             /*!
-             * Returns the list of text values.  If the data type is not \a Text, always
-             * returns an empty StringList.
+             * Returns the list of text values.  If the data type is not \a Text, always returns an empty StringList.
              */
             StringList values() const;
 
@@ -206,7 +198,6 @@ namespace TagLib
              * Returns if the item has any real content.
              */
             bool isEmpty() const;
-
         private:
             class ItemPrivate;
             ItemPrivate *d;

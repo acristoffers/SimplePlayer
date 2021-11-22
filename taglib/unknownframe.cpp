@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -80,5 +79,5 @@ ByteVector UnknownFrame::renderFields() const
 UnknownFrame::UnknownFrame(const ByteVector &data, Header *h) : Frame(h)
 {
     d = new UnknownFramePrivate;
-    parseFields( fieldData(data) );
+    parseFields(fieldData(data));
 }

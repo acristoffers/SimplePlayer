@@ -1,7 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2004 by Allan Sandfeld Jensen
-*                           (C) 2002 - 2008 by Scott Wheeler (id3v2header.cpp)
-*    email                : kde@carewolf.org
+/***************************************************************************
+*    copyright            : (C) 2004 by Allan Sandfeld Jensen (C) 2002 - 2008 by Scott Wheeler (id3v2header.cpp) email                : kde@carewolf.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -39,11 +37,11 @@ class APE::Footer::FooterPrivate
 {
 public:
     FooterPrivate() : version(0),
-                      footerPresent(true),
-                      headerPresent(false),
-                      isHeader(false),
-                      itemCount(0),
-                      tagSize(0)
+        footerPresent(true),
+        headerPresent(false),
+        isHeader(false),
+        itemCount(0),
+        tagSize(0)
     {
     }
 
@@ -140,7 +138,7 @@ TagLib::uint APE::Footer::tagSize() const
 
 TagLib::uint APE::Footer::completeTagSize() const
 {
-    if ( d->headerPresent ) {
+    if (d->headerPresent) {
         return d->tagSize + d->size;
     } else {
         return d->tagSize;
@@ -164,7 +162,7 @@ ByteVector APE::Footer::renderFooter() const
 
 ByteVector APE::Footer::renderHeader() const
 {
-    if ( !d->headerPresent ) {
+    if (!d->headerPresent) {
         return ByteVector();
     }
 
@@ -177,7 +175,7 @@ ByteVector APE::Footer::renderHeader() const
 
 void APE::Footer::parse(const ByteVector &data)
 {
-    if ( data.size() < size() ) {
+    if (data.size() < size()) {
         return;
     }
 
@@ -197,7 +195,7 @@ void APE::Footer::parse(const ByteVector &data)
 
     // Read the flags
 
-    std::bitset<32> flags( TAGLIB_CONSTRUCT_BITSET( data.toUInt(20, false) ) );
+    std::bitset<32> flags(TAGLIB_CONSTRUCT_BITSET(data.toUInt(20, false)));
 
     d->headerPresent = flags[31];
     d->footerPresent = !flags[30];
@@ -210,20 +208,20 @@ ByteVector APE::Footer::render(bool isHeader) const
 
     // add the file identifier -- "APETAGEX"
 
-    v.append( fileIdentifier() );
+    v.append(fileIdentifier());
 
     // add the version number -- we always render a 2.000 tag regardless of what
     // the tag originally was.
 
-    v.append( ByteVector::fromUInt(2000, false) );
+    v.append(ByteVector::fromUInt(2000, false));
 
     // add the tag size
 
-    v.append( ByteVector::fromUInt(d->tagSize, false) );
+    v.append(ByteVector::fromUInt(d->tagSize, false));
 
     // add the item count
 
-    v.append( ByteVector::fromUInt(d->itemCount, false) );
+    v.append(ByteVector::fromUInt(d->itemCount, false));
 
     // render and add the flags
 
@@ -233,11 +231,11 @@ ByteVector APE::Footer::render(bool isHeader) const
     flags[30] = false; // footer is always present
     flags[29] = isHeader;
 
-    v.append( ByteVector::fromUInt(flags.to_ulong(), false) );
+    v.append(ByteVector::fromUInt(flags.to_ulong(), false));
 
     // add the reserved 64bit
 
-    v.append( ByteVector::fromLongLong(0) );
+    v.append(ByteVector::fromLongLong(0));
 
     return v;
 }

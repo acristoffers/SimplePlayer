@@ -1,10 +1,8 @@
-﻿/***************************************************************************
+/***************************************************************************
 *    copyright            : (C) 2006 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 *
-*    copyright            : (C) 2004 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
-*                           (original MPC implementation)
+*    copyright            : (C) 2004 by Allan Sandfeld Jensen email                : kde@carewolf.org (original MPC implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -43,16 +41,14 @@ namespace TagLib
         // ! An implementation of audio property reading for TrueAudio
 
         /*!
-         * This reads the data from an TrueAudio stream found in the AudioProperties
-         * API.
+         * This reads the data from an TrueAudio stream found in the AudioProperties API.
          */
 
         class TAGLIB_EXPORT Properties : public AudioProperties
         {
         public:
             /*!
-             * Create an instance of TrueAudio::Properties with the data read from the
-             * ByteVector \a data.
+             * Create an instance of TrueAudio::Properties with the data read from the ByteVector \a data.
              */
             Properties(const ByteVector &data, long streamLength, ReadStyle style = Average);
 
@@ -82,10 +78,9 @@ namespace TagLib
              * Returns the major version number.
              */
             int ttaVersion() const;
-
         private:
             Properties(const Properties &);
-            Properties &operator=(const Properties &);
+            Properties &operator =(const Properties &);
 
             void read();
 

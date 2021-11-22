@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -59,12 +58,12 @@ public:
     }
 
     String::Type defaultEncoding;
-    bool         useDefaultEncoding;
+    bool useDefaultEncoding;
 
     template<class T>
     void setTextEncoding(T *frame)
     {
-        if ( useDefaultEncoding ) {
+        if (useDefaultEncoding) {
             frame->setTextEncoding(defaultEncoding);
         }
     }
@@ -76,17 +75,17 @@ FrameFactory FrameFactory::factory;
 // public members
 ////////////////////////////////////////////////////////////////////////////////
 
-FrameFactory *FrameFactory::instance()
+FrameFactory*FrameFactory::instance()
 {
     return &factory;
 }
 
-Frame *FrameFactory::createFrame(const ByteVector &data, bool synchSafeInts) const
+Frame*FrameFactory::createFrame(const ByteVector &data, bool synchSafeInts) const
 {
-    return createFrame( data, uint(synchSafeInts ? 4 : 3) );
+    return createFrame(data, uint(synchSafeInts ? 4 : 3));
 }
 
-Frame *FrameFactory::createFrame(const ByteVector &data, uint version) const
+Frame*FrameFactory::createFrame(const ByteVector &data, uint version) const
 {
     Header tagHeader;
 
@@ -94,7 +93,7 @@ Frame *FrameFactory::createFrame(const ByteVector &data, uint version) const
     return createFrame(data, &tagHeader);
 }
 
-Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) const
+Frame*FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) const
 {
     ByteVector    data    = origData;
     uint          version = tagHeader->majorVersion();
@@ -104,15 +103,15 @@ Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) 
     // A quick sanity check -- make sure that the frameID is 4 uppercase Latin1
     // characters.  Also make sure that there is data in the frame.
 
-    if ( ( frameID.size() != ( (version < 3) ? 3 : 4 ) ) ||
-         ( header->frameSize() <= uint(header->dataLengthIndicator() ? 4 : 0) ) ||
-         ( header->frameSize() > data.size() ) ) {
+    if ((frameID.size() != ((version < 3) ? 3 : 4)) ||
+        (header->frameSize() <= uint(header->dataLengthIndicator() ? 4 : 0)) ||
+        (header->frameSize() > data.size())) {
         delete header;
         return 0;
     }
 
 #ifndef NO_ITUNES_HACKS
-    if ( (version == 3) && (frameID.size() == 4) && (frameID[3] == '\0') ) {
+    if ((version == 3) && (frameID.size() == 4) && (frameID[3] == '\0')) {
         // iTunes v2.3 tags store v2.2 frames - convert now
         frameID = frameID.mid(0, 3);
         header->setFrameID(frameID);
@@ -122,36 +121,36 @@ Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) 
     }
 #endif
 
-    for ( ByteVector::ConstIterator it = frameID.begin(); it != frameID.end(); it++ ) {
-        if ( ( (*it < 'A') || (*it > 'Z') ) && ( (*it < '0') || (*it > '9') ) ) {
+    for (ByteVector::ConstIterator it = frameID.begin(); it != frameID.end(); it++) {
+        if (((*it < 'A') || (*it > 'Z')) && ((*it < '0') || (*it > '9'))) {
             delete header;
             return 0;
         }
     }
 
-    if ( (version > 3) && ( tagHeader->unsynchronisation() || header->unsynchronisation() ) ) {
+    if ((version > 3) && (tagHeader->unsynchronisation() || header->unsynchronisation())) {
         // Data lengths are not part of the encoded data, but since they are synch-safe
         // integers they will be never actually encoded.
-        ByteVector frameData = data.mid( Frame::Header::size(version), header->frameSize() );
+        ByteVector frameData = data.mid(Frame::Header::size(version), header->frameSize());
         frameData = SynchData::decode(frameData);
-        data      = data.mid( 0, Frame::Header::size(version) ) + frameData;
+        data      = data.mid(0, Frame::Header::size(version)) + frameData;
     }
 
     // TagLib doesn't mess with encrypted frames, so just treat them
     // as unknown frames.
 
-#if !defined (HAVE_ZLIB) || HAVE_ZLIB == 0
-    if ( header->compression() ) {
+#if !defined(HAVE_ZLIB) || HAVE_ZLIB == 0
+    if (header->compression()) {
         debug("Compressed frames are currently not supported.");
         return new UnknownFrame(data, header);
     }
 #endif
-    if ( header->encryption() ) {
+    if (header->encryption()) {
         debug("Encrypted frames are currently not supported.");
         return new UnknownFrame(data, header);
     }
 
-    if ( !updateFrame(header) ) {
+    if (!updateFrame(header)) {
         header->setTagAlterPreservation(true);
         return new UnknownFrame(data, header);
     }
@@ -167,14 +166,14 @@ Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) 
 
     // Text Identification (frames 4.2)
 
-    if ( frameID.startsWith("T") ) {
+    if (frameID.startsWith("T")) {
         TextIdentificationFrame *f = frameID != "TXXX"
                                      ? new TextIdentificationFrame(data, header)
                                      : new UserTextIdentificationFrame(data, header);
 
         d->setTextEncoding(f);
 
-        if ( frameID == "TCON" ) {
+        if (frameID == "TCON") {
             updateGenre(f);
         }
 
@@ -183,7 +182,7 @@ Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) 
 
     // Comments (frames 4.10)
 
-    if ( frameID == "COMM" ) {
+    if (frameID == "COMM") {
         CommentsFrame *f = new CommentsFrame(data, header);
         d->setTextEncoding(f);
         return f;
@@ -191,7 +190,7 @@ Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) 
 
     // Attached Picture (frames 4.14)
 
-    if ( frameID == "APIC" ) {
+    if (frameID == "APIC") {
         AttachedPictureFrame *f = new AttachedPictureFrame(data, header);
         d->setTextEncoding(f);
         return f;
@@ -199,7 +198,7 @@ Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) 
 
     // ID3v2.2 Attached Picture
 
-    if ( frameID == "PIC" ) {
+    if (frameID == "PIC") {
         AttachedPictureFrame *f = new AttachedPictureFrameV22(data, header);
         d->setTextEncoding(f);
         return f;
@@ -207,19 +206,19 @@ Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) 
 
     // Relative Volume Adjustment (frames 4.11)
 
-    if ( frameID == "RVA2" ) {
+    if (frameID == "RVA2") {
         return new RelativeVolumeFrame(data, header);
     }
 
     // Unique File Identifier (frames 4.1)
 
-    if ( frameID == "UFID" ) {
+    if (frameID == "UFID") {
         return new UniqueFileIdentifierFrame(data, header);
     }
 
     // General Encapsulated Object (frames 4.15)
 
-    if ( frameID == "GEOB" ) {
+    if (frameID == "GEOB") {
         GeneralEncapsulatedObjectFrame *f = new GeneralEncapsulatedObjectFrame(data, header);
         d->setTextEncoding(f);
         return f;
@@ -227,8 +226,8 @@ Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) 
 
     // URL link (frames 4.3)
 
-    if ( frameID.startsWith("W") ) {
-        if ( frameID != "WXXX" ) {
+    if (frameID.startsWith("W")) {
+        if (frameID != "WXXX") {
             return new UrlLinkFrame(data, header);
         } else {
             UserUrlLinkFrame *f = new UserUrlLinkFrame(data, header);
@@ -239,9 +238,9 @@ Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) 
 
     // Unsynchronized lyric/text transcription (frames 4.8)
 
-    if ( frameID == "USLT" ) {
+    if (frameID == "USLT") {
         UnsynchronizedLyricsFrame *f = new UnsynchronizedLyricsFrame(data, header);
-        if ( d->useDefaultEncoding ) {
+        if (d->useDefaultEncoding) {
             f->setTextEncoding(d->defaultEncoding);
         }
         return f;
@@ -249,19 +248,19 @@ Frame *FrameFactory::createFrame(const ByteVector &origData, Header *tagHeader) 
 
     // Popularimeter (frames 4.17)
 
-    if ( frameID == "POPM" ) {
+    if (frameID == "POPM") {
         return new PopularimeterFrame(data, header);
     }
 
     // Private (frames 4.27)
 
-    if ( frameID == "PRIV" ) {
+    if (frameID == "PRIV") {
         return new PrivateFrame(data, header);
     }
 
     // Ownership (frames 4.22)
 
-    if ( frameID == "OWNE" ) {
+    if (frameID == "OWNE") {
         OwnershipFrame *f = new OwnershipFrame(data, header);
         d->setTextEncoding(f);
         return f;
@@ -299,15 +298,15 @@ bool FrameFactory::updateFrame(Frame::Header *header) const
 {
     TagLib::ByteVector frameID = header->frameID();
 
-    switch ( header->version() ) {
+    switch (header->version()) {
         case 2: // ID3v2.2
-            if ( (frameID == "CRM") ||
-                 (frameID == "EQU") ||
-                 (frameID == "LNK") ||
-                 (frameID == "RVA") ||
-                 (frameID == "TIM") ||
-                 (frameID == "TSI") ||
-                 (frameID == "TDA") ) {
+            if ((frameID == "CRM") ||
+                (frameID == "EQU") ||
+                (frameID == "LNK") ||
+                (frameID == "RVA") ||
+                (frameID == "TIM") ||
+                (frameID == "TSI") ||
+                (frameID == "TDA")) {
                 debug("ID3v2.4 no longer supports the frame type " + String(frameID) +
                       ".  It will be discarded from the tag.");
                 return false;
@@ -381,12 +380,12 @@ bool FrameFactory::updateFrame(Frame::Header *header) const
             break;
 
         case 3: // ID3v2.3
-            if ( (frameID == "EQUA") ||
-                 (frameID == "RVAD") ||
-                 (frameID == "TIME") ||
-                 (frameID == "TRDA") ||
-                 (frameID == "TSIZ") ||
-                 (frameID == "TDAT") ) {
+            if ((frameID == "EQUA") ||
+                (frameID == "RVAD") ||
+                (frameID == "TIME") ||
+                (frameID == "TRDA") ||
+                (frameID == "TSIZ") ||
+                (frameID == "TDAT")) {
                 debug("ID3v2.4 no longer supports the frame type " + String(frameID) +
                       ".  It will be discarded from the tag.");
                 return false;
@@ -416,7 +415,7 @@ bool FrameFactory::updateFrame(Frame::Header *header) const
 
 void FrameFactory::convertFrame(const char *from, const char *to, Frame::Header *header) const
 {
-    if ( header->frameID() != from ) {
+    if (header->frameID() != from) {
         return;
     }
 
@@ -431,19 +430,19 @@ void FrameFactory::updateGenre(TextIdentificationFrame *frame) const
     StringList fields = frame->fieldList();
     StringList newfields;
 
-    for ( StringList::Iterator it = fields.begin(); it != fields.end(); ++it ) {
+    for (StringList::Iterator it = fields.begin(); it != fields.end(); ++it) {
         String s   = *it;
         int    end = s.find(")");
 
-        if ( s.startsWith("(") && (end > 0) ) {
+        if (s.startsWith("(") && (end > 0)) {
             // "(12)Genre"
             String text = s.substr(end + 1);
             bool   ok;
             int    number = s.substr(1, end - 1).toInt(&ok);
-            if ( ok && (number >= 0) && (number <= 255) && !(ID3v1::genre(number) == text) ) {
-                newfields.append( s.substr(1, end - 1) );
+            if (ok && (number >= 0) && (number <= 255) && !(ID3v1::genre(number) == text)) {
+                newfields.append(s.substr(1, end - 1));
             }
-            if ( !text.isEmpty() ) {
+            if (!text.isEmpty()) {
                 newfields.append(text);
             }
         } else {
@@ -452,7 +451,7 @@ void FrameFactory::updateGenre(TextIdentificationFrame *frame) const
         }
     }
 
-    if ( newfields.isEmpty() ) {
+    if (newfields.isEmpty()) {
         fields.append(String::null);
     }
 

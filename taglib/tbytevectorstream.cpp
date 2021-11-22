@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2011 by Lukas Lalinsky
-*    email                : lalinsky@gmail.com
+/***************************************************************************
+*    copyright            : (C) 2011 by Lukas Lalinsky email                : lalinsky@gmail.com
 ***************************************************************************/
 
 /***************************************************************************
@@ -40,7 +39,7 @@ public:
     ByteVectorStreamPrivate(const ByteVector &data);
 
     ByteVector data;
-    long       position;
+    long position;
 };
 
 ByteVectorStream::ByteVectorStreamPrivate::ByteVectorStreamPrivate(const ByteVector &data) :
@@ -70,11 +69,12 @@ FileName ByteVectorStream::name() const
 
 ByteVector ByteVectorStream::readBlock(ulong length)
 {
-    if ( length == 0 ) {
+    if (length == 0) {
         return ByteVector::null;
     }
 
     ByteVector v = d->data.mid(d->position, length);
+
     d->position += v.size();
     return v;
 }
@@ -83,7 +83,7 @@ void ByteVectorStream::writeBlock(const ByteVector &data)
 {
     uint size = data.size();
 
-    if ( long (d->position + size) > length() ) {
+    if (long(d->position + size) > length()) {
         truncate(d->position + size);
     }
     memcpy(d->data.data() + d->position, data.data(), size);
@@ -94,9 +94,9 @@ void ByteVectorStream::insert(const ByteVector &data, ulong start, ulong replace
 {
     long sizeDiff = data.size() - replace;
 
-    if ( sizeDiff < 0 ) {
+    if (sizeDiff < 0) {
         removeBlock(start + data.size(), -sizeDiff);
-    } else if ( sizeDiff > 0 ) {
+    } else if (sizeDiff > 0) {
         truncate(length() + sizeDiff);
         ulong readPosition  = start + replace;
         ulong writePosition = start + data.size();
@@ -111,7 +111,7 @@ void ByteVectorStream::removeBlock(ulong start, ulong length)
     ulong readPosition  = start + length;
     ulong writePosition = start;
 
-    if ( readPosition < ulong( ByteVectorStream::length() ) ) {
+    if (readPosition < ulong(ByteVectorStream::length())) {
         ulong bytesToMove = ByteVectorStream::length() - readPosition;
         memmove(d->data.data() + writePosition, d->data.data() + readPosition, bytesToMove);
         writePosition += bytesToMove;
@@ -132,7 +132,7 @@ bool ByteVectorStream::isOpen() const
 
 void ByteVectorStream::seek(long offset, Position p)
 {
-    switch ( p ) {
+    switch (p) {
         case Beginning:
             d->position = offset;
             break;
@@ -166,7 +166,7 @@ void ByteVectorStream::truncate(long length)
     d->data.resize(length);
 }
 
-ByteVector *ByteVectorStream::data()
+ByteVector*ByteVectorStream::data()
 {
     return &d->data;
 }

@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2013 by Tsuda Kageyu
-*    email                : tsuda.kageyu@gmail.com
+/***************************************************************************
+*    copyright            : (C) 2013 by Tsuda Kageyu email                : tsuda.kageyu@gmail.com
 ***************************************************************************/
 
 /***************************************************************************
@@ -32,24 +31,23 @@
 #ifdef __APPLE__
  #include <libkern/OSAtomic.h>
  #define TAGLIB_ATOMIC_MAC
-#elif defined (WIN32) || defined (_WIN32) || defined (__WIN32__) || defined (__CYGWIN__)
+#elif defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__CYGWIN__)
  #define NOMINMAX
  #include <windows.h>
  #define TAGLIB_ATOMIC_WIN
-#elif defined (__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 401) \
-    && (defined (__i386__) || defined (__i486__) || defined (__i586__) || \
-    defined (__i686__) || defined (__x86_64) || defined (__ia64 ) ) \
-    && !defined (__INTEL_COMPILER)
+#elif defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ >= 401) \
+    && (defined(__i386__) || defined(__i486__) || defined(__i586__) || \
+    defined(__i686__) || defined(__x86_64) || defined(__ia64)) \
+    && !defined(__INTEL_COMPILER)
  #define TAGLIB_ATOMIC_GCC
-#elif defined (__ia64) && defined (__INTEL_COMPILER)
+#elif defined(__ia64) && defined(__INTEL_COMPILER)
  #include <ia64intrin.h>
  #define TAGLIB_ATOMIC_GCC
 #endif
 
 #ifndef DO_NOT_DOCUMENT // Tell Doxygen to skip this class.
 /*!
- * \internal
- * This is just used as a base class for shared classes in TagLib.
+ * \internal This is just used as a base class for shared classes in TagLib.
  *
  * \warning This <b>is not</b> part of the TagLib public API!
  */
@@ -64,7 +62,6 @@ namespace TagLib
         void ref();
         bool deref();
         int count() const;
-
     private:
         class RefCounterPrivate;
         RefCounterPrivate *d;
@@ -81,22 +78,21 @@ namespace TagLib
  #ifdef TAGLIB_ATOMIC_MAC
         void ref()
         {
-            OSAtomicIncrement32Barrier( const_cast<int32_t *> (&refCount) );
+            OSAtomicIncrement32Barrier(const_cast<int32_t*>(&refCount));
         }
 
         bool deref()
         {
-            return !OSAtomicDecrement32Barrier( const_cast<int32_t *> (&refCount) );
+            return !OSAtomicDecrement32Barrier(const_cast<int32_t*>(&refCount));
         }
 
         int32_t count()
         {
             return refCount;
         }
-
     private:
         volatile int32_t refCount;
- #elif defined (TAGLIB_ATOMIC_WIN)
+ #elif defined(TAGLIB_ATOMIC_WIN)
         void ref()
         {
             InterlockedIncrement(&refCount);
@@ -111,10 +107,9 @@ namespace TagLib
         {
             return refCount;
         }
-
     private:
         volatile long refCount;
- #elif defined (TAGLIB_ATOMIC_GCC)
+ #elif defined(TAGLIB_ATOMIC_GCC)
         void ref()
         {
             __sync_add_and_fetch(&refCount, 1);
@@ -129,7 +124,6 @@ namespace TagLib
         {
             return refCount;
         }
-
     private:
         volatile int refCount;
  #else
@@ -147,7 +141,6 @@ namespace TagLib
         {
             return refCount;
         }
-
     private:
         uint refCount;
  #endif

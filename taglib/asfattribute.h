@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2005-2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -72,13 +72,9 @@ namespace TagLib
             /*!
              * Constructs an attribute with \a key and a Picture \a value.
              *
-             * This attribute is compatible with the ID3 frame, APIC. The ID3 specification for the APIC frame stipulates that,
-             * while there may be any number of APIC frames associated with a file,
-             * only one may be of type 1 and only one may be of type 2.
+             * This attribute is compatible with the ID3 frame, APIC. The ID3 specification for the APIC frame stipulates that, while there may be any number of APIC frames associated with a file, only one may be of type 1 and only one may be of type 2.
              *
-             * The specification also states that the description of the picture can be no longer than 64 characters, but can be empty.
-             * WM/Picture attributes added with TagLib::ASF are not automatically validated to conform to ID3 specifications.
-             * You must add code in your application to perform validations if you want to maintain complete compatibility with ID3.
+             * The specification also states that the description of the picture can be no longer than 64 characters, but can be empty. WM/Picture attributes added with TagLib::ASF are not automatically validated to conform to ID3 specifications. You must add code in your application to perform validations if you want to maintain complete compatibility with ID3.
              */
             Attribute(const Picture &value);
 
@@ -110,7 +106,7 @@ namespace TagLib
             /*!
              * Copies the contents of \a other into this item.
              */
-            ASF::Attribute &operator=(const Attribute &other);
+            ASF::Attribute &operator =(const Attribute &other);
 
             /*!
              * Destroys the attribute.
@@ -184,7 +180,6 @@ namespace TagLib
 
             // ! Returns the size of the stored data
             int dataSize() const;
-
         private:
             friend class File;
 

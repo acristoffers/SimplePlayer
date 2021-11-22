@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -39,16 +38,14 @@ namespace TagLib
             // ! An implementation of audio property reading for AIFF
 
             /*!
-             * This reads the data from an AIFF stream found in the AudioProperties
-             * API.
+             * This reads the data from an AIFF stream found in the AudioProperties API.
              */
 
             class TAGLIB_EXPORT Properties : public AudioProperties
             {
             public:
                 /*!
-                 * Create an instance of AIFF::Properties with the data read from the
-                 * ByteVector \a data.
+                 * Create an instance of AIFF::Properties with the data read from the ByteVector \a data.
                  */
                 Properties(const ByteVector &data, ReadStyle style);
 
@@ -66,10 +63,9 @@ namespace TagLib
 
                 int sampleWidth() const;
                 uint sampleFrames() const;
-
             private:
                 Properties(const Properties &);
-                Properties &operator=(const Properties &);
+                Properties &operator =(const Properties &);
 
                 void read(const ByteVector &data);
 

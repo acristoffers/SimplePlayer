@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -38,12 +38,12 @@ public:
     {
     }
 
-    int   length;
-    int   bitrate;
-    int   sampleRate;
-    int   channels;
-    int   bitsPerSample;
-    bool  encrypted;
+    int length;
+    int bitrate;
+    int sampleRate;
+    int channels;
+    int bitsPerSample;
+    bool encrypted;
     Codec codec;
 };
 
@@ -53,8 +53,9 @@ MP4::Properties::Properties(File *file, MP4::Atoms *atoms, ReadStyle style)
     d = new PropertiesPrivate;
 
     MP4::Atom *moov = atoms->find("moov");
-    if ( !moov ) {
-            debug("MP4: Atom 'moov' not found");
+
+    if (!moov) {
+        debug("MP4: Atom 'moov' not found");
         return;
     }
 
@@ -62,44 +63,47 @@ MP4::Properties::Properties(File *file, MP4::Atoms *atoms, ReadStyle style)
     ByteVector data;
 
     MP4::AtomList trakList = moov->findall("trak");
-    for ( unsigned int i = 0; i < trakList.size(); i++ ) {
+
+    for (unsigned int i = 0; i < trakList.size(); i++) {
         trak = trakList[i];
         MP4::Atom *hdlr = trak->find("mdia", "hdlr");
-        if ( !hdlr ) {
+        if (!hdlr) {
             debug("MP4: Atom 'trak.mdia.hdlr' not found");
             return;
         }
         file->seek(hdlr->offset);
         data = file->readBlock(hdlr->length);
-        if ( data.mid(16, 4) == "soun" ) {
+        if (data.mid(16, 4) == "soun") {
             break;
         }
         trak = 0;
     }
-    if ( !trak ) {
-            debug("MP4: No audio tracks");
+    if (!trak) {
+        debug("MP4: No audio tracks");
         return;
     }
 
     MP4::Atom *mdhd = trak->find("mdia", "mdhd");
-    if ( !mdhd ) {
-            debug("MP4: Atom 'trak.mdia.mdhd' not found");
+
+    if (!mdhd) {
+        debug("MP4: Atom 'trak.mdia.mdhd' not found");
         return;
     }
 
     file->seek(mdhd->offset);
     data = file->readBlock(mdhd->length);
     uint version = data[8];
-    if ( version == 1 ) {
-        if ( data.size() < 36 + 8 ) {
+
+    if (version == 1) {
+        if (data.size() < 36 + 8) {
             debug("MP4: Atom 'trak.mdia.mdhd' is smaller than expected");
             return;
         }
         const long long unit   = data.toLongLong(28U);
         const long long length = data.toLongLong(36U);
-        d->length = unit ? int (length / unit) : 0;
+        d->length = unit ? int(length / unit) : 0;
     } else {
-        if ( data.size() < 24 + 4 ) {
+        if (data.size() < 24 + 4) {
             debug("MP4: Atom 'trak.mdia.mdhd' is smaller than expected");
             return;
         }
@@ -109,34 +113,35 @@ MP4::Properties::Properties(File *file, MP4::Atoms *atoms, ReadStyle style)
     }
 
     MP4::Atom *atom = trak->find("mdia", "minf", "stbl", "stsd");
-    if ( !atom ) {
+
+    if (!atom) {
         return;
     }
 
     file->seek(atom->offset);
     data = file->readBlock(atom->length);
-    if ( data.mid(20, 4) == "mp4a" ) {
+    if (data.mid(20, 4) == "mp4a") {
         d->codec         = AAC;
         d->channels      = data.toShort(40U);
         d->bitsPerSample = data.toShort(42U);
         d->sampleRate    = data.toUInt(46U);
-        if ( (data.mid(56, 4) == "esds") && (data[64] == 0x03) ) {
+        if ((data.mid(56, 4) == "esds") && (data[64] == 0x03)) {
             uint pos = 65;
-            if ( data.mid(pos, 3) == "\x80\x80\x80" ) {
+            if (data.mid(pos, 3) == "\x80\x80\x80") {
                 pos += 3;
             }
             pos += 4;
-            if ( data[pos] == 0x04 ) {
+            if (data[pos] == 0x04) {
                 pos += 1;
-                if ( data.mid(pos, 3) == "\x80\x80\x80" ) {
+                if (data.mid(pos, 3) == "\x80\x80\x80") {
                     pos += 3;
                 }
                 pos       += 10;
                 d->bitrate = (data.toUInt(pos) + 500) / 1000;
             }
         }
-    } else if ( data.mid(20, 4) == "alac" ) {
-        if ( (atom->length == 88) && (data.mid(56, 4) == "alac") ) {
+    } else if (data.mid(20, 4) == "alac") {
+        if ((atom->length == 88) && (data.mid(56, 4) == "alac")) {
             d->codec         = ALAC;
             d->bitsPerSample = data.at(69);
             d->channels      = data.at(73);
@@ -146,7 +151,8 @@ MP4::Properties::Properties(File *file, MP4::Atoms *atoms, ReadStyle style)
     }
 
     MP4::Atom *drms = atom->find("drms");
-    if ( drms ) {
+
+    if (drms) {
         d->encrypted = true;
     }
 }

@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -44,7 +44,7 @@ namespace TagLib
 
             Item();
             Item(const Item &item);
-            Item &operator=(const Item &item);
+            Item &operator =(const Item &item);
 
             ~Item();
 
@@ -72,7 +72,6 @@ namespace TagLib
             CoverArtList toCoverArtList() const;
 
             bool isValid() const;
-
         private:
             class ItemPrivate;
             ItemPrivate *d;

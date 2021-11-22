@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -50,7 +49,7 @@ struct ChannelData
 class RelativeVolumeFrame::RelativeVolumeFramePrivate
 {
 public:
-    String                        identification;
+    String identification;
     Map<ChannelType, ChannelData> channels;
 };
 
@@ -84,8 +83,9 @@ List<RelativeVolumeFrame::ChannelType> RelativeVolumeFrame::channels() const
     List<ChannelType> l;
 
     Map<ChannelType, ChannelData>::ConstIterator it = d->channels.begin();
-    for ( ; it != d->channels.end(); ++it ) {
-        l.append( (*it).first );
+
+    for ( ; it != d->channels.end(); ++it) {
+        l.append((*it).first);
     }
 
     return l;
@@ -126,7 +126,7 @@ void RelativeVolumeFrame::setVolumeAdjustmentIndex(short index)
 
 float RelativeVolumeFrame::volumeAdjustment(ChannelType type) const
 {
-    return d->channels.contains(type) ? float (d->channels[type].volumeAdjustment) / float (512) : 0;
+    return d->channels.contains(type) ? float(d->channels[type].volumeAdjustment) / float(512) : 0;
 }
 
 float RelativeVolumeFrame::volumeAdjustment() const
@@ -136,7 +136,7 @@ float RelativeVolumeFrame::volumeAdjustment() const
 
 void RelativeVolumeFrame::setVolumeAdjustment(float adjustment, ChannelType type)
 {
-    d->channels[type].volumeAdjustment = short ( adjustment * float (512) );
+    d->channels[type].volumeAdjustment = short(adjustment * float(512));
 }
 
 void RelativeVolumeFrame::setVolumeAdjustment(float adjustment)
@@ -186,13 +186,13 @@ void RelativeVolumeFrame::parseFields(const ByteVector &data)
 
     // Each channel is at least 4 bytes.
 
-    while ( pos <= (int) data.size() - 4 ) {
+    while (pos <= (int) data.size() - 4) {
         ChannelType type = ChannelType(data[pos]);
         pos += 1;
 
         ChannelData &channel = d->channels[type];
 
-        channel.volumeAdjustment = data.toShort( static_cast<uint> (pos) );
+        channel.volumeAdjustment = data.toShort(static_cast<uint>(pos));
         pos                     += 2;
 
         channel.peakVolume.bitsRepresentingPeak = data[pos];
@@ -208,18 +208,18 @@ ByteVector RelativeVolumeFrame::renderFields() const
 {
     ByteVector data;
 
-    data.append( d->identification.data(String::Latin1) );
-    data.append( textDelimiter(String::Latin1) );
+    data.append(d->identification.data(String::Latin1));
+    data.append(textDelimiter(String::Latin1));
 
     Map<ChannelType, ChannelData>::ConstIterator it = d->channels.begin();
 
-    for ( ; it != d->channels.end(); ++it ) {
+    for ( ; it != d->channels.end(); ++it) {
         ChannelType       type     = (*it).first;
         const ChannelData &channel = (*it).second;
 
-        data.append( char (type) );
-        data.append( ByteVector::fromShort(channel.volumeAdjustment) );
-        data.append( char (channel.peakVolume.bitsRepresentingPeak) );
+        data.append(char(type));
+        data.append(ByteVector::fromShort(channel.volumeAdjustment));
+        data.append(char(channel.peakVolume.bitsRepresentingPeak));
         data.append(channel.peakVolume.peakVolume);
     }
 
@@ -233,5 +233,5 @@ ByteVector RelativeVolumeFrame::renderFields() const
 RelativeVolumeFrame::RelativeVolumeFrame(const ByteVector &data, Header *h) : Frame(h)
 {
     d = new RelativeVolumeFramePrivate;
-    parseFields( fieldData(data) );
+    parseFields(fieldData(data));
 }

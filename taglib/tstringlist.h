@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -38,8 +37,7 @@ namespace TagLib
     // ! A list of strings
 
     /*!
-     * This is a spcialization of the List class with some members convention for
-     * string operations.
+     * This is a spcialization of the List class with some members convention for string operations.
      */
 
     class TAGLIB_EXPORT StringList : public List<String>
@@ -51,9 +49,7 @@ namespace TagLib
         StringList();
 
         /*!
-         * Make a shallow, implicitly shared, copy of \a l.  Because this is
-         * implicitly shared, this method is lightweight and suitable for
-         * pass-by-value usage.
+         * Make a shallow, implicitly shared, copy of \a l.  Because this is implicitly shared, this method is lightweight and suitable for pass-by-value usage.
          */
         StringList(const StringList &l);
 
@@ -65,8 +61,7 @@ namespace TagLib
         /*!
          * Makes a deep copy of the data in \a vl.
          *
-         * \note This should only be used with the 8-bit codecs Latin1 and UTF8, when
-         * used with other codecs it will simply print a warning and exit.
+         * \note This should only be used with the 8-bit codecs Latin1 and UTF8, when used with other codecs it will simply print a warning and exit.
          */
         StringList(const ByteVectorList &vl, String::Type t = String::Latin1);
 
@@ -81,23 +76,19 @@ namespace TagLib
         String toString(const String &separator = " ") const;
 
         /*!
-         * Appends \a s to the end of the list and returns a reference to the
-         * list.
+         * Appends \a s to the end of the list and returns a reference to the list.
          */
         StringList &append(const String &s);
 
         /*!
-         * Appends all of the values in \a l to the end of the list and returns a
-         * reference to the list.
+         * Appends all of the values in \a l to the end of the list and returns a reference to the list.
          */
         StringList &append(const StringList &l);
 
         /*!
-         * Splits the String \a s into several strings at \a pattern.  This will not include
-         * the pattern in the returned strings.
+         * Splits the String \a s into several strings at \a pattern.  This will not include the pattern in the returned strings.
          */
         static StringList split(const String &s, const String &pattern);
-
     private:
         class StringListPrivate;
         StringListPrivate *d;
@@ -105,8 +96,8 @@ namespace TagLib
 }
 
 /*!
- * \related TagLib::StringList
- * Send the StringList to an output stream.
+ * \related TagLib::StringList Send the StringList to an output stream.
  */
-std::ostream &operator<<(std::ostream &s, const TagLib::StringList &l);
+std::ostream &operator <<(std::ostream &s, const TagLib::StringList &l);
+
 #endif

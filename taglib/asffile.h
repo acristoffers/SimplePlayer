@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2005-2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -38,10 +38,7 @@ namespace TagLib
     namespace ASF
     {
         /*!
-         * This implements and provides an interface for ASF files to the
-         * TagLib::Tag and TagLib::AudioProperties interfaces by way of implementing
-         * the abstract TagLib::File API as well as providing some additional
-         * information specific to ASF files.
+         * This implements and provides an interface for ASF files to the TagLib::Tag and TagLib::AudioProperties interfaces by way of implementing the abstract TagLib::File API as well as providing some additional information specific to ASF files.
          */
         class TAGLIB_EXPORT File : public TagLib::File
         {
@@ -50,8 +47,7 @@ namespace TagLib
              * Constructs an ASF file from \a file.
              *
              * \note In the current implementation, both \a readProperties and
-             * \a propertiesStyle are ignored.  The audio properties are always
-             * read.
+             * \a propertiesStyle are ignored.  The audio properties are always read.
              */
             File(FileName file, bool readProperties = true, Properties::ReadStyle propertiesStyle = Properties::Average);
 
@@ -59,11 +55,9 @@ namespace TagLib
              * Constructs an ASF file from \a stream.
              *
              * \note In the current implementation, both \a readProperties and
-             * \a propertiesStyle are ignored.  The audio properties are always
-             * read.
+             * \a propertiesStyle are ignored.  The audio properties are always read.
              *
-             * \note TagLib will *not* take ownership of the stream, the caller is
-             * responsible for deleting it after the File object.
+             * \note TagLib will *not* take ownership of the stream, the caller is responsible for deleting it after the File object.
              */
             File(IOStream *stream, bool readProperties = true, Properties::ReadStyle propertiesStyle = Properties::Average);
 
@@ -75,12 +69,9 @@ namespace TagLib
             /*!
              * Returns a pointer to the ASF tag of the file.
              *
-             * ASF::Tag implements the tag interface, so this serves as the
-             * reimplementation of TagLib::File::tag().
+             * ASF::Tag implements the tag interface, so this serves as the reimplementation of TagLib::File::tag().
              *
-             * \note The Tag <b>is still</b> owned by the ASF::File and should not be
-             * deleted by the user.  It will be deleted when the file (object) is
-             * destroyed.
+             * \note The Tag <b>is still</b> owned by the ASF::File and should not be deleted by the user.  It will be deleted when the file (object) is destroyed.
              */
             virtual Tag *tag() const;
 
@@ -90,8 +81,7 @@ namespace TagLib
             PropertyMap properties() const;
 
             /*!
-             * Removes unsupported properties. Forwards to the actual Tag's
-             * removeUnsupportedProperties() function.
+             * Removes unsupported properties. Forwards to the actual Tag's removeUnsupportedProperties() function.
              */
             void removeUnsupportedProperties(const StringList &properties);
 
@@ -111,12 +101,11 @@ namespace TagLib
              * This returns true if the save was successful.
              */
             virtual bool save();
-
         private:
-            int readBYTE(bool *ok = 0);
-            int readWORD(bool *ok = 0);
-            unsigned int readDWORD(bool *ok = 0);
-            long long readQWORD(bool *ok = 0);
+            int readBYTE(bool *ok                                                = 0);
+            int readWORD(bool *ok                                                = 0);
+            unsigned int readDWORD(bool *ok                                      = 0);
+            long long readQWORD(bool *ok                                         = 0);
             static ByteVector renderString(const String &str, bool includeLength = false);
             String readString(int len);
             void read(bool readProperties, Properties::ReadStyle propertiesStyle);

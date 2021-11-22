@@ -1,8 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
-*    copyright            : (C) 2006 by Urs Fleisch
-*    email                : ufleisch@users.sourceforge.net
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org copyright            : (C) 2006 by Urs Fleisch email                : ufleisch@users.sourceforge.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -48,7 +45,7 @@ public:
     }
 
     String::Type textEncoding;
-    String       description;
+    String description;
 };
 
 UrlLinkFrame::UrlLinkFrame(const ByteVector &data) :
@@ -85,14 +82,14 @@ String UrlLinkFrame::toString() const
 
 PropertyMap UrlLinkFrame::asProperties() const
 {
-    String      key = frameIDToKey( frameID() );
+    String      key = frameIDToKey(frameID());
     PropertyMap map;
 
-    if ( key.isNull() ) {
+    if (key.isNull()) {
         // unknown W*** frame - this normally shouldn't happen
-        map.unsupportedData().append( frameID() );
+        map.unsupportedData().append(frameID());
     } else {
-        map.insert( key, url() );
+        map.insert(key, url());
     }
     return map;
 }
@@ -110,7 +107,7 @@ ByteVector UrlLinkFrame::renderFields() const
 UrlLinkFrame::UrlLinkFrame(const ByteVector &data, Header *h) : Frame(h)
 {
     d = new UrlLinkFramePrivate;
-    parseFields( fieldData(data) );
+    parseFields(fieldData(data));
 }
 
 UserUrlLinkFrame::UserUrlLinkFrame(String::Type encoding) :
@@ -162,23 +159,23 @@ PropertyMap UserUrlLinkFrame::asProperties() const
     PropertyMap map;
     String      key = description().upper();
 
-    if ( key.isEmpty() || (key.upper() == "URL") ) {
-        map.insert( "URL", url() );
-    } else if ( key.isNull() ) {
-        map.unsupportedData().append( L"WXXX/" + description() );
+    if (key.isEmpty() || (key.upper() == "URL")) {
+        map.insert("URL", url());
+    } else if (key.isNull()) {
+        map.unsupportedData().append(L"WXXX/" + description());
     } else {
-        map.insert( "URL:" + key, url() );
+        map.insert("URL:" + key, url());
     }
     return map;
 }
 
-UserUrlLinkFrame *UserUrlLinkFrame::find(ID3v2::Tag *tag, const String &description) // static
+UserUrlLinkFrame*UserUrlLinkFrame::find(ID3v2::Tag *tag, const String &description)  // static
 {
     FrameList l = tag->frameList("WXXX");
 
-    for ( FrameList::Iterator it = l.begin(); it != l.end(); ++it ) {
-        UserUrlLinkFrame *f = dynamic_cast<UserUrlLinkFrame *> (*it);
-        if ( f && (f->description() == description) ) {
+    for (FrameList::Iterator it = l.begin(); it != l.end(); ++it) {
+        UserUrlLinkFrame *f = dynamic_cast<UserUrlLinkFrame*>(*it);
+        if (f && (f->description() == description)) {
             return f;
         }
     }
@@ -187,7 +184,7 @@ UserUrlLinkFrame *UserUrlLinkFrame::find(ID3v2::Tag *tag, const String &descript
 
 void UserUrlLinkFrame::parseFields(const ByteVector &data)
 {
-    if ( data.size() < 2 ) {
+    if (data.size() < 2) {
         debug("A user URL link frame must contain at least 2 bytes.");
         return;
     }
@@ -197,9 +194,9 @@ void UserUrlLinkFrame::parseFields(const ByteVector &data)
     d->textEncoding = String::Type(data[0]);
     pos            += 1;
 
-    if ( (d->textEncoding == String::Latin1) || (d->textEncoding == String::UTF8) ) {
+    if ((d->textEncoding == String::Latin1) || (d->textEncoding == String::UTF8)) {
         int offset = data.find(textDelimiter(d->textEncoding), pos);
-        if ( offset < pos ) {
+        if (offset < pos) {
             return;
         }
 
@@ -207,7 +204,7 @@ void UserUrlLinkFrame::parseFields(const ByteVector &data)
         pos            = offset + 1;
     } else {
         int len = data.mid(pos).find(textDelimiter(d->textEncoding), 0, 2);
-        if ( len < 0 ) {
+        if (len < 0) {
             return;
         }
 
@@ -215,7 +212,7 @@ void UserUrlLinkFrame::parseFields(const ByteVector &data)
         pos           += len + 2;
     }
 
-    setUrl( String( data.mid(pos) ) );
+    setUrl(String(data.mid(pos)));
 }
 
 ByteVector UserUrlLinkFrame::renderFields() const
@@ -224,10 +221,10 @@ ByteVector UserUrlLinkFrame::renderFields() const
 
     String::Type encoding = checkTextEncoding(d->description, d->textEncoding);
 
-    v.append( char (encoding) );
-    v.append( d->description.data(encoding) );
-    v.append( textDelimiter(encoding) );
-    v.append( url().data(String::Latin1) );
+    v.append(char(encoding));
+    v.append(d->description.data(encoding));
+    v.append(textDelimiter(encoding));
+    v.append(url().data(String::Latin1));
 
     return v;
 }
@@ -235,5 +232,5 @@ ByteVector UserUrlLinkFrame::renderFields() const
 UserUrlLinkFrame::UserUrlLinkFrame(const ByteVector &data, Header *h) : UrlLinkFrame(data, h)
 {
     d = new UserUrlLinkFramePrivate;
-    parseFields( fieldData(data) );
+    parseFields(fieldData(data));
 }

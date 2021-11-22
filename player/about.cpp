@@ -1,4 +1,4 @@
-﻿#include "player/about.h"
+#include "player/about.h"
 #include "ui_about.h"
 
 About::About(QWidget *parent) :

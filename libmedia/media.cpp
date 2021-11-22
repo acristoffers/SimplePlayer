@@ -1,4 +1,4 @@
-﻿#include "media.h"
+#include "media.h"
 
 #include <QDebug>
 
@@ -16,7 +16,7 @@ struct MediaPrivate
 
 Media::Media(QString file)
     : QObject(0),
-      d(new MediaPrivate)
+    d(new MediaPrivate)
 {
     d->file = file;
 }
@@ -44,25 +44,25 @@ bool Media::isValid()
 QString Media::isA()
 {
     QMimeDatabase db;
-    QString       mime = db.mimeTypeForUrl( QUrl::fromLocalFile(d->file) ).name();
+    QString       mime = db.mimeTypeForUrl(QUrl::fromLocalFile(d->file)).name();
 
-    if ( mime.startsWith("audio/") && !d->file.endsWith(".m3u") ) {
+    if (mime.startsWith("audio/") && !d->file.endsWith(".m3u")) {
         return "Music";
-    } else if ( mime.startsWith("video/") ) {
+    } else if (mime.startsWith("video/")) {
         return "Video";
-    } else if ( mime.startsWith("image/") ) {
+    } else if (mime.startsWith("image/")) {
         return "Image";
     }
 
     return "NaM";
 }
 
-Media *Media::specializedObjectForFile(QString file)
+Media*Media::specializedObjectForFile(QString file)
 {
     QMimeDatabase db;
-    QString       mime = db.mimeTypeForUrl( QUrl::fromLocalFile(file) ).name();
+    QString       mime = db.mimeTypeForUrl(QUrl::fromLocalFile(file)).name();
 
-    if ( mime.startsWith("audio/") && !file.endsWith(".m3u") ) {
+    if (mime.startsWith("audio/") && !file.endsWith(".m3u")) {
         return new Music(file, false);
     }
 

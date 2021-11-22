@@ -1,10 +1,8 @@
-﻿/***************************************************************************
+/***************************************************************************
 *    copyright            : (C) 2006 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 *
-*    copyright            : (C) 2004 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
-*                           (original MPC implementation)
+*    copyright            : (C) 2004 by Allan Sandfeld Jensen email                : kde@carewolf.org (original MPC implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -44,19 +42,16 @@ namespace TagLib
         // ! An implementation of audio property reading for WavPack
 
         /*!
-         * This reads the data from an WavPack stream found in the AudioProperties
-         * API.
+         * This reads the data from an WavPack stream found in the AudioProperties API.
          */
 
         class TAGLIB_EXPORT Properties : public AudioProperties
         {
         public:
             /*!
-             * Create an instance of WavPack::Properties with the data read from the
-             * ByteVector \a data.
+             * Create an instance of WavPack::Properties with the data read from the ByteVector \a data.
              *
-             * \deprecated This constructor will be dropped in favor of the one below
-             * in a future version.
+             * \deprecated This constructor will be dropped in favor of the one below in a future version.
              */
             Properties(const ByteVector &data, long streamLength, ReadStyle style = Average);
 
@@ -93,10 +88,9 @@ namespace TagLib
              * Returns WavPack version.
              */
             int version() const;
-
         private:
             Properties(const Properties &);
-            Properties &operator=(const Properties &);
+            Properties &operator =(const Properties &);
 
             void read();
             unsigned int seekFinalIndex();

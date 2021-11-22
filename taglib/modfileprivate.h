@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright           : (C) 2011 by Mathias Panzenböck
-*    email               : grosser.meister.morti@gmx.net
+/***************************************************************************
+*    copyright           : (C) 2011 by Mathias Panzenböck email               : grosser.meister.morti@gmx.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -24,7 +23,7 @@
 
 // some helper-macros only used internally by (s3m|it|xm)file.cpp
 #define READ_ASSERT(cond) \
-    if ( !(cond) ) \
+    if (!(cond)) \
     { \
         setValid(false); \
         return; \
@@ -33,7 +32,7 @@
 #define READ(setter, type, read) \
     { \
         type number; \
-        READ_ASSERT( read(number) ); \
+        READ_ASSERT(read(number)); \
         setter(number); \
     }
 
@@ -46,13 +45,13 @@
 #define READ_STRING(setter, size) \
     { \
         String s; \
-        READ_ASSERT( readString(s, size) ); \
+        READ_ASSERT(readString(s, size)); \
         setter(s); \
     }
 
 #define READ_AS(type, name, read) \
     type name = 0; \
-    READ_ASSERT( read(name) );
+    READ_ASSERT(read(name));
 
 #define READ_BYTE_AS(name) READ_AS(uchar, name, readByte)
 #define READ_U16L_AS(name) READ_AS(ushort, name, readU16L)
@@ -62,5 +61,5 @@
 
 #define READ_STRING_AS(name, size) \
     String name; \
-    READ_ASSERT( readString(name, size) );
+    READ_ASSERT(readString(name, size));
 #endif

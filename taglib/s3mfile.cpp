@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright           : (C) 2011 by Mathias Panzenböck
-*    email               : grosser.meister.morti@gmx.net
+/***************************************************************************
+*    copyright           : (C) 2011 by Mathias Panzenböck email               : grosser.meister.morti@gmx.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -38,24 +37,24 @@ public:
     {
     }
 
-    Mod::Tag        tag;
+    Mod::Tag tag;
     S3M::Properties properties;
 };
 
 S3M::File::File(FileName file, bool readProperties, AudioProperties::ReadStyle propertiesStyle) :
     Mod::FileBase(file),
-    d( new FilePrivate(propertiesStyle) )
+    d(new FilePrivate(propertiesStyle))
 {
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties);
     }
 }
 
 S3M::File::File(IOStream *stream, bool readProperties, AudioProperties::ReadStyle propertiesStyle) :
     Mod::FileBase(stream),
-    d( new FilePrivate(propertiesStyle) )
+    d(new FilePrivate(propertiesStyle))
 {
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties);
     }
 }
@@ -65,7 +64,7 @@ S3M::File::~File()
     delete d;
 }
 
-Mod::Tag *S3M::File::tag() const
+Mod::Tag*S3M::File::tag() const
 {
     return &d->tag;
 }
@@ -80,14 +79,14 @@ PropertyMap S3M::File::setProperties(const PropertyMap &properties)
     return d->tag.setProperties(properties);
 }
 
-S3M::Properties *S3M::File::audioProperties() const
+S3M::Properties*S3M::File::audioProperties() const
 {
     return &d->properties;
 }
 
 bool S3M::File::save()
 {
-    if ( readOnly() ) {
+    if (readOnly()) {
         debug("S3M::File::save() - Cannot save to a read only file.");
         return false;
     }
@@ -98,46 +97,48 @@ bool S3M::File::save()
     // string terminating NUL is not optional:
     writeByte(0);
 
-        seek(32);
+    seek(32);
 
     ushort length      = 0;
     ushort sampleCount = 0;
 
-    if ( !readU16L(length) || !readU16L(sampleCount) ) {
+    if (!readU16L(length) || !readU16L(sampleCount)) {
         return false;
     }
 
-        seek(28, Current);
+    seek(28, Current);
 
     int channels = 0;
-    for ( int i = 0; i < 32; ++i ) {
+
+    for (int i = 0; i < 32; ++i) {
         uchar setting = 0;
-        if ( !readByte(setting) ) {
+        if (!readByte(setting)) {
             return false;
         }
         // or if(setting >= 128)?
         // or channels = i + 1;?
         // need a better spec!
-        if ( setting != 0xff ) {
+        if (setting != 0xff) {
             ++channels;
         }
     }
 
-        seek(channels, Current);
+    seek(channels, Current);
 
     StringList lines = d->tag.comment().split("\n");
+
     // write comment as sample names:
-    for ( ushort i = 0; i < sampleCount; ++i ) {
-        seek( 96L + length + ( (long) i << 1 ) );
+    for (ushort i = 0; i < sampleCount; ++i) {
+        seek(96L + length + ((long) i << 1));
 
         ushort instrumentOffset = 0;
-        if ( !readU16L(instrumentOffset) ) {
+        if (!readU16L(instrumentOffset)) {
             return false;
         }
-        seek( ( (long) instrumentOffset << 4 ) + 48 );
+        seek(((long) instrumentOffset << 4) + 48);
 
-        if ( i < lines.size() ) {
-            writeString(lines[i],     27);
+        if (i < lines.size()) {
+            writeString(lines[i], 27);
         } else {
             writeString(String::null, 27);
         }
@@ -149,7 +150,7 @@ bool S3M::File::save()
 
 void S3M::File::read(bool)
 {
-    if ( !isOpen() ) {
+    if (!isOpen()) {
         return;
     }
 
@@ -179,7 +180,7 @@ void S3M::File::read(bool)
 
     READ_BYTE_AS(masterVolume);
     d->properties.setMasterVolume(masterVolume & 0x7f);
-    d->properties.setStereo( (masterVolume & 0x80) != 0 );
+    d->properties.setStereo((masterVolume & 0x80) != 0);
 
     // I've seen players who call the next two bytes
     // "ultra click" and "use panning values" (if == 0xFC).
@@ -190,12 +191,13 @@ void S3M::File::read(bool)
     seek(12, Current);
 
     int channels = 0;
-    for ( int i = 0; i < 32; ++i ) {
+
+    for (int i = 0; i < 32; ++i) {
         READ_BYTE_AS(setting);
         // or if(setting >= 128)?
         // or channels = i + 1;?
         // need a better spec!
-        if ( setting != 0xff ) {
+        if (setting != 0xff) {
             ++channels;
         }
     }
@@ -203,29 +205,31 @@ void S3M::File::read(bool)
 
     seek(96);
     ushort realLength = 0;
-    for ( ushort i = 0; i < length; ++i ) {
+
+    for (ushort i = 0; i < length; ++i) {
         READ_BYTE_AS(order);
-        if ( order == 255 ) {
+        if (order == 255) {
             break;
         }
-        if ( order != 254 ) {
+        if (order != 254) {
             ++realLength;
         }
     }
     d->properties.setLengthInPatterns(realLength);
 
-        seek(channels, Current);
+    seek(channels, Current);
 
     // Note: The S3M spec mentions samples and instruments, but in
     // the header there are only pointers to instruments.
     // However, there I never found instruments (SCRI) but
     // instead samples (SCRS).
     StringList comment;
-    for ( ushort i = 0; i < sampleCount; ++i ) {
-        seek( 96L + length + ( (long) i << 1 ) );
+
+    for (ushort i = 0; i < sampleCount; ++i) {
+        seek(96L + length + ((long) i << 1));
 
         READ_U16L_AS(sampleHeaderOffset);
-        seek( (long) sampleHeaderOffset << 4 );
+        seek((long) sampleHeaderOffset << 4);
 
         READ_BYTE_AS(sampleType);
         READ_STRING_AS(dosFileName, 13);
@@ -251,6 +255,6 @@ void S3M::File::read(bool)
         comment.append(sampleName);
     }
 
-    d->tag.setComment( comment.toString("\n") );
+    d->tag.setComment(comment.toString("\n"));
     d->tag.setTrackerName("ScreamTracker III");
 }

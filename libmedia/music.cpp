@@ -1,4 +1,4 @@
-﻿#include "music.h"
+#include "music.h"
 
 #include <QFileInfo>
 #include <QImage>
@@ -28,13 +28,13 @@ struct MusicPrivate
 
 Music::Music(QString file, bool preferDataBaseData)
     : Media(file),
-      d(new MusicPrivate)
+    d(new MusicPrivate)
 {
-    if ( preferDataBaseData ) {
+    if (preferDataBaseData) {
         QString artist, album, title;
         int     track, year;
         bool    b = DataBase::instance()->musicInfoForFile(file, &artist, &album, &title, &track, &year);
-        if ( b ) {
+        if (b) {
             d->artist = artist;
             d->album  = album;
             d->title  = title;
@@ -44,12 +44,12 @@ Music::Music(QString file, bool preferDataBaseData)
         }
     }
 
-    TagLib::FileRef f( QFileInfo(file).canonicalFilePath().toLocal8Bit().data() );
+    TagLib::FileRef f(QFileInfo(file).canonicalFilePath().toLocal8Bit().data());
 
-    if ( !f.isNull() ) {
-        d->artist = QString::fromUtf8( f.tag()->artist().to8Bit(true).data() );
-        d->album  = QString::fromUtf8( f.tag()->album().to8Bit(true).data() );
-        d->title  = QString::fromUtf8( f.tag()->title().to8Bit(true).data() );
+    if (!f.isNull()) {
+        d->artist = QString::fromUtf8(f.tag()->artist().to8Bit(true).data());
+        d->album  = QString::fromUtf8(f.tag()->album().to8Bit(true).data());
+        d->title  = QString::fromUtf8(f.tag()->title().to8Bit(true).data());
         d->track  = f.tag()->track();
         d->year   = f.tag()->year();
     }
@@ -57,7 +57,7 @@ Music::Music(QString file, bool preferDataBaseData)
 
 Music::Music(QString file, QString artist, QString album, QString title, int track, int year)
     : Media(file),
-      d(new MusicPrivate)
+    d(new MusicPrivate)
 {
     d->artist = artist;
     d->album  = album;
@@ -91,9 +91,10 @@ QStringList Music::albumsForArtist(QString artist)
     return DataBase::instance()->albumForArtist(artist);
 }
 
-QList<Music *> Music::titlesForArtistAndAlbum(QString artist, QString album)
+QList<Music*> Music::titlesForArtistAndAlbum(QString artist, QString album)
 {
     QMap<Fields, QVariant> map;
+
     map[Artist] = artist;
     map[Album]  = album;
     return DataBase::instance()->musicWhere(map);
@@ -126,16 +127,16 @@ int Music::year()
 
 QPixmap Music::cover()
 {
-    if ( d->cover.isNull() ) {
+    if (d->cover.isNull()) {
         QMimeDatabase db;
-        QMimeType     type = db.mimeTypeForUrl( QUrl::fromLocalFile( file() ) );
-        if ( "audio/mpeg" == type.name() ) {
-            TagLib::MPEG::File audioFile( file().toStdString().c_str() );
+        QMimeType     type = db.mimeTypeForUrl(QUrl::fromLocalFile(file()));
+        if ("audio/mpeg" == type.name()) {
+            TagLib::MPEG::File audioFile(file().toStdString().c_str());
 
             QByteArray cover, other;
 
             TagLib::ID3v2::Tag *tag = audioFile.ID3v2Tag(true);
-            if ( tag ) {
+            if (tag) {
                 static const char *idPicture = "APIC";
 
                 TagLib::ID3v2::FrameList            frames;
@@ -143,24 +144,24 @@ QPixmap Music::cover()
 
                 frames = tag->frameListMap()[idPicture];
 
-                if ( !frames.isEmpty() ) {
-                    for ( auto frame : frames ) {
-                        apf = (TagLib::ID3v2::AttachedPictureFrame *) frame;
+                if (!frames.isEmpty()) {
+                    for (auto frame : frames) {
+                        apf = (TagLib::ID3v2::AttachedPictureFrame*) frame;
 
-                        if ( apf->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover ) {
-                            cover = QByteArray( apf->picture().data(), apf->picture().size() );
+                        if (apf->type() == TagLib::ID3v2::AttachedPictureFrame::FrontCover) {
+                            cover = QByteArray(apf->picture().data(), apf->picture().size());
                             break;
                         } else {
-                            other = QByteArray( apf->picture().data(), apf->picture().size() );
+                            other = QByteArray(apf->picture().data(), apf->picture().size());
                         }
                     }
                 }
             }
 
-            if ( cover.isEmpty() ) {
-                d->cover = QPixmap::fromImage( QImage::fromData(other) );
+            if (cover.isEmpty()) {
+                d->cover = QPixmap::fromImage(QImage::fromData(other));
             } else {
-                d->cover = QPixmap::fromImage( QImage::fromData(cover) );
+                d->cover = QPixmap::fromImage(QImage::fromData(cover));
             }
         }
     }
@@ -170,12 +171,12 @@ QPixmap Music::cover()
 
 Music::Music(int id)
     : Media(""),
-      d(new MusicPrivate)
+    d(new MusicPrivate)
 {
     QString file, artist, album, title;
     int     track, year;
 
-    if ( DataBase::instance()->musicInfoForID(id, &file, &artist, &album, &title, &track, &year) ) {
+    if (DataBase::instance()->musicInfoForID(id, &file, &artist, &album, &title, &track, &year)) {
         setFile(file);
         d->artist = artist;
         d->album  = album;

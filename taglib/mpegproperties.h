@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -41,16 +40,14 @@ namespace TagLib
         // ! An implementation of audio property reading for MP3
 
         /*!
-         * This reads the data from an MPEG Layer III stream found in the
-         * AudioProperties API.
+         * This reads the data from an MPEG Layer III stream found in the AudioProperties API.
          */
 
         class TAGLIB_EXPORT Properties : public AudioProperties
         {
         public:
             /*!
-             * Create an instance of MPEG::Properties with the data read from the
-             * MPEG::File \a file.
+             * Create an instance of MPEG::Properties with the data read from the MPEG::File \a file.
              */
             Properties(File *file, ReadStyle style = Average);
 
@@ -67,8 +64,7 @@ namespace TagLib
             virtual int channels() const;
 
             /*!
-             * Returns a pointer to the XingHeader if one exists or null if no
-             * XingHeader was found.
+             * Returns a pointer to the XingHeader if one exists or null if no XingHeader was found.
              */
 
             const XingHeader *xingHeader() const;
@@ -102,10 +98,9 @@ namespace TagLib
              * Returns true if the "original" bit is set.
              */
             bool isOriginal() const;
-
         private:
             Properties(const Properties &);
-            Properties &operator=(const Properties &);
+            Properties &operator =(const Properties &);
 
             void read();
 

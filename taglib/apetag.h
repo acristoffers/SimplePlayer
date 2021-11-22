@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2004 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
+/***************************************************************************
+*    copyright            : (C) 2004 by Allan Sandfeld Jensen email                : kde@carewolf.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -73,14 +72,12 @@ namespace TagLib
             virtual ~Tag();
 
             /*!
-             * Renders the in memory values to a ByteVector suitable for writing to
-             * the file.
+             * Renders the in memory values to a ByteVector suitable for writing to the file.
              */
             ByteVector render() const;
 
             /*!
-             * Returns the string "APETAGEX" suitable for usage in locating the tag in a
-             * file.
+             * Returns the string "APETAGEX" suitable for usage in locating the tag in a file.
              */
             static ByteVector fileIdentifier();
 
@@ -103,28 +100,17 @@ namespace TagLib
             virtual void setTrack(uint i);
 
             /*!
-             * Implements the unified tag dictionary interface -- export function.
-             * APE tags are perfectly compatible with the dictionary interface because they
-             * support both arbitrary tag names and multiple values. Currently only
-             * APE items of type *Text* are handled by the dictionary interface; all *Binary*
-             * and *Locator* items will be put into the unsupportedData list and can be
-             * deleted on request using removeUnsupportedProperties(). The same happens
-             * to Text items if their key is invalid for PropertyMap (which should actually
-             * never happen).
+             * Implements the unified tag dictionary interface -- export function. APE tags are perfectly compatible with the dictionary interface because they support both arbitrary tag names and multiple values. Currently only APE items of type *Text* are handled by the dictionary interface; all *Binary*
+             * and *Locator* items will be put into the unsupportedData list and can be deleted on request using removeUnsupportedProperties(). The same happens to Text items if their key is invalid for PropertyMap (which should actually never happen).
              *
-             * The only conversion done by this export function is to rename the APE tags
-             * TRACK to TRACKNUMBER, YEAR to DATE, and ALBUM ARTIST to ALBUMARTIST, respectively,
-             * in order to be compliant with the names used in other formats.
+             * The only conversion done by this export function is to rename the APE tags TRACK to TRACKNUMBER, YEAR to DATE, and ALBUM ARTIST to ALBUMARTIST, respectively, in order to be compliant with the names used in other formats.
              */
             PropertyMap properties() const;
 
             void removeUnsupportedProperties(const StringList &properties);
 
             /*!
-             * Implements the unified tag dictionary interface -- import function. The same
-             * comments as for the export function apply; additionally note that the APE tag
-             * specification requires keys to have between 2 and 16 printable ASCII characters
-             * with the exception of the fixed strings "ID3", "TAG", "OGGS", and "MP+".
+             * Implements the unified tag dictionary interface -- import function. The same comments as for the export function apply; additionally note that the APE tag specification requires keys to have between 2 and 16 printable ASCII characters with the exception of the fixed strings "ID3", "TAG", "OGGS", and "MP+".
              */
             PropertyMap setProperties(const PropertyMap &);
 
@@ -139,16 +125,13 @@ namespace TagLib
             Footer *footer() const;
 
             /*!
-             * Returns a reference to the item list map.  This is an ItemListMap of
-             * all of the items in the tag.
+             * Returns a reference to the item list map.  This is an ItemListMap of all of the items in the tag.
              *
              * This is the most powerfull structure for accessing the items of the tag.
              *
-             * APE tags are case-insensitive, all keys in this map have been converted
-             * to upper case.
+             * APE tags are case-insensitive, all keys in this map have been converted to upper case.
              *
-             * \warning You should not modify this data structure directly, instead
-             * use setItem() and removeItem().
+             * \warning You should not modify this data structure directly, instead use setItem() and removeItem().
              */
             const ItemListMap &itemListMap() const;
 
@@ -158,22 +141,17 @@ namespace TagLib
             void removeItem(const String &key);
 
             /*!
-             * Adds to the text item specified by \a key the data \a value.  If \a replace
-             * is true, then all of the other values on the same key will be removed
-             * first.  If a binary item exists for \a key it will be removed first.
+             * Adds to the text item specified by \a key the data \a value.  If \a replace is true, then all of the other values on the same key will be removed first.  If a binary item exists for \a key it will be removed first.
              */
             void addValue(const String &key, const String &value, bool replace = true);
 
             /*!
-             * Set the binary data for the key specified by \a item to \a value
-             * This will convert the item to type \a Binary if it isn't already and
-             * all of the other values on the same key will be removed.
+             * Set the binary data for the key specified by \a item to \a value This will convert the item to type \a Binary if it isn't already and all of the other values on the same key will be removed.
              */
             void setData(const String &key, const ByteVector &value);
 
             /*!
-             * Sets the \a key item to the value of \a item. If an item with the \a key is already
-             * present, it will be replaced.
+             * Sets the \a key item to the value of \a item. If an item with the \a key is already present, it will be replaced.
              */
             void setItem(const String &key, const Item &item);
 
@@ -181,7 +159,6 @@ namespace TagLib
              * Returns true if the tag does not contain any data.
              */
             bool isEmpty() const;
-
         protected:
             /*!
              * Reads from the file specified in the constructor.
@@ -192,10 +169,9 @@ namespace TagLib
              * Parses the body of the tag in \a data.
              */
             void parse(const ByteVector &data);
-
         private:
             Tag(const Tag &);
-            Tag &operator=(const Tag &);
+            Tag &operator =(const Tag &);
 
             class TagPrivate;
             TagPrivate *d;

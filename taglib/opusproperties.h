@@ -1,10 +1,8 @@
-﻿/***************************************************************************
+/***************************************************************************
 *    copyright            : (C) 2012 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 *
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
-*                           (original Vorbis implementation)
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org (original Vorbis implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -43,16 +41,14 @@ namespace TagLib
             // ! An implementation of audio property reading for Ogg Opus
 
             /*!
-             * This reads the data from an Ogg Opus stream found in the AudioProperties
-             * API.
+             * This reads the data from an Ogg Opus stream found in the AudioProperties API.
              */
 
             class TAGLIB_EXPORT Properties : public AudioProperties
             {
             public:
                 /*!
-                 * Create an instance of Opus::Properties with the data read from the
-                 * Opus::File \a file.
+                 * Create an instance of Opus::Properties with the data read from the Opus::File \a file.
                  */
                 Properties(File *file, ReadStyle style = Average);
 
@@ -69,9 +65,7 @@ namespace TagLib
                 virtual int channels() const;
 
                 /*!
-                 * The Opus codec supports decoding at multiple sample rates, there is no
-                 * single sample rate of the encoded stream. This returns the sample rate
-                 * of the original audio stream.
+                 * The Opus codec supports decoding at multiple sample rates, there is no single sample rate of the encoded stream. This returns the sample rate of the original audio stream.
                  */
                 int inputSampleRate() const;
 
@@ -79,10 +73,9 @@ namespace TagLib
                  * Returns the Opus version, currently "0" (as specified by the spec).
                  */
                 int opusVersion() const;
-
             private:
                 Properties(const Properties &);
-                Properties &operator=(const Properties &);
+                Properties &operator =(const Properties &);
 
                 void read();
 

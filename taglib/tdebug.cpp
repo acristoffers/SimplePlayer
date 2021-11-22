@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -49,12 +48,10 @@ namespace
 
         char buf[256];
 
-#if defined (HAVE_SNPRINTF)
+#if defined(HAVE_SNPRINTF)
         vsnprintf(buf, sizeof(buf), fmt, args);
-
-#elif defined (HAVE_SPRINTF_S)
+#elif defined(HAVE_SPRINTF_S)
         vsprintf_s(buf, fmt, args);
-
 #else
         // Be careful. May cause a buffer overflow.
         vsprintf(buf, fmt, args);
@@ -73,18 +70,18 @@ namespace TagLib
 
     void debug(const String &s)
     {
-#if !defined (NDEBUG) || defined (TRACE_IN_RELEASE)
+#if !defined(NDEBUG) || defined(TRACE_IN_RELEASE)
         debugListener->printMessage("TagLib: " + s + "\n");
 #endif
     }
 
     void debugData(const ByteVector &v)
     {
-#if !defined (NDEBUG) || defined (TRACE_IN_RELEASE)
-        for ( size_t i = 0; i < v.size(); ++i ) {
-            std::string bits = std::bitset<8> (v[i]).to_string();
-            String      msg  = format( "*** [%d] - char '%c' - int %d, 0x%02x, 0b%s\n",
-                                       i, v[i], v[i], v[i], bits.c_str() );
+#if !defined(NDEBUG) || defined(TRACE_IN_RELEASE)
+        for (size_t i = 0; i < v.size(); ++i) {
+            std::string bits = std::bitset<8>(v[i]).to_string();
+            String      msg  = format("*** [%d] - char '%c' - int %d, 0x%02x, 0b%s\n",
+                                      i, v[i], v[i], v[i], bits.c_str());
 
             debugListener->printMessage(msg);
         }

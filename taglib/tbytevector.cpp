@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -46,7 +45,7 @@
 //
 // http://www.informit.com/isapi/product_id~{9C84DAB4-FE6E-49C5-BB0A-FB50331233EA}/content/index.asp
 
-#define DATA(x) ( &(x->data->data[0]) )
+#define DATA(x) (&(x->data->data[0]))
 
 namespace TagLib
 {
@@ -99,26 +98,25 @@ namespace TagLib
     };
 
     /*!
-     * A templatized straightforward find that works with the types
-     * std::vector<char>::iterator and std::vector<char>::reverse_iterator.
+     * A templatized straightforward find that works with the types std::vector<char>::iterator and std::vector<char>::reverse_iterator.
      */
     template<class TIterator>
     int findChar(const TIterator dataBegin, const TIterator dataEnd, char c, uint offset, int byteAlign)
     {
         const size_t dataSize = dataEnd - dataBegin;
 
-        if ( (dataSize == 0) || (offset > dataSize - 1) ) {
+        if ((dataSize == 0) || (offset > dataSize - 1)) {
             return -1;
         }
 
         // n % 0 is invalid
 
-        if ( byteAlign == 0 ) {
+        if (byteAlign == 0) {
             return -1;
         }
 
-        for ( TIterator it = dataBegin + offset; it < dataEnd; it += byteAlign ) {
-            if ( *it == c ) {
+        for (TIterator it = dataBegin + offset; it < dataEnd; it += byteAlign) {
+            if (*it == c) {
                 return it - dataBegin;
             }
         }
@@ -127,8 +125,7 @@ namespace TagLib
     }
 
     /*!
-     * A templatized KMP find that works with the types
-     * std::vector<char>::iterator and std::vector<char>::reverse_iterator.
+     * A templatized KMP find that works with the types std::vector<char>::iterator and std::vector<char>::reverse_iterator.
      */
     template<class TIterator>
     int findVector(const TIterator dataBegin, const TIterator dataEnd, const TIterator patternBegin, const TIterator patternEnd, uint offset, int byteAlign)
@@ -136,40 +133,41 @@ namespace TagLib
         const size_t dataSize    = dataEnd - dataBegin;
         const size_t patternSize = patternEnd - patternBegin;
 
-        if ( (patternSize > dataSize) || (offset > dataSize - 1) ) {
+        if ((patternSize > dataSize) || (offset > dataSize - 1)) {
             return -1;
         }
 
         // n % 0 is invalid
 
-        if ( byteAlign == 0 ) {
+        if (byteAlign == 0) {
             return -1;
         }
 
         // Special case that pattern contains just single char.
 
-        if ( patternSize == 1 ) {
+        if (patternSize == 1) {
             return findChar(dataBegin, dataEnd, *patternBegin, offset, byteAlign);
         }
 
         size_t lastOccurrence[256];
 
-        for ( size_t i = 0; i < 256; ++i ) {
+        for (size_t i = 0; i < 256; ++i) {
             lastOccurrence[i] = patternSize;
         }
 
-        for ( size_t i = 0; i < patternSize - 1; ++i ) {
-            lastOccurrence[static_cast<uchar> ( *(patternBegin + i) )] = patternSize - i - 1;
+        for (size_t i = 0; i < patternSize - 1; ++i) {
+            lastOccurrence[static_cast<uchar>(*(patternBegin + i))] = patternSize - i - 1;
         }
 
         TIterator it = dataBegin + patternSize - 1 + offset;
-        while ( true ) {
+
+        while (true) {
             TIterator itBuffer  = it;
             TIterator itPattern = patternBegin + patternSize - 1;
 
-            while ( *itBuffer == *itPattern ) {
-                if ( itPattern == patternBegin ) {
-                    if ( (itBuffer - dataBegin - offset) % byteAlign == 0 ) {
+            while (*itBuffer == *itPattern) {
+                if (itPattern == patternBegin) {
+                    if ((itBuffer - dataBegin - offset) % byteAlign == 0) {
                         return itBuffer - dataBegin;
                     } else {
                         break;
@@ -180,8 +178,8 @@ namespace TagLib
                 --itPattern;
             }
 
-            const size_t step = lastOccurrence[static_cast<uchar> (*it)];
-            if ( dataEnd - step <= it ) {
+            const size_t step = lastOccurrence[static_cast<uchar>(*it)];
+            if (dataEnd - step <= it) {
                 break;
             }
 
@@ -194,7 +192,7 @@ namespace TagLib
     template<class T>
     T toNumber(const ByteVector &v, size_t offset, size_t length, bool mostSignificantByteFirst)
     {
-        if ( offset >= v.size() ) {
+        if (offset >= v.size()) {
             debug("toNumber<T>() -- No data to convert. Returning 0.");
             return 0;
         }
@@ -202,9 +200,10 @@ namespace TagLib
         length = std::min(length, v.size() - offset);
 
         T sum = 0;
-        for ( size_t i = 0; i < length; i++ ) {
+
+        for (size_t i = 0; i < length; i++) {
             const size_t shift = (mostSignificantByteFirst ? length - 1 - i : i) * 8;
-            sum |= static_cast<T> ( static_cast<uchar> (v[offset + i]) ) << shift;
+            sum |= static_cast<T>(static_cast<uchar>(v[offset + i])) << shift;
         }
 
         return sum;
@@ -216,15 +215,15 @@ namespace TagLib
         static const bool isBigEndian = (Utils::SystemByteOrder == Utils::BigEndian);
         const bool        swap        = (mostSignificantByteFirst != isBigEndian);
 
-        if ( offset + sizeof(T) > v.size() ) {
-            return toNumber<T> (v, offset, v.size() - offset, mostSignificantByteFirst);
+        if (offset + sizeof(T) > v.size()) {
+            return toNumber<T>(v, offset, v.size() - offset, mostSignificantByteFirst);
         }
 
         // Uses memcpy instead of reinterpret_cast to avoid an alignment exception.
         T tmp;
-        ::memcpy( &tmp, v.data() + offset, sizeof(T) );
+        ::memcpy(&tmp, v.data() + offset, sizeof(T));
 
-        if ( swap ) {
+        if (swap) {
             return Utils::byteSwap(tmp);
         } else {
             return tmp;
@@ -237,11 +236,11 @@ namespace TagLib
         static const bool isBigEndian = (Utils::SystemByteOrder == Utils::BigEndian);
         const bool        swap        = (mostSignificantByteFirst != isBigEndian);
 
-        if ( swap ) {
+        if (swap) {
             value = Utils::byteSwap(value);
         }
 
-        return ByteVector( reinterpret_cast<const char *> (&value), sizeof(T) );
+        return ByteVector(reinterpret_cast<const char*>(&value), sizeof(T));
     }
 
     class DataPrivate : public RefCounter
@@ -275,48 +274,48 @@ namespace TagLib
     public:
         ByteVectorPrivate()
             : RefCounter()
-              , data( new DataPrivate() )
-              , offset(0)
-              , length(0)
+            , data(new DataPrivate())
+            , offset(0)
+            , length(0)
         {
         }
 
         ByteVectorPrivate(ByteVectorPrivate *d, uint o, uint l)
             : RefCounter()
-              , data(d->data)
-              , offset(d->offset + o)
-              , length(l)
+            , data(d->data)
+            , offset(d->offset + o)
+            , length(l)
         {
             data->ref();
         }
 
         ByteVectorPrivate(const std::vector<char> &v, uint o, uint l)
             : RefCounter()
-              , data( new DataPrivate(v, o, l) )
-              , offset(0)
-              , length(l)
+            , data(new DataPrivate(v, o, l))
+            , offset(0)
+            , length(l)
         {
         }
 
         ByteVectorPrivate(uint l, char c)
             : RefCounter()
-              , data( new DataPrivate(l, c) )
-              , offset(0)
-              , length(l)
+            , data(new DataPrivate(l, c))
+            , offset(0)
+            , length(l)
         {
         }
 
         ByteVectorPrivate(const char *s, uint l)
             : RefCounter()
-              , data( new DataPrivate(s, s + l) )
-              , offset(0)
-              , length(l)
+            , data(new DataPrivate(s, s + l))
+            , offset(0)
+            , length(l)
         {
         }
 
         void detach()
         {
-            if ( data->count() > 1 ) {
+            if (data->count() > 1) {
                 data->deref();
                 data   = new DataPrivate(data->data, offset, length);
                 offset = 0;
@@ -325,15 +324,15 @@ namespace TagLib
 
         ~ByteVectorPrivate()
         {
-            if ( data->deref() ) {
+            if (data->deref()) {
                 delete data;
             }
         }
 
-        ByteVectorPrivate &operator=(const ByteVectorPrivate &x)
+        ByteVectorPrivate &operator =(const ByteVectorPrivate &x)
         {
-            if ( &x != this ) {
-                if ( data->deref() ) {
+            if (&x != this) {
+                if (data->deref()) {
                     delete data;
                 }
 
@@ -345,8 +344,8 @@ namespace TagLib
         }
 
         DataPrivate *data;
-        uint        offset;
-        uint        length;
+        uint offset;
+        uint length;
     };
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -357,8 +356,8 @@ namespace TagLib
 
     ByteVector ByteVector::fromCString(const char *s, uint length)
     {
-        if ( length == 0xffffffff ) {
-            return ByteVector( s, ::strlen(s) );
+        if (length == 0xffffffff) {
+            return ByteVector(s, ::strlen(s));
         } else {
             return ByteVector(s, length);
         }
@@ -366,17 +365,17 @@ namespace TagLib
 
     ByteVector ByteVector::fromUInt(uint value, bool mostSignificantByteFirst)
     {
-        return fromNumber<uint> (value, mostSignificantByteFirst);
+        return fromNumber<uint>(value, mostSignificantByteFirst);
     }
 
     ByteVector ByteVector::fromShort(short value, bool mostSignificantByteFirst)
     {
-        return fromNumber<ushort> (value, mostSignificantByteFirst);
+        return fromNumber<ushort>(value, mostSignificantByteFirst);
     }
 
     ByteVector ByteVector::fromLongLong(long long value, bool mostSignificantByteFirst)
     {
-        return fromNumber<unsigned long long> (value, mostSignificantByteFirst);
+        return fromNumber<unsigned long long>(value, mostSignificantByteFirst);
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -384,12 +383,12 @@ namespace TagLib
     ////////////////////////////////////////////////////////////////////////////////
 
     ByteVector::ByteVector()
-        : d( new ByteVectorPrivate() )
+        : d(new ByteVectorPrivate())
     {
     }
 
     ByteVector::ByteVector(uint size, char value)
-        : d( new ByteVectorPrivate(size, value) )
+        : d(new ByteVectorPrivate(size, value))
     {
     }
 
@@ -400,28 +399,28 @@ namespace TagLib
     }
 
     ByteVector::ByteVector(const ByteVector &v, uint offset, uint length)
-        : d( new ByteVectorPrivate(v.d, offset, length) )
+        : d(new ByteVectorPrivate(v.d, offset, length))
     {
     }
 
     ByteVector::ByteVector(char c)
-        : d( new ByteVectorPrivate(1, c) )
+        : d(new ByteVectorPrivate(1, c))
     {
     }
 
     ByteVector::ByteVector(const char *data, uint length)
-        : d( new ByteVectorPrivate(data, length) )
+        : d(new ByteVectorPrivate(data, length))
     {
     }
 
     ByteVector::ByteVector(const char *data)
-        : d( new ByteVectorPrivate( data, ::strlen(data) ) )
+        : d(new ByteVectorPrivate(data, ::strlen(data)))
     {
     }
 
     ByteVector::~ByteVector()
     {
-        if ( d->deref() ) {
+        if (d->deref()) {
             delete d;
         }
     }
@@ -438,20 +437,20 @@ namespace TagLib
         return *this;
     }
 
-    char *ByteVector::data()
+    char*ByteVector::data()
     {
         detach();
         return size() > 0 ? (DATA(d) + d->offset) : 0;
     }
 
-    const char *ByteVector::data() const
+    const char*ByteVector::data() const
     {
         return size() > 0 ? (DATA(d) + d->offset) : 0;
     }
 
     ByteVector ByteVector::mid(uint index, uint length) const
     {
-        index  = std::min( index, size() );
+        index  = std::min(index, size());
         length = std::min(length, size() - index);
 
         return ByteVector(*this, index, length);
@@ -464,28 +463,28 @@ namespace TagLib
 
     int ByteVector::find(const ByteVector &pattern, uint offset, int byteAlign) const
     {
-        return findVector<ConstIterator> (
+        return findVector<ConstIterator>(
             begin(), end(), pattern.begin(), pattern.end(), offset, byteAlign);
     }
 
     int ByteVector::find(char c, uint offset, int byteAlign) const
     {
-        return findChar<ConstIterator> (begin(), end(), c, offset, byteAlign);
+        return findChar<ConstIterator>(begin(), end(), c, offset, byteAlign);
     }
 
     int ByteVector::rfind(const ByteVector &pattern, uint offset, int byteAlign) const
     {
-        if ( offset > 0 ) {
+        if (offset > 0) {
             offset = size() - offset - pattern.size();
-            if ( offset >= size() ) {
+            if (offset >= size()) {
                 offset = 0;
             }
         }
 
-        const int pos = findVector<ConstReverseIterator> (
+        const int pos = findVector<ConstReverseIterator>(
             rbegin(), rend(), pattern.rbegin(), pattern.rend(), offset, byteAlign);
 
-        if ( pos == -1 ) {
+        if (pos == -1) {
             return -1;
         } else {
             return size() - pos - pattern.size();
@@ -494,13 +493,14 @@ namespace TagLib
 
     bool ByteVector::containsAt(const ByteVector &pattern, uint offset, uint patternOffset, uint patternLength) const
     {
-        if ( pattern.size() < patternLength ) {
+        if (pattern.size() < patternLength) {
             patternLength = pattern.size();
         }
 
         // do some sanity checking -- all of these things are needed for the search to be valid
         const uint compareLength = patternLength - patternOffset;
-        if ( ( offset + compareLength > size() ) || ( patternOffset >= pattern.size() ) || (patternLength == 0) ) {
+
+        if ((offset + compareLength > size()) || (patternOffset >= pattern.size()) || (patternLength == 0)) {
             return false;
         }
 
@@ -514,12 +514,12 @@ namespace TagLib
 
     bool ByteVector::endsWith(const ByteVector &pattern) const
     {
-        return containsAt( pattern, size() - pattern.size() );
+        return containsAt(pattern, size() - pattern.size());
     }
 
     ByteVector &ByteVector::replace(const ByteVector &pattern, const ByteVector &with)
     {
-        if ( (pattern.size() == 0) || ( pattern.size() > size() ) ) {
+        if ((pattern.size() == 0) || (pattern.size() > size())) {
             return *this;
         }
 
@@ -527,11 +527,11 @@ namespace TagLib
         const uint patternSize = pattern.size();
         int        offset      = 0;
 
-        if ( withSize == patternSize ) {
+        if (withSize == patternSize) {
             // I think this case might be common enough to optimize it
             detach();
             offset = find(pattern);
-            while ( offset >= 0 ) {
+            while (offset >= 0) {
                 ::memcpy(data() + offset, with.data(), withSize);
                 offset = find(pattern, offset + withSize);
             }
@@ -540,10 +540,11 @@ namespace TagLib
 
         // calculate new size:
         uint newSize = 0;
+
         for ( ; ; ) {
             int next = find(pattern, offset);
-            if ( next < 0 ) {
-                if ( offset == 0 ) {
+            if (next < 0) {
+                if (offset == 0) {
                     // pattern not found, do nothing:
                     return *this;
                 }
@@ -563,20 +564,20 @@ namespace TagLib
         offset = 0;
         for ( ; ; ) {
             int next = find(pattern, offset);
-            if ( next < 0 ) {
+            if (next < 0) {
                 ::memcpy(target, source + offset, size() - offset);
                 break;
             }
             int chunkSize = next - offset;
             ::memcpy(target, source + offset, chunkSize);
             target += chunkSize;
-            ::memcpy(target, with.data(), withSize);
+            ::memcpy(target, with.data(),     withSize);
             target += withSize;
             offset += chunkSize + patternSize;
         }
 
         // replace private data:
-        if ( d->deref() ) {
+        if (d->deref()) {
             delete d;
         }
 
@@ -587,7 +588,7 @@ namespace TagLib
 
     int ByteVector::endsWithPartialMatch(const ByteVector &pattern) const
     {
-        if ( pattern.size() > size() ) {
+        if (pattern.size() > size()) {
             return -1;
         }
 
@@ -596,8 +597,8 @@ namespace TagLib
         // try to match the last n-1 bytes from the vector (where n is the pattern
         // size) -- continue trying to match n-2, n-3...1 bytes
 
-        for ( uint i = 1; i < pattern.size(); i++ ) {
-            if ( containsAt(pattern, startIndex + i, 0, pattern.size() - i) ) {
+        for (uint i = 1; i < pattern.size(); i++) {
+            if (containsAt(pattern, startIndex + i, 0, pattern.size() - i)) {
                 return startIndex + i;
             }
         }
@@ -607,12 +608,12 @@ namespace TagLib
 
     ByteVector &ByteVector::append(const ByteVector &v)
     {
-        if ( v.d->length != 0 ) {
+        if (v.d->length != 0) {
             detach();
 
             uint originalSize = size();
-            resize( originalSize + v.size() );
-            ::memcpy( data() + originalSize, v.data(), v.size() );
+            resize(originalSize + v.size());
+            ::memcpy(data() + originalSize, v.data(), v.size());
         }
 
         return *this;
@@ -631,7 +632,7 @@ namespace TagLib
 
     ByteVector &ByteVector::resize(uint size, char padding)
     {
-        if ( size != d->length ) {
+        if (size != d->length) {
             detach();
             d->data->data.resize(d->offset + size, padding);
             d->length = size;
@@ -664,14 +665,14 @@ namespace TagLib
     {
         std::vector<char> &v = d->data->data;
 
-        return v.rbegin() + ( v.size() - (d->offset + d->length) );
+        return v.rbegin() + (v.size() - (d->offset + d->length));
     }
 
     ByteVector::ConstReverseIterator ByteVector::rbegin() const
     {
         std::vector<char> &v = d->data->data;
 
-        return v.rbegin() + ( v.size() - (d->offset + d->length) );
+        return v.rbegin() + (v.size() - (d->offset + d->length));
     }
 
     ByteVector::ReverseIterator ByteVector::rend()
@@ -702,113 +703,113 @@ namespace TagLib
     {
         uint sum = 0;
 
-        for ( ByteVector::ConstIterator it = begin(); it != end(); ++it ) {
-            sum = (sum << 8) ^ crcTable[( (sum >> 24) & 0xff ) ^ uchar(*it)];
+        for (ByteVector::ConstIterator it = begin(); it != end(); ++it) {
+            sum = (sum << 8) ^ crcTable[((sum >> 24) & 0xff) ^ uchar(*it)];
         }
         return sum;
     }
 
     TagLib::uint ByteVector::toUInt(bool mostSignificantByteFirst) const
     {
-        return toNumber<uint> (*this, 0, mostSignificantByteFirst);
+        return toNumber<uint>(*this, 0, mostSignificantByteFirst);
     }
 
     TagLib::uint ByteVector::toUInt(uint offset, bool mostSignificantByteFirst) const
     {
-        return toNumber<uint> (*this, offset, mostSignificantByteFirst);
+        return toNumber<uint>(*this, offset, mostSignificantByteFirst);
     }
 
     TagLib::uint ByteVector::toUInt(uint offset, uint length, bool mostSignificantByteFirst) const
     {
-        return toNumber<uint> (*this, offset, length, mostSignificantByteFirst);
+        return toNumber<uint>(*this, offset, length, mostSignificantByteFirst);
     }
 
     short ByteVector::toShort(bool mostSignificantByteFirst) const
     {
-        return toNumber<unsigned short> (*this, 0, mostSignificantByteFirst);
+        return toNumber<unsigned short>(*this, 0, mostSignificantByteFirst);
     }
 
     short ByteVector::toShort(uint offset, bool mostSignificantByteFirst) const
     {
-        return toNumber<unsigned short> (*this, offset, mostSignificantByteFirst);
+        return toNumber<unsigned short>(*this, offset, mostSignificantByteFirst);
     }
 
     unsigned short ByteVector::toUShort(bool mostSignificantByteFirst) const
     {
-        return toNumber<unsigned short> (*this, 0, mostSignificantByteFirst);
+        return toNumber<unsigned short>(*this, 0, mostSignificantByteFirst);
     }
 
     unsigned short ByteVector::toUShort(uint offset, bool mostSignificantByteFirst) const
     {
-        return toNumber<unsigned short> (*this, offset, mostSignificantByteFirst);
+        return toNumber<unsigned short>(*this, offset, mostSignificantByteFirst);
     }
 
     long long ByteVector::toLongLong(bool mostSignificantByteFirst) const
     {
-        return toNumber<unsigned long long> (*this, 0, mostSignificantByteFirst);
+        return toNumber<unsigned long long>(*this, 0, mostSignificantByteFirst);
     }
 
     long long ByteVector::toLongLong(uint offset, bool mostSignificantByteFirst) const
     {
-        return toNumber<unsigned long long> (*this, offset, mostSignificantByteFirst);
+        return toNumber<unsigned long long>(*this, offset, mostSignificantByteFirst);
     }
 
-    const char &ByteVector::operator[](int index) const
+    const char &ByteVector::operator [](int index) const
     {
         return d->data->data[d->offset + index];
     }
 
-    char &ByteVector::operator[](int index)
+    char &ByteVector::operator [](int index)
     {
-            detach();
+        detach();
         return d->data->data[d->offset + index];
     }
 
-    bool ByteVector::operator==(const ByteVector &v) const
+    bool ByteVector::operator ==(const ByteVector &v) const
     {
-        if ( size() != v.size() ) {
+        if (size() != v.size()) {
             return false;
         }
 
-        return ::memcmp( data(), v.data(), size() ) == 0;
+        return ::memcmp(data(), v.data(), size()) == 0;
     }
 
-    bool ByteVector::operator!=(const ByteVector &v) const
+    bool ByteVector::operator !=(const ByteVector &v) const
     {
-        return !operator==(v);
+        return !operator ==(v);
     }
 
-    bool ByteVector::operator==(const char *s) const
+    bool ByteVector::operator ==(const char *s) const
     {
-        if ( size() != ::strlen(s) ) {
+        if (size() != ::strlen(s)) {
             return false;
         }
 
-        return ::memcmp( data(), s, size() ) == 0;
+        return ::memcmp(data(), s, size()) == 0;
     }
 
-    bool ByteVector::operator!=(const char *s) const
+    bool ByteVector::operator !=(const char *s) const
     {
-        return !operator==(s);
+        return !operator ==(s);
     }
 
-    bool ByteVector::operator<(const ByteVector &v) const
+    bool ByteVector::operator <(const ByteVector &v) const
     {
-        const int result = ::memcmp( data(), v.data(), std::min( size(), v.size() ) );
+        const int result = ::memcmp(data(), v.data(), std::min(size(), v.size()));
 
-        if ( result != 0 ) {
+        if (result != 0) {
             return result < 0;
         } else {
             return size() < v.size();
         }
     }
 
-    bool ByteVector::operator>(const ByteVector &v) const
+    bool ByteVector::operator >(const ByteVector &v) const
     {
         return v < *this;
     }
 
-    ByteVector ByteVector::operator+(const ByteVector &v) const
+    ByteVector ByteVector::operator +(const ByteVector &v) const
     {
         ByteVector sum(*this);
 
@@ -816,13 +817,13 @@ namespace TagLib
         return sum;
     }
 
-    ByteVector &ByteVector::operator=(const ByteVector &v)
+    ByteVector &ByteVector::operator =(const ByteVector &v)
     {
-        if ( &v == this ) {
+        if (&v == this) {
             return *this;
         }
 
-        if ( d->deref() ) {
+        if (d->deref()) {
             delete d;
         }
 
@@ -831,13 +832,13 @@ namespace TagLib
         return *this;
     }
 
-    ByteVector &ByteVector::operator=(char c)
+    ByteVector &ByteVector::operator =(char c)
     {
         *this = ByteVector(c);
         return *this;
     }
 
-    ByteVector &ByteVector::operator=(const char *data)
+    ByteVector &ByteVector::operator =(const char *data)
     {
         *this = ByteVector(data);
         return *this;
@@ -848,7 +849,7 @@ namespace TagLib
         ByteVector encoded(size() * 2);
         char       *p = encoded.data();
 
-        for ( uint i = 0; i < size(); i++ ) {
+        for (uint i = 0; i < size(); i++) {
             unsigned char c = data()[i];
             *p++ = hexTable[(c >> 4) & 0x0F];
             *p++ = hexTable[(c) & 0x0F];
@@ -863,13 +864,13 @@ namespace TagLib
 
     void ByteVector::detach()
     {
-        if ( d->data->count() > 1 ) {
+        if (d->data->count() > 1) {
             d->data->deref();
             d->data   = new DataPrivate(d->data->data, d->offset, d->length);
             d->offset = 0;
         }
 
-        if ( d->count() > 1 ) {
+        if (d->count() > 1) {
             d->deref();
             d = new ByteVectorPrivate(d->data->data, d->offset, d->length);
         }
@@ -880,9 +881,9 @@ namespace TagLib
 // related functions
 ////////////////////////////////////////////////////////////////////////////////
 
-std::ostream &operator<<(std::ostream &s, const TagLib::ByteVector &v)
+std::ostream &operator <<(std::ostream &s, const TagLib::ByteVector &v)
 {
-    for ( TagLib::uint i = 0; i < v.size(); i++ ) {
+    for (TagLib::uint i = 0; i < v.size(); i++) {
         s << v[i];
     }
     return s;

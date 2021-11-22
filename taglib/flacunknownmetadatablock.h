@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2010 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -65,10 +65,9 @@ namespace TagLib
              * Render the content of the block.
              */
             ByteVector render() const;
-
         private:
             UnknownMetadataBlock(const MetadataBlock &item);
-            UnknownMetadataBlock &operator=(const MetadataBlock &item);
+            UnknownMetadataBlock &operator =(const MetadataBlock &item);
 
             class UnknownMetadataBlockPrivate;
             UnknownMetadataBlockPrivate *d;

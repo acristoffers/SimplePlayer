@@ -1,4 +1,4 @@
-﻿#include <QTimer>
+#include <QTimer>
 
 #include <librarymanager.h>
 
@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 
     MainWindow::instance()->show();
 
-    QTimer::singleShot( 2000, LibraryManager::instance(), SLOT( startScan() ) );
+    QTimer::singleShot(2000, LibraryManager::instance(), SLOT(startScan()));
 
     return a.exec();
 }

@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2003 by Ismael Orenstein
-*    email                : orenstein@kde.org
+/***************************************************************************
+*    copyright            : (C) 2003 by Ismael Orenstein email                : orenstein@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -38,11 +37,7 @@ namespace TagLib
         // ! An implementation of the Xing VBR headers
 
         /*!
-         * This is a minimalistic implementation of the Xing VBR headers.  Xing
-         * headers are often added to VBR (variable bit rate) MP3 streams to make it
-         * easy to compute the length and quality of a VBR stream.  Our implementation
-         * is only concerned with the total size of the stream (so that we can
-         * calculate the total playing time and the average bitrate).  It uses
+         * This is a minimalistic implementation of the Xing VBR headers.  Xing headers are often added to VBR (variable bit rate) MP3 streams to make it easy to compute the length and quality of a VBR stream.  Our implementation is only concerned with the total size of the stream (so that we can calculate the total playing time and the average bitrate).  It uses
          * <a href="http://home.pcisys.net/~melanson/codecs/mp3extensions.txt">this text</a>
          * and the XMMS sources as references.
          */
@@ -51,8 +46,7 @@ namespace TagLib
         {
         public:
             /*!
-             * Parses a Xing header based on \a data.  The data must be at least 16
-             * bytes long (anything longer than this is discarded).
+             * Parses a Xing header based on \a data.  The data must be at least 16 bytes long (anything longer than this is discarded).
              */
             XingHeader(const ByteVector &data);
 
@@ -62,8 +56,7 @@ namespace TagLib
             virtual ~XingHeader();
 
             /*!
-             * Returns true if the data was parsed properly and if there is a valid
-             * Xing header present.
+             * Returns true if the data was parsed properly and if there is a valid Xing header present.
              */
             bool isValid() const;
 
@@ -78,15 +71,13 @@ namespace TagLib
             uint totalSize() const;
 
             /*!
-             * Returns the offset for the start of this Xing header, given the
-             * version and channels of the frame
+             * Returns the offset for the start of this Xing header, given the version and channels of the frame
              */
             // BIC: rename to offset()
             static int xingHeaderOffset(TagLib::MPEG::Header::Version v, TagLib::MPEG::Header::ChannelMode c);
-
         private:
             XingHeader(const XingHeader &);
-            XingHeader &operator=(const XingHeader &);
+            XingHeader &operator =(const XingHeader &);
 
             void parse(const ByteVector &data);
 

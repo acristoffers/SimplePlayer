@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2012 by Rupert Daniel
-*    email                : rupert@cancelmonday.com
+/***************************************************************************
+*    copyright            : (C) 2012 by Rupert Daniel email                : rupert@cancelmonday.com
 ***************************************************************************/
 
 /***************************************************************************
@@ -34,9 +33,9 @@ using namespace ID3v2;
 class OwnershipFrame::OwnershipFramePrivate
 {
 public:
-    String       pricePaid;
-    String       datePurchased;
-    String       seller;
+    String pricePaid;
+    String datePurchased;
+    String seller;
     String::Type textEncoding;
 };
 
@@ -123,17 +122,17 @@ void OwnershipFrame::parseFields(const ByteVector &data)
 
     // If we don't have at least 8 bytes left then don't parse the rest of the
     // data
-    if ( data.size() - pos < 8 ) {
+    if (data.size() - pos < 8) {
         return;
     }
 
     // Read the date purchased YYYYMMDD
-    d->datePurchased = String( data.mid(pos, 8) );
+    d->datePurchased = String(data.mid(pos, 8));
     pos             += 8;
 
     // Read the seller
-    if ( d->textEncoding == String::Latin1 ) {
-        d->seller = Tag::latin1StringHandler()->parse( data.mid(pos) );
+    if (d->textEncoding == String::Latin1) {
+        d->seller = Tag::latin1StringHandler()->parse(data.mid(pos));
     } else {
         d->seller = String(data.mid(pos), d->textEncoding);
     }
@@ -143,11 +142,11 @@ ByteVector OwnershipFrame::renderFields() const
 {
     ByteVector v;
 
-    v.append( char (d->textEncoding) );
-    v.append( d->pricePaid.data(String::Latin1) );
-    v.append( textDelimiter(String::Latin1) );
-    v.append( d->datePurchased.data(String::Latin1) );
-    v.append( d->seller.data(d->textEncoding) );
+    v.append(char(d->textEncoding));
+    v.append(d->pricePaid.data(String::Latin1));
+    v.append(textDelimiter(String::Latin1));
+    v.append(d->datePurchased.data(String::Latin1));
+    v.append(d->seller.data(d->textEncoding));
 
     return v;
 }
@@ -159,5 +158,5 @@ ByteVector OwnershipFrame::renderFields() const
 OwnershipFrame::OwnershipFrame(const ByteVector &data, Header *h) : Frame(h)
 {
     d = new OwnershipFramePrivate;
-    parseFields( fieldData(data) );
+    parseFields(fieldData(data));
 }

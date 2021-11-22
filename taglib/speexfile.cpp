@@ -1,10 +1,8 @@
-﻿/***************************************************************************
+/***************************************************************************
 *    copyright            : (C) 2006 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 *
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
-*                           (original Vorbis implementation)
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org (original Vorbis implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -54,7 +52,7 @@ public:
     }
 
     Ogg::XiphComment *comment;
-    Properties       *properties;
+    Properties *properties;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -64,7 +62,7 @@ public:
 Speex::File::File(FileName file, bool readProperties, Properties::ReadStyle propertiesStyle) : Ogg::File(file)
 {
     d = new FilePrivate;
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties, propertiesStyle);
     }
 }
@@ -72,7 +70,7 @@ Speex::File::File(FileName file, bool readProperties, Properties::ReadStyle prop
 Speex::File::File(IOStream *stream, bool readProperties, Properties::ReadStyle propertiesStyle) : Ogg::File(stream)
 {
     d = new FilePrivate;
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties, propertiesStyle);
     }
 }
@@ -82,7 +80,7 @@ Speex::File::~File()
     delete d;
 }
 
-Ogg::XiphComment *Speex::File::tag() const
+Ogg::XiphComment*Speex::File::tag() const
 {
     return d->comment;
 }
@@ -97,18 +95,18 @@ PropertyMap Speex::File::setProperties(const PropertyMap &properties)
     return d->comment->setProperties(properties);
 }
 
-Speex::Properties *Speex::File::audioProperties() const
+Speex::Properties*Speex::File::audioProperties() const
 {
     return d->properties;
 }
 
 bool Speex::File::save()
 {
-    if ( !d->comment ) {
+    if (!d->comment) {
         d->comment = new Ogg::XiphComment;
     }
 
-    setPacket( 1, d->comment->render() );
+    setPacket(1, d->comment->render());
 
     return Ogg::File::save();
 }
@@ -121,7 +119,7 @@ void Speex::File::read(bool readProperties, Properties::ReadStyle propertiesStyl
 {
     ByteVector speexHeaderData = packet(0);
 
-    if ( !speexHeaderData.startsWith("Speex   ") ) {
+    if (!speexHeaderData.startsWith("Speex   ")) {
         debug("Speex::File::read() -- invalid Speex identification header");
         return;
     }
@@ -130,7 +128,7 @@ void Speex::File::read(bool readProperties, Properties::ReadStyle propertiesStyl
 
     d->comment = new Ogg::XiphComment(commentHeaderData);
 
-    if ( readProperties ) {
+    if (readProperties) {
         d->properties = new Properties(this, propertiesStyle);
     }
 }

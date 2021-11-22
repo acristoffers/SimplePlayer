@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -46,11 +45,11 @@ ByteVectorList ByteVectorList::split(const ByteVector &v, const ByteVector &patt
 
     uint previousOffset = 0;
 
-    for ( int offset = v.find(pattern, 0, byteAlign);
-          offset != -1 && (max == 0 || max > int ( l.size() ) + 1);
-          offset = v.find(pattern, offset + pattern.size(), byteAlign) ) {
-        if ( offset - previousOffset >= 1 ) {
-            l.append( v.mid(previousOffset, offset - previousOffset) );
+    for (int offset = v.find(pattern, 0, byteAlign);
+         offset != -1 && (max == 0 || max > int(l.size()) + 1);
+         offset = v.find(pattern, offset + pattern.size(), byteAlign)) {
+        if (offset - previousOffset >= 1) {
+            l.append(v.mid(previousOffset, offset - previousOffset));
         } else {
             l.append(ByteVector::null);
         }
@@ -58,8 +57,8 @@ ByteVectorList ByteVectorList::split(const ByteVector &v, const ByteVector &patt
         previousOffset = offset + pattern.size();
     }
 
-    if ( previousOffset < v.size() ) {
-        l.append( v.mid(previousOffset, v.size() - previousOffset) );
+    if (previousOffset < v.size()) {
+        l.append(v.mid(previousOffset, v.size() - previousOffset));
     }
 
     return l;
@@ -69,11 +68,11 @@ ByteVectorList ByteVectorList::split(const ByteVector &v, const ByteVector &patt
 // public members
 ////////////////////////////////////////////////////////////////////////////////
 
-ByteVectorList::ByteVectorList() : List<ByteVector> ()
+ByteVectorList::ByteVectorList() : List<ByteVector>()
 {
 }
 
-ByteVectorList::ByteVectorList(const ByteVectorList &l) : List<ByteVector> (l)
+ByteVectorList::ByteVectorList(const ByteVectorList &l) : List<ByteVector>(l)
 {
 }
 
@@ -87,10 +86,10 @@ ByteVector ByteVectorList::toByteVector(const ByteVector &separator) const
 
     ConstIterator it = begin();
 
-    while ( it != end() ) {
+    while (it != end()) {
         v.append(*it);
         it++;
-        if ( it != end() ) {
+        if (it != end()) {
             v.append(separator);
         }
     }

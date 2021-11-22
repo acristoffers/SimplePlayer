@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -35,15 +34,15 @@ class AttachedPictureFrame::AttachedPictureFramePrivate
 {
 public:
     AttachedPictureFramePrivate() : textEncoding(String::Latin1),
-                                    type(AttachedPictureFrame::Other)
+        type(AttachedPictureFrame::Other)
     {
     }
 
-    String::Type               textEncoding;
-    String                     mimeType;
+    String::Type textEncoding;
+    String mimeType;
     AttachedPictureFrame::Type type;
-    String                     description;
-    ByteVector                 data;
+    String description;
+    ByteVector data;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -129,7 +128,7 @@ void AttachedPictureFrame::setPicture(const ByteVector &p)
 
 void AttachedPictureFrame::parseFields(const ByteVector &data)
 {
-    if ( data.size() < 5 ) {
+    if (data.size() < 5) {
         debug("A picture frame must contain at least 5 bytes.");
         return;
     }
@@ -140,7 +139,7 @@ void AttachedPictureFrame::parseFields(const ByteVector &data)
 
     d->mimeType = readStringField(data, String::Latin1, &pos);
     /* Now we need at least two more bytes available */
-    if ( uint(pos) + 1 >= data.size() ) {
+    if (uint(pos) + 1 >= data.size()) {
         debug("Truncated picture frame.");
         return;
     }
@@ -157,12 +156,12 @@ ByteVector AttachedPictureFrame::renderFields() const
 
     String::Type encoding = checkTextEncoding(d->description, d->textEncoding);
 
-    data.append( char (encoding) );
-    data.append( d->mimeType.data(String::Latin1) );
-    data.append( textDelimiter(String::Latin1) );
-    data.append( char (d->type) );
-    data.append( d->description.data(encoding) );
-    data.append( textDelimiter(encoding) );
+    data.append(char(encoding));
+    data.append(d->mimeType.data(String::Latin1));
+    data.append(textDelimiter(String::Latin1));
+    data.append(char(d->type));
+    data.append(d->description.data(encoding));
+    data.append(textDelimiter(encoding));
     data.append(d->data);
 
     return data;
@@ -175,7 +174,7 @@ ByteVector AttachedPictureFrame::renderFields() const
 AttachedPictureFrame::AttachedPictureFrame(const ByteVector &data, Header *h) : Frame(h)
 {
     d = new AttachedPictureFramePrivate;
-    parseFields( fieldData(data) );
+    parseFields(fieldData(data));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -184,7 +183,7 @@ AttachedPictureFrame::AttachedPictureFrame(const ByteVector &data, Header *h) : 
 
 void AttachedPictureFrameV22::parseFields(const ByteVector &data)
 {
-    if ( data.size() < 5 ) {
+    if (data.size() < 5) {
         debug("A picture frame must contain at least 5 bytes.");
         return;
     }
@@ -194,11 +193,12 @@ void AttachedPictureFrameV22::parseFields(const ByteVector &data)
     int pos = 1;
 
     String fixedString = String(data.mid(pos, 3), String::Latin1);
+
     pos += 3;
     // convert fixed string image type to mime string
-    if ( fixedString.upper() == "JPG" ) {
+    if (fixedString.upper() == "JPG") {
         d->mimeType = "image/jpeg";
-    } else if ( fixedString.upper() == "PNG" ) {
+    } else if (fixedString.upper() == "PNG") {
         d->mimeType = "image/png";
     } else {
         debug("probably unsupported image type");
@@ -216,10 +216,11 @@ AttachedPictureFrameV22::AttachedPictureFrameV22(const ByteVector &data, Header 
     // set v2.2 header to make fieldData work correctly
     setHeader(h, true);
 
-    parseFields( fieldData(data) );
+    parseFields(fieldData(data));
 
     // now set the v2.4 header
     Frame::Header *newHeader = new Frame::Header("APIC");
-    newHeader->setFrameSize( h->frameSize() );
+
+    newHeader->setFrameSize(h->frameSize());
     setHeader(newHeader, true);
 }

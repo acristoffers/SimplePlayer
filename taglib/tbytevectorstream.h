@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2011 by Lukas Lalinsky
-*    email                : lalinsky@gmail.com
+/***************************************************************************
+*    copyright            : (C) 2011 by Lukas Lalinsky email                : lalinsky@gmail.com
 ***************************************************************************/
 
 /***************************************************************************
@@ -43,8 +42,7 @@ namespace TagLib
     {
     public:
         /*!
-         * Construct a File object and opens the \a file.  \a file should be a
-         * be a C-string in the local file system encoding.
+         * Construct a File object and opens the \a file.  \a file should be a be a C-string in the local file system encoding.
          */
         ByteVectorStream(const ByteVector &data);
 
@@ -64,22 +62,17 @@ namespace TagLib
         ByteVector readBlock(ulong length);
 
         /*!
-         * Attempts to write the block \a data at the current get pointer.  If the
-         * file is currently only opened read only -- i.e. readOnly() returns true --
+         * Attempts to write the block \a data at the current get pointer.  If the file is currently only opened read only -- i.e. readOnly() returns true --
          * this attempts to reopen the file in read/write mode.
          *
-         * \note This should be used instead of using the streaming output operator
-         * for a ByteVector.  And even this function is significantly slower than
-         * doing output with a char[].
+         * \note This should be used instead of using the streaming output operator for a ByteVector.  And even this function is significantly slower than doing output with a char[].
          */
         void writeBlock(const ByteVector &data);
 
         /*!
-         * Insert \a data at position \a start in the file overwriting \a replace
-         * bytes of the original content.
+         * Insert \a data at position \a start in the file overwriting \a replace bytes of the original content.
          *
-         * \note This method is slow since it requires rewriting all of the file
-         * after the insertion point.
+         * \note This method is slow since it requires rewriting all of the file after the insertion point.
          */
         void insert(const ByteVector &data, ulong start = 0, ulong replace = 0);
 
@@ -87,8 +80,7 @@ namespace TagLib
          * Removes a block of the file starting a \a start and continuing for
          * \a length bytes.
          *
-         * \note This method is slow since it involves rewriting all of the file
-         * after the removed portion.
+         * \note This method is slow since it involves rewriting all of the file after the removed portion.
          */
         void removeBlock(ulong start = 0, ulong length = 0);
 
@@ -98,14 +90,12 @@ namespace TagLib
         bool readOnly() const;
 
         /*!
-         * Since the file can currently only be opened as an argument to the
-         * constructor (sort-of by design), this returns if that open succeeded.
+         * Since the file can currently only be opened as an argument to the constructor (sort-of by design), this returns if that open succeeded.
          */
         bool isOpen() const;
 
         /*!
-         * Move the I/O pointer to \a offset in the file from position \a p.  This
-         * defaults to seeking from the beginning of the file.
+         * Move the I/O pointer to \a offset in the file from position \a p.  This defaults to seeking from the beginning of the file.
          *
          * \see Position
          */
@@ -132,7 +122,6 @@ namespace TagLib
         void truncate(long length);
 
         ByteVector *data();
-
     protected:
     private:
         class ByteVectorStreamPrivate;

@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2007,2011 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -70,11 +70,10 @@ namespace TagLib
             PropertyMap properties() const;
             void removeUnsupportedProperties(const StringList &properties);
             PropertyMap setProperties(const PropertyMap &properties);
-
         private:
-            AtomDataList parseData2(Atom *atom, TagLib::File *file, int expectedFlags = -1, bool freeForm = false);
+            AtomDataList parseData2(Atom *atom, TagLib::File *file, int expectedFlags          = -1, bool freeForm = false);
             TagLib::ByteVectorList parseData(Atom *atom, TagLib::File *file, int expectedFlags = -1, bool freeForm = false);
-            void parseText(Atom *atom, TagLib::File *file, int expectedFlags = 1);
+            void parseText(Atom *atom, TagLib::File *file, int expectedFlags                   = 1);
             void parseFreeForm(Atom *atom, TagLib::File *file);
             void parseInt(Atom *atom, TagLib::File *file);
             void parseByte(Atom *atom, TagLib::File *file);

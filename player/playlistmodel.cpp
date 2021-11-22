@@ -1,4 +1,4 @@
-﻿#include "playlistmodel.h"
+#include "playlistmodel.h"
 
 #include <QDebug>
 
@@ -18,10 +18,10 @@ struct PlaylistModelPrivate
 
 PlaylistModel::PlaylistModel(QMediaPlaylist *playlist)
     : QAbstractListModel(0),
-      d(new PlaylistModelPrivate)
+    d(new PlaylistModelPrivate)
 {
     d->playlist = playlist;
-    connect( playlist, SIGNAL( currentIndexChanged(int) ), this, SLOT( findModifiedModel(int) ) );
+    connect(playlist, SIGNAL(currentIndexChanged(int)), this, SLOT(findModifiedModel(int)));
 }
 
 PlaylistModel::~PlaylistModel()
@@ -32,21 +32,21 @@ PlaylistModel::~PlaylistModel()
 
 void PlaylistModel::playIndex(QModelIndex index)
 {
-    if ( index.isValid() ) {
-        d->playlist->setCurrentIndex( index.row() );
+    if (index.isValid()) {
+        d->playlist->setCurrentIndex(index.row());
     }
 }
 
 void PlaylistModel::findModifiedModel(int row)
 {
-    emit dataChanged(createIndex(row, 0), createIndex(row, 0), QVector<int> () << Qt::BackgroundColorRole);
+    emit dataChanged(createIndex(row, 0), createIndex(row, 0), QVector<int>() << Qt::BackgroundColorRole);
 }
 
 QModelIndex PlaylistModel::index(int row, int column, const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
 
-    if ( (column == 0) && ( row <= d->playlist->mediaCount() ) ) {
+    if ((column == 0) && (row <= d->playlist->mediaCount())) {
         return createIndex(row, column);
     }
 
@@ -61,23 +61,21 @@ int PlaylistModel::rowCount(const QModelIndex &parent) const
 
 QVariant PlaylistModel::data(const QModelIndex &index, int role) const
 {
-    if ( index.isValid() ) {
-        switch ( role ) {
+    if (index.isValid()) {
+        switch (role) {
             case Qt::DisplayRole:
             case Qt::ToolTipRole:
             {
-                QString file = d->playlist->media( index.row() ).canonicalUrl().path();
+                QString file = d->playlist->media(index.row()).canonicalUrl().path();
                 Music   m(file);
                 return m.title();
             }
 
             case Qt::BackgroundColorRole:
-            {
-                if ( d->playlist->media( index.row() ) == d->playlist->currentMedia() ) {
+                if (d->playlist->media(index.row()) == d->playlist->currentMedia()) {
                     return QColor(Qt::lightGray);
                 }
                 return QColor(Qt::white);
-            }
         }
     }
 
@@ -89,7 +87,7 @@ QVariant PlaylistModel::headerData(int section, Qt::Orientation orientation, int
     Q_UNUSED(section);
     Q_UNUSED(orientation);
 
-    if ( role == Qt::DisplayRole ) {
+    if (role == Qt::DisplayRole) {
         return "Title";
     } else {
         return QVariant();
@@ -101,15 +99,15 @@ QStringList PlaylistModel::mimeTypes() const
     return QStringList() << "application/file-list" << "application/ids-list" << QAbstractListModel::mimeTypes();
 }
 
-QMimeData *PlaylistModel::mimeData(const QModelIndexList &indexes) const
+QMimeData*PlaylistModel::mimeData(const QModelIndexList &indexes) const
 {
     QMimeData *data = new QMimeData;
 
     QByteArray  byteArray;
     QDataStream stream(&byteArray, QIODevice::WriteOnly);
 
-    for ( QModelIndex index : indexes ) {
-        if ( index.isValid() ) {
+    for (QModelIndex index : indexes) {
+        if (index.isValid()) {
             qint32 row = index.row();
             stream << row;
         }
@@ -126,7 +124,7 @@ bool PlaylistModel::canDropMimeData(const QMimeData *data, Qt::DropAction action
     Q_UNUSED(column);
     Q_UNUSED(parent);
 
-    if ( ( (action == Qt::MoveAction) || (action == Qt::CopyAction) ) && ( data->hasFormat("application/file-list") || data->hasFormat("application/ids-list") ) ) {
+    if (((action == Qt::MoveAction) || (action == Qt::CopyAction)) && (data->hasFormat("application/file-list") || data->hasFormat("application/ids-list"))) {
         return true;
     }
 
@@ -135,20 +133,20 @@ bool PlaylistModel::canDropMimeData(const QMimeData *data, Qt::DropAction action
 
 bool PlaylistModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
-    if ( ( (action == Qt::MoveAction) || (action == Qt::CopyAction) ) ) {
-        if ( data->hasFormat("application/file-list") ) {
+    if (((action == Qt::MoveAction) || (action == Qt::CopyAction))) {
+        if (data->hasFormat("application/file-list")) {
             QByteArray  byteArray = data->data("application/file-list");
             QDataStream stream(&byteArray, QIODevice::ReadOnly);
 
             QList<QMediaContent> list;
 
             QString file;
-            while ( !stream.atEnd() ) {
+            while (!stream.atEnd()) {
                 stream >> file;
-                list << QMediaContent( QUrl::fromLocalFile(file) );
+                list << QMediaContent(QUrl::fromLocalFile(file));
             }
 
-            if ( row < 0 ) {
+            if (row < 0) {
                 row = d->playlist->mediaCount();
             }
 
@@ -157,7 +155,7 @@ bool PlaylistModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
             endResetModel();
 
             return true;
-        } else if ( data->hasFormat("application/ids-list") ) {
+        } else if (data->hasFormat("application/ids-list")) {
             beginResetModel();
 
             QList<qint32> ids;
@@ -166,7 +164,7 @@ bool PlaylistModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
             QDataStream stream(&byteArray, QIODevice::ReadOnly);
             qint32      cid;
 
-            while ( !stream.atEnd() ) {
+            while (!stream.atEnd()) {
                 stream >> cid;
                 ids << cid;
             }
@@ -175,14 +173,14 @@ bool PlaylistModel::dropMimeData(const QMimeData *data, Qt::DropAction action, i
 
             int fix = 0;
 
-            for ( qint32 id : ids ) {
+            for (qint32 id : ids) {
                 mediaList << d->playlist->media(id);
-                if ( id < row ) {
+                if (id < row) {
                     fix++;
                 }
             }
 
-            for ( qint32 id : ids ) {
+            for (qint32 id : ids) {
                 d->playlist->removeMedia(id);
                 fix++;
             }
@@ -211,7 +209,8 @@ void PlaylistModel::removeRows(QList<int> rows)
     beginResetModel();
 
     int fix = 0;
-    for ( int row : rows ) {
+
+    for (int row : rows) {
         d->playlist->removeMedia(row - fix);
         fix++;
     }
@@ -221,7 +220,7 @@ void PlaylistModel::removeRows(QList<int> rows)
 
 Qt::ItemFlags PlaylistModel::flags(const QModelIndex &index) const
 {
-    if ( index.isValid() ) {
+    if (index.isValid()) {
         return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled | Qt::ItemIsDropEnabled | Qt::ItemNeverHasChildren;
     }
 

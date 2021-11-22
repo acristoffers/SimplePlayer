@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -41,12 +40,12 @@ StringList StringList::split(const String &s, const String &pattern)
 
     int previousOffset = 0;
 
-    for ( int offset = s.find(pattern); offset != -1; offset = s.find(pattern, offset + 1) ) {
-        l.append( s.substr(previousOffset, offset - previousOffset) );
+    for (int offset = s.find(pattern); offset != -1; offset = s.find(pattern, offset + 1)) {
+        l.append(s.substr(previousOffset, offset - previousOffset));
         previousOffset = offset + 1;
     }
 
-    l.append( s.substr(previousOffset, s.size() - previousOffset) );
+    l.append(s.substr(previousOffset, s.size() - previousOffset));
 
     return l;
 }
@@ -55,25 +54,25 @@ StringList StringList::split(const String &s, const String &pattern)
 // public members
 ////////////////////////////////////////////////////////////////////////////////
 
-StringList::StringList() : List<String> ()
+StringList::StringList() : List<String>()
 {
 }
 
-StringList::StringList(const StringList &l) : List<String> (l)
+StringList::StringList(const StringList &l) : List<String>(l)
 {
 }
 
-StringList::StringList(const String &s) : List<String> ()
+StringList::StringList(const String &s) : List<String>()
 {
-        append(s);
+    append(s);
 }
 
-StringList::StringList(const ByteVectorList &bl, String::Type t) : List<String> ()
+StringList::StringList(const ByteVectorList &bl, String::Type t) : List<String>()
 {
     ByteVectorList::ConstIterator i = bl.begin();
 
-    for ( ; i != bl.end(); i++ ) {
-        append( String(*i, t) );
+    for ( ; i != bl.end(); i++) {
+        append(String(*i, t));
     }
 }
 
@@ -88,10 +87,10 @@ String StringList::toString(const String &separator) const
     ConstIterator it    = begin();
     ConstIterator itEnd = end();
 
-    while ( it != itEnd ) {
+    while (it != itEnd) {
         s += *it;
         it++;
-        if ( it != itEnd ) {
+        if (it != itEnd) {
             s += separator;
         }
     }
@@ -102,12 +101,14 @@ String StringList::toString(const String &separator) const
 StringList &StringList::append(const String &s)
 {
     List<String>::append(s);
+
     return *this;
 }
 
 StringList &StringList::append(const StringList &l)
 {
     List<String>::append(l);
+
     return *this;
 }
 
@@ -115,7 +116,7 @@ StringList &StringList::append(const StringList &l)
 // related functions
 ////////////////////////////////////////////////////////////////////////////////
 
-std::ostream &operator<<(std::ostream &s, const StringList &l)
+std::ostream &operator <<(std::ostream &s, const StringList &l)
 {
     s << l.toString();
     return s;

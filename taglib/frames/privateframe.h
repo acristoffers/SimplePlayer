@@ -1,7 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2008 by Serkan Kalyoncu
-*    copyright            : (C) 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2008 by Serkan Kalyoncu copyright            : (C) 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -39,7 +37,6 @@ namespace TagLib
         class TAGLIB_EXPORT PrivateFrame : public Frame
         {
             friend class FrameFactory;
-
         public:
             /*!
              * Construct an empty private frame.
@@ -86,13 +83,11 @@ namespace TagLib
              *
              */
             void setData(const ByteVector &v);
-
         protected:
             // Reimplementations.
 
             virtual void parseFields(const ByteVector &data);
             virtual ByteVector renderFields() const;
-
         private:
             /*!
              * The constructor used by the FrameFactory.
@@ -100,7 +95,7 @@ namespace TagLib
             PrivateFrame(const ByteVector &data, Header *h);
 
             PrivateFrame(const PrivateFrame &);
-            PrivateFrame &operator=(const PrivateFrame &);
+            PrivateFrame &operator =(const PrivateFrame &);
 
             class PrivateFramePrivate;
             PrivateFramePrivate *d;

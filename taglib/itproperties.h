@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright           : (C) 2011 by Mathias Panzenböck
-*    email               : grosser.meister.morti@gmx.net
+/***************************************************************************
+*    copyright           : (C) 2011 by Mathias Panzenböck email               : grosser.meister.morti@gmx.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -32,7 +31,6 @@ namespace TagLib
         class TAGLIB_EXPORT Properties : public AudioProperties
         {
             friend class File;
-
         public:
             /*! Flag bits. */
             enum {
@@ -91,10 +89,9 @@ namespace TagLib
             void setBpmSpeed(uchar bpmSpeed);
             void setPanningSeparation(uchar panningSeparation);
             void setPitchWheelDepth(uchar pitchWheelDepth);
-
         private:
             Properties(const Properties &);
-            Properties &operator=(const Properties &);
+            Properties &operator =(const Properties &);
 
             class PropertiesPrivate;
             PropertiesPrivate *d;

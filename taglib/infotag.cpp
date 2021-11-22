@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2012 by Tsuda Kageyu
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2012 by Tsuda Kageyu email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -35,12 +34,12 @@ namespace
 {
     static bool isValidChunkID(const ByteVector &name)
     {
-        if ( name.size() != 4 ) {
+        if (name.size() != 4) {
             return false;
         }
 
-        for ( int i = 0; i < 4; i++ ) {
-            if ( (name[i] < 32) || (name[i] > 127) ) {
+        for (int i = 0; i < 4; i++) {
+            if ((name[i] < 32) || (name[i] > 127)) {
                 return false;
             }
         }
@@ -87,19 +86,19 @@ ByteVector RIFF::Info::StringHandler::render(const String &s) const
 // public members
 ////////////////////////////////////////////////////////////////////////////////
 
-static const StringHandler      defaultStringHandler;
-const RIFF::Info::StringHandler *RIFF::Info::Tag::TagPrivate::stringHandler = &defaultStringHandler;
+static const StringHandler     defaultStringHandler;
+const RIFF::Info::StringHandler*RIFF::Info::Tag::TagPrivate::stringHandler = &defaultStringHandler;
 
 RIFF::Info::Tag::Tag(const ByteVector &data)
     : TagLib::Tag()
-      , d( new TagPrivate() )
+    , d(new TagPrivate())
 {
     parse(data);
 }
 
 RIFF::Info::Tag::Tag()
     : TagLib::Tag()
-      , d( new TagPrivate() )
+    , d(new TagPrivate())
 {
 }
 
@@ -145,33 +144,33 @@ TagLib::uint RIFF::Info::Tag::track() const
 
 void RIFF::Info::Tag::setTitle(const String &s)
 {
-        setFieldText("INAM", s);
+    setFieldText("INAM", s);
 }
 
 void RIFF::Info::Tag::setArtist(const String &s)
 {
-        setFieldText("IART", s);
+    setFieldText("IART", s);
 }
 
 void RIFF::Info::Tag::setAlbum(const String &s)
 {
-        setFieldText("IPRD", s);
+    setFieldText("IPRD", s);
 }
 
 void RIFF::Info::Tag::setComment(const String &s)
 {
-        setFieldText("ICMT", s);
+    setFieldText("ICMT", s);
 }
 
 void RIFF::Info::Tag::setGenre(const String &s)
 {
-        setFieldText("IGNR", s);
+    setFieldText("IGNR", s);
 }
 
 void RIFF::Info::Tag::setYear(uint i)
 {
-    if ( i != 0 ) {
-        setFieldText( "ICRD", String::number(i) );
+    if (i != 0) {
+        setFieldText("ICRD", String::number(i));
     } else {
         d->fieldListMap.erase("ICRD");
     }
@@ -179,8 +178,8 @@ void RIFF::Info::Tag::setYear(uint i)
 
 void RIFF::Info::Tag::setTrack(uint i)
 {
-    if ( i != 0 ) {
-        setFieldText( "IPRT", String::number(i) );
+    if (i != 0) {
+        setFieldText("IPRT", String::number(i));
     } else {
         d->fieldListMap.erase("IPRT");
     }
@@ -198,7 +197,7 @@ FieldListMap RIFF::Info::Tag::fieldListMap() const
 
 String RIFF::Info::Tag::fieldText(const ByteVector &id) const
 {
-    if ( d->fieldListMap.contains(id) ) {
+    if (d->fieldListMap.contains(id)) {
         return String(d->fieldListMap[id]);
     } else {
         return String();
@@ -208,11 +207,11 @@ String RIFF::Info::Tag::fieldText(const ByteVector &id) const
 void RIFF::Info::Tag::setFieldText(const ByteVector &id, const String &s)
 {
     // id must be four-byte long pure ascii string.
-    if ( !isValidChunkID(id) ) {
+    if (!isValidChunkID(id)) {
         return;
     }
 
-    if ( !s.isEmpty() ) {
+    if (!s.isEmpty()) {
         d->fieldListMap[id] = s;
     } else {
         removeField(id);
@@ -221,7 +220,7 @@ void RIFF::Info::Tag::setFieldText(const ByteVector &id, const String &s)
 
 void RIFF::Info::Tag::removeField(const ByteVector &id)
 {
-    if ( d->fieldListMap.contains(id) ) {
+    if (d->fieldListMap.contains(id)) {
         d->fieldListMap.erase(id);
     }
 }
@@ -232,22 +231,22 @@ ByteVector RIFF::Info::Tag::render() const
 
     FieldListMap::ConstIterator it = d->fieldListMap.begin();
 
-    for ( ; it != d->fieldListMap.end(); ++it ) {
+    for ( ; it != d->fieldListMap.end(); ++it) {
         ByteVector text = TagPrivate::stringHandler->render(it->second);
-        if ( text.isEmpty() ) {
+        if (text.isEmpty()) {
             continue;
         }
 
         data.append(it->first);
-        data.append( ByteVector::fromUInt(text.size() + 1, false) );
+        data.append(ByteVector::fromUInt(text.size() + 1, false));
         data.append(text);
 
         do {
             data.append('\0');
-        } while ( data.size() & 1 );
+        } while (data.size() & 1);
     }
 
-    if ( data.size() == 4 ) {
+    if (data.size() == 4) {
         return ByteVector();
     } else {
         return data;
@@ -256,7 +255,7 @@ ByteVector RIFF::Info::Tag::render() const
 
 void RIFF::Info::Tag::setStringHandler(const StringHandler *handler)
 {
-    if ( handler ) {
+    if (handler) {
         TagPrivate::stringHandler = handler;
     } else {
         TagPrivate::stringHandler = &defaultStringHandler;
@@ -271,10 +270,10 @@ void RIFF::Info::Tag::parse(const ByteVector &data)
 {
     uint p = 4;
 
-    while ( p < data.size() ) {
+    while (p < data.size()) {
         const uint size = data.toUInt(p + 4, false);
-        d->fieldListMap[data.mid(p, 4)] = TagPrivate::stringHandler->parse( data.mid(p + 8, size) );
+        d->fieldListMap[data.mid(p, 4)] = TagPrivate::stringHandler->parse(data.mid(p + 8, size));
 
-        p += ( (size + 1) & ~1 ) + 8;
+        p += ((size + 1) & ~1) + 8;
     }
 }

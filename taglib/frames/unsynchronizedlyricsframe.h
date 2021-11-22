@@ -1,8 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
-*    copyright            : (C) 2006 by Urs Fleisch
-*    email                : ufleisch@users.sourceforge.net
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org copyright            : (C) 2006 by Urs Fleisch email                : ufleisch@users.sourceforge.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -41,7 +38,6 @@ namespace TagLib
         class TAGLIB_EXPORT UnsynchronizedLyricsFrame : public Frame
         {
             friend class FrameFactory;
-
         public:
             /*!
              * Construct an empty unsynchronized lyrics frame that will use the text encoding
@@ -116,9 +112,7 @@ namespace TagLib
             virtual void setText(const String &s);
 
             /*!
-             * Returns the text encoding that will be used in rendering this frame.
-             * This defaults to the type that was either specified in the constructor
-             * or read from the frame when parsed.
+             * Returns the text encoding that will be used in rendering this frame. This defaults to the type that was either specified in the constructor or read from the frame when parsed.
              *
              * \see setTextEncoding()
              * \see render()
@@ -136,38 +130,30 @@ namespace TagLib
 
             /*! Parses this frame as PropertyMap with a single key.
              * - if description() is empty or "LYRICS", the key will be "LYRICS"
-             * - if description() is not a valid PropertyMap key, the frame will be
-             *   marked unsupported by an entry "USLT/<description>" in the unsupportedData()
-             *   attribute of the returned map.
+             * - if description() is not a valid PropertyMap key, the frame will be marked unsupported by an entry "USLT/<description>" in the unsupportedData() attribute of the returned map.
              * - otherwise, the key will be "LYRICS:<description>"
-             * - The single value will be the frame's text().
-             * Note that currently the language() field is not supported by the PropertyMap
-             * interface.
+             * - The single value will be the frame's text(). Note that currently the language() field is not supported by the PropertyMap interface.
              */
             PropertyMap asProperties() const;
 
             /*!
-             * LyricsFrames each have a unique description.  This searches for a lyrics
-             * frame with the decription \a d and returns a pointer to it.  If no
-             * frame is found that matches the given description null is returned.
+             * LyricsFrames each have a unique description.  This searches for a lyrics frame with the decription \a d and returns a pointer to it.  If no frame is found that matches the given description null is returned.
              *
              * \see description()
              */
             static UnsynchronizedLyricsFrame *findByDescription(const Tag *tag, const String &d);
-
         protected:
             // Reimplementations.
 
             virtual void parseFields(const ByteVector &data);
             virtual ByteVector renderFields() const;
-
         private:
             /*!
              * The constructor used by the FrameFactory.
              */
             UnsynchronizedLyricsFrame(const ByteVector &data, Header *h);
             UnsynchronizedLyricsFrame(const UnsynchronizedLyricsFrame &);
-            UnsynchronizedLyricsFrame &operator=(const UnsynchronizedLyricsFrame &);
+            UnsynchronizedLyricsFrame &operator =(const UnsynchronizedLyricsFrame &);
 
             class UnsynchronizedLyricsFramePrivate;
             UnsynchronizedLyricsFramePrivate *d;

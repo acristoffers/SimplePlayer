@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright           : (C) 2011 by Mathias Panzenböck
-*    email               : grosser.meister.morti@gmx.net
+/***************************************************************************
+*    copyright           : (C) 2011 by Mathias Panzenböck email               : grosser.meister.morti@gmx.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -34,8 +33,8 @@ public:
     {
     }
 
-    int   channels;
-    uint  instrumentCount;
+    int channels;
+    uint instrumentCount;
     uchar lengthInPatterns;
 };
 

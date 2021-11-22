@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2009 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -37,7 +37,7 @@ public:
     {
     }
 
-    Format     format;
+    Format format;
     ByteVector data;
 };
 
@@ -53,9 +53,9 @@ MP4::CoverArt::CoverArt(const CoverArt &item) : d(item.d)
     d->ref();
 }
 
-MP4::CoverArt &MP4::CoverArt::operator=(const CoverArt &item)
+MP4::CoverArt &MP4::CoverArt::operator =(const CoverArt &item)
 {
-    if ( d->deref() ) {
+    if (d->deref()) {
         delete d;
     }
     d = item.d;
@@ -65,7 +65,7 @@ MP4::CoverArt &MP4::CoverArt::operator=(const CoverArt &item)
 
 MP4::CoverArt::~CoverArt()
 {
-    if ( d->deref() ) {
+    if (d->deref()) {
         delete d;
     }
 }

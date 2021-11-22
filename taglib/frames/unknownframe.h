@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -36,20 +35,14 @@ namespace TagLib
         // ! A frame type \e unknown to TagLib.
 
         /*!
-         * This class represents a frame type not known (or more often simply
-         * unimplemented) in TagLib.  This is here provide a basic API for
-         * manipulating the binary data of unknown frames and to provide a means
-         * of rendering such \e unknown frames.
+         * This class represents a frame type not known (or more often simply unimplemented) in TagLib.  This is here provide a basic API for manipulating the binary data of unknown frames and to provide a means of rendering such \e unknown frames.
          *
-         * Please note that a cleaner way of handling frame types that TagLib
-         * does not understand is to subclass ID3v2::Frame and ID3v2::FrameFactory
-         * to have your frame type supported through the standard ID3v2 mechanism.
+         * Please note that a cleaner way of handling frame types that TagLib does not understand is to subclass ID3v2::Frame and ID3v2::FrameFactory to have your frame type supported through the standard ID3v2 mechanism.
          */
 
         class TAGLIB_EXPORT UnknownFrame : public Frame
         {
             friend class FrameFactory;
-
         public:
             UnknownFrame(const ByteVector &data);
             virtual ~UnknownFrame();
@@ -60,15 +53,13 @@ namespace TagLib
              * Returns the field data (everything but the header) for this frame.
              */
             ByteVector data() const;
-
         protected:
             virtual void parseFields(const ByteVector &data);
             virtual ByteVector renderFields() const;
-
         private:
             UnknownFrame(const ByteVector &data, Header *h);
             UnknownFrame(const UnknownFrame &);
-            UnknownFrame &operator=(const UnknownFrame &);
+            UnknownFrame &operator =(const UnknownFrame &);
 
             class UnknownFramePrivate;
             UnknownFramePrivate *d;

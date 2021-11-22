@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -29,35 +28,35 @@
 using namespace TagLib;
 
 #define stringUnion(method) \
-    if ( tag(0) && !tag(0)->method().isEmpty() ) { \
+    if (tag(0) && !tag(0)->method().isEmpty()) { \
         return tag(0)->method(); } \
-    if ( tag(1) && !tag(1)->method().isEmpty() ) { \
+    if (tag(1) && !tag(1)->method().isEmpty()) { \
         return tag(1)->method(); } \
-    if ( tag(2) && !tag(2)->method().isEmpty() ) { \
+    if (tag(2) && !tag(2)->method().isEmpty()) { \
         return tag(2)->method(); } \
     return String::null \
 
 #define numberUnion(method) \
-    if ( tag(0) && tag(0)->method() > 0 ) { \
+    if (tag(0) && tag(0)->method() > 0) { \
         return tag(0)->method(); } \
-    if ( tag(1) && tag(1)->method() > 0 ) { \
+    if (tag(1) && tag(1)->method() > 0) { \
         return tag(1)->method(); } \
-    if ( tag(2) && tag(2)->method() > 0 ) { \
+    if (tag(2) && tag(2)->method() > 0) { \
         return tag(2)->method(); } \
     return 0
 
 #define setUnion(method, value) \
-    if ( tag(0) ) { \
+    if (tag(0)) { \
         tag(0)->set ## method(value); } \
-    if ( tag(1) ) { \
+    if (tag(1)) { \
         tag(1)->set ## method(value); } \
-    if ( tag(2) ) { \
+    if (tag(2)) { \
         tag(2)->set ## method(value); } \
 
 class TagUnion::TagUnionPrivate
 {
 public:
-    TagUnionPrivate() : tags( 3, static_cast<Tag *> (0) )
+    TagUnionPrivate() : tags(3, static_cast<Tag*>(0))
     {
     }
 
@@ -68,7 +67,7 @@ public:
         delete tags[2];
     }
 
-    std::vector<Tag *> tags;
+    std::vector<Tag*> tags;
 };
 
 TagUnion::TagUnion(Tag *first, Tag *second, Tag *third)
@@ -85,12 +84,12 @@ TagUnion::~TagUnion()
     delete d;
 }
 
-Tag *TagUnion::operator[](int index) const
+Tag*TagUnion::operator [](int index) const
 {
     return tag(index);
 }
 
-Tag *TagUnion::tag(int index) const
+Tag*TagUnion::tag(int index) const
 {
     return d->tags[index];
 }
@@ -173,13 +172,13 @@ void TagUnion::setTrack(uint i)
 
 bool TagUnion::isEmpty() const
 {
-    if ( d->tags[0] && !d->tags[0]->isEmpty() ) {
+    if (d->tags[0] && !d->tags[0]->isEmpty()) {
         return false;
     }
-    if ( d->tags[1] && !d->tags[1]->isEmpty() ) {
+    if (d->tags[1] && !d->tags[1]->isEmpty()) {
         return false;
     }
-    if ( d->tags[2] && !d->tags[2]->isEmpty() ) {
+    if (d->tags[2] && !d->tags[2]->isEmpty()) {
         return false;
     }
 

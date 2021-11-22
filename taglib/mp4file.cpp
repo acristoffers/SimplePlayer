@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -41,22 +41,22 @@ public:
 
     ~FilePrivate()
     {
-        if ( atoms ) {
+        if (atoms) {
             delete atoms;
             atoms = 0;
         }
-        if ( tag ) {
+        if (tag) {
             delete tag;
             tag = 0;
         }
-        if ( properties ) {
+        if (properties) {
             delete properties;
             properties = 0;
         }
     }
 
-    MP4::Tag        *tag;
-    MP4::Atoms      *atoms;
+    MP4::Tag *tag;
+    MP4::Atoms *atoms;
     MP4::Properties *properties;
 };
 
@@ -64,7 +64,7 @@ MP4::File::File(FileName file, bool readProperties, AudioProperties::ReadStyle a
     : TagLib::File(file)
 {
     d = new FilePrivate;
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties, audioPropertiesStyle);
     }
 }
@@ -73,7 +73,7 @@ MP4::File::File(IOStream *stream, bool readProperties, AudioProperties::ReadStyl
     : TagLib::File(stream)
 {
     d = new FilePrivate;
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties, audioPropertiesStyle);
     }
 }
@@ -83,7 +83,7 @@ MP4::File::~File()
     delete d;
 }
 
-MP4::Tag *MP4::File::tag() const
+MP4::Tag*MP4::File::tag() const
 {
     return d->tag;
 }
@@ -103,18 +103,18 @@ PropertyMap MP4::File::setProperties(const PropertyMap &properties)
     return d->tag->setProperties(properties);
 }
 
-MP4::Properties *MP4::File::audioProperties() const
+MP4::Properties*MP4::File::audioProperties() const
 {
     return d->properties;
 }
 
 bool MP4::File::checkValid(const MP4::AtomList &list)
 {
-    for ( uint i = 0; i < list.size(); i++ ) {
-        if ( list[i]->length == 0 ) {
+    for (uint i = 0; i < list.size(); i++) {
+        if (list[i]->length == 0) {
             return false;
         }
-        if ( !checkValid(list[i]->children) ) {
+        if (!checkValid(list[i]->children)) {
             return false;
         }
     }
@@ -123,37 +123,38 @@ bool MP4::File::checkValid(const MP4::AtomList &list)
 
 void MP4::File::read(bool readProperties, Properties::ReadStyle audioPropertiesStyle)
 {
-    if ( !isValid() ) {
+    if (!isValid()) {
         return;
     }
 
     d->atoms = new Atoms(this);
-    if ( !checkValid(d->atoms->atoms) ) {
+    if (!checkValid(d->atoms->atoms)) {
         setValid(false);
         return;
     }
 
     // must have a moov atom, otherwise consider it invalid
     MP4::Atom *moov = d->atoms->find("moov");
-    if ( !moov ) {
+
+    if (!moov) {
         setValid(false);
         return;
     }
 
     d->tag = new Tag(this, d->atoms);
-    if ( readProperties ) {
+    if (readProperties) {
         d->properties = new Properties(this, d->atoms, audioPropertiesStyle);
     }
 }
 
 bool MP4::File::save()
 {
-    if ( readOnly() ) {
+    if (readOnly()) {
         debug("MP4::File::save() -- File is read only.");
         return false;
     }
 
-    if ( !isValid() ) {
+    if (!isValid()) {
         debug("MP4::File::save() -- Trying to save invalid file.");
         return false;
     }

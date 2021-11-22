@@ -1,4 +1,4 @@
-﻿#include "player/playlistlistview.h"
+#include "player/playlistlistview.h"
 
 #include <QDebug>
 
@@ -15,7 +15,7 @@ PlaylistListView::PlaylistListView(QWidget *parent) :
 
     remove->setShortcut(QKeySequence::Delete);
     addAction(remove);
-    connect( remove, SIGNAL( triggered() ), this, SLOT( removeSelected() ) );
+    connect(remove, SIGNAL(triggered()), this, SLOT(removeSelected()));
 }
 
 void PlaylistListView::removeSelected()
@@ -24,11 +24,11 @@ void PlaylistListView::removeSelected()
 
     QList<int> ids;
 
-    for ( QModelIndex index : indexes ) {
+    for (QModelIndex index : indexes) {
         ids << index.row();
     }
 
     qSort(ids);
 
-    ( (PlaylistModel *) model() )->removeRows(ids);
+    ((PlaylistModel*) model())->removeRows(ids);
 }

@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -69,5 +68,5 @@ void ExtendedHeader::setData(const ByteVector &data)
 
 void ExtendedHeader::parse(const ByteVector &data)
 {
-    d->size = SynchData::toUInt( data.mid(0, 4) ); // (structure 3.2 "Extended header size")
+    d->size = SynchData::toUInt(data.mid(0, 4));   // (structure 3.2 "Extended header size")
 }

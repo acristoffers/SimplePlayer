@@ -1,6 +1,5 @@
-﻿/**************************************************************************
-*    copyright            : (C) 2010 by Anton Sergunov
-*    email                : setosha@gmail.com
+/**************************************************************************
+*    copyright            : (C) 2010 by Anton Sergunov email                : setosha@gmail.com
 **************************************************************************/
 
 /***************************************************************************
@@ -38,10 +37,7 @@ namespace TagLib
         // ! An ASF attached picture interface implementation
 
         /*!
-         * This is an implementation of ASF attached pictures interface.  Pictures may be
-         * included in attributes, one per WM/Picture attribute (but there may be multiple WM/Picture
-         * attribute in a single tag).  These pictures are usually in either JPEG or
-         * PNG format.
+         * This is an implementation of ASF attached pictures interface.  Pictures may be included in attributes, one per WM/Picture attribute (but there may be multiple WM/Picture attribute in a single tag).  These pictures are usually in either JPEG or PNG format.
          * \see Attribute::toPicture()
          * \see Attribute::Attribute(const Picture& picture)
          */
@@ -114,7 +110,7 @@ namespace TagLib
             /*!
              * Copies the contents of \a other into this picture.
              */
-            Picture &operator=(const Picture &other);
+            Picture &operator =(const Picture &other);
 
             /*!
              * Returns true if Picture stores valid picture
@@ -172,8 +168,7 @@ namespace TagLib
             /*!
              * Returns the image data as a ByteVector.
              *
-             * \note ByteVector has a data() method that returns a const char * which
-             * should make it easy to export this data to external programs.
+             * \note ByteVector has a data() method that returns a const char * which should make it easy to export this data to external programs.
              *
              * \see setPicture()
              * \see mimeType()
@@ -181,8 +176,7 @@ namespace TagLib
             ByteVector picture() const;
 
             /*!
-             * Sets the image data to \a p.  \a p should be of the type specified in
-             * this frame's mime-type specification.
+             * Sets the image data to \a p.  \a p should be of the type specified in this frame's mime-type specification.
              *
              * \see picture()
              * \see mimeType()
@@ -207,7 +201,6 @@ namespace TagLib
 
             friend class Attribute;
 #endif
-
         private:
             class PicturePrivate;
             PicturePrivate *d;

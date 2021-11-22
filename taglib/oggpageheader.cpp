@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -55,19 +54,19 @@ public:
     {
     }
 
-    File      *file;
-    long      fileOffset;
-    bool      isValid;
+    File *file;
+    long fileOffset;
+    bool isValid;
     List<int> packetSizes;
-    bool      firstPacketContinued;
-    bool      lastPacketCompleted;
-    bool      firstPageOfStream;
-    bool      lastPageOfStream;
+    bool firstPacketContinued;
+    bool lastPacketCompleted;
+    bool firstPageOfStream;
+    bool lastPageOfStream;
     long long absoluteGranularPosition;
-    uint      streamSerialNumber;
-    int       pageSequenceNumber;
-    int       size;
-    int       dataSize;
+    uint streamSerialNumber;
+    int pageSequenceNumber;
+    int size;
+    int dataSize;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -77,7 +76,7 @@ public:
 Ogg::PageHeader::PageHeader(Ogg::File *file, long pageOffset)
 {
     d = new PageHeaderPrivate(file, pageOffset);
-    if ( file && (pageOffset >= 0) ) {
+    if (file && (pageOffset >= 0)) {
         read();
     }
 }
@@ -192,39 +191,40 @@ ByteVector Ogg::PageHeader::render() const
 
     // stream structure version
 
-    data.append( char (0) );
+    data.append(char(0));
 
     // header type flag
 
     std::bitset<8> flags;
+
     flags[0] = d->firstPacketContinued;
     flags[1] = d->pageSequenceNumber == 0;
     flags[2] = d->lastPageOfStream;
 
-    data.append( char ( flags.to_ulong() ) );
+    data.append(char(flags.to_ulong()));
 
     // absolute granular position
 
-    data.append( ByteVector::fromLongLong(d->absoluteGranularPosition, false) );
+    data.append(ByteVector::fromLongLong(d->absoluteGranularPosition, false));
 
     // stream serial number
 
-    data.append( ByteVector::fromUInt(d->streamSerialNumber, false) );
+    data.append(ByteVector::fromUInt(d->streamSerialNumber, false));
 
     // page sequence number
 
-    data.append( ByteVector::fromUInt(d->pageSequenceNumber, false) );
+    data.append(ByteVector::fromUInt(d->pageSequenceNumber, false));
 
     // checksum -- this is left empty and should be filled in by the Ogg::Page
     // class
 
-    data.append( ByteVector(4, 0) );
+    data.append(ByteVector(4, 0));
 
     // page segment count and page segment table
 
     ByteVector pageSegments = lacingValues();
 
-    data.append( char ( uchar( pageSegments.size() ) ) );
+    data.append(char(uchar(pageSegments.size())));
     data.append(pageSegments);
 
     return data;
@@ -246,7 +246,7 @@ void Ogg::PageHeader::read()
     // Sanity check -- make sure that we were in fact able to read as much data as
     // we asked for and that the page begins with "OggS".
 
-    if ( (data.size() != 27) || !data.startsWith("OggS") ) {
+    if ((data.size() != 27) || !data.startsWith("OggS")) {
         debug("Ogg::PageHeader::read() -- error reading page header");
         return;
     }
@@ -271,7 +271,7 @@ void Ogg::PageHeader::read()
 
     // Another sanity check.
 
-    if ( (pageSegmentCount < 1) || (int ( pageSegments.size() ) != pageSegmentCount) ) {
+    if ((pageSegmentCount < 1) || (int(pageSegments.size()) != pageSegmentCount)) {
         return;
     }
 
@@ -281,17 +281,17 @@ void Ogg::PageHeader::read()
 
     int packetSize = 0;
 
-    for ( int i = 0; i < pageSegmentCount; i++ ) {
+    for (int i = 0; i < pageSegmentCount; i++) {
         d->dataSize += uchar(pageSegments[i]);
         packetSize  += uchar(pageSegments[i]);
 
-        if ( uchar(pageSegments[i]) < 255 ) {
+        if (uchar(pageSegments[i]) < 255) {
             d->packetSizes.append(packetSize);
             packetSize = 0;
         }
     }
 
-    if ( packetSize > 0 ) {
+    if (packetSize > 0) {
         d->packetSizes.append(packetSize);
         d->lastPacketCompleted = false;
     } else {
@@ -306,7 +306,8 @@ ByteVector Ogg::PageHeader::lacingValues() const
     ByteVector data;
 
     List<int> sizes = d->packetSizes;
-    for ( List<int>::ConstIterator it = sizes.begin(); it != sizes.end(); ++it ) {
+
+    for (List<int>::ConstIterator it = sizes.begin(); it != sizes.end(); ++it) {
         // The size of a packet in an Ogg page is indicated by a series of "lacing
         // values" where the sum of the values is the packet size in bytes.  Each of
         // these values is a byte.  A value of less than 255 (0xff) indicates the end
@@ -314,12 +315,12 @@ ByteVector Ogg::PageHeader::lacingValues() const
 
         div_t n = div(*it, 255);
 
-        for ( int i = 0; i < n.quot; i++ ) {
-            data.append( char ( uchar(255) ) );
+        for (int i = 0; i < n.quot; i++) {
+            data.append(char(uchar(255)));
         }
 
-        if ( ( it != --sizes.end() ) || d->lastPacketCompleted ) {
-            data.append( char ( uchar(n.rem) ) );
+        if ((it != --sizes.end()) || d->lastPacketCompleted) {
+            data.append(char(uchar(n.rem)));
         }
     }
 

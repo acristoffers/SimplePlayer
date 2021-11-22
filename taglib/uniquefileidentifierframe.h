@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -33,9 +32,7 @@ namespace TagLib
     namespace ID3v2
     {
         /*!
-         * This is an implementation of ID3v2 unique file identifier frames.  This
-         * frame is used to identify the file in an arbitrary database identified
-         * by the owner field.
+         * This is an implementation of ID3v2 unique file identifier frames.  This frame is used to identify the file in an arbitrary database identified by the owner field.
          */
 
         // ! An implementation of ID3v2 unique identifier frames
@@ -43,7 +40,6 @@ namespace TagLib
         class TAGLIB_EXPORT UniqueFileIdentifierFrame : public ID3v2::Frame
         {
             friend class FrameFactory;
-
         public:
             /*!
              * Creates a uniqe file identifier frame based on \a data.
@@ -51,8 +47,7 @@ namespace TagLib
             UniqueFileIdentifierFrame(const ByteVector &data);
 
             /*!
-             * Creates a unique file identifier frame with the owner \a owner and
-             * the identification \a id.
+             * Creates a unique file identifier frame with the owner \a owner and the identification \a id.
              */
             UniqueFileIdentifierFrame(const String &owner, const ByteVector &id);
 
@@ -62,19 +57,14 @@ namespace TagLib
             ~UniqueFileIdentifierFrame();
 
             /*!
-             * Returns the owner for the frame; essentially this is the key for
-             * determining which identification scheme this key belongs to.  This
-             * will usually either be an email address or URL for the person or tool
-             * used to create the unique identifier.
+             * Returns the owner for the frame; essentially this is the key for determining which identification scheme this key belongs to.  This will usually either be an email address or URL for the person or tool used to create the unique identifier.
              *
              * \see setOwner()
              */
             String owner() const;
 
             /*!
-             * Returns the unique identifier.  Though sometimes this is a text string
-             * it also may be binary data and as much should be assumed when handling
-             * it.
+             * Returns the unique identifier.  Though sometimes this is a text string it also may be binary data and as much should be assumed when handling it.
              */
             ByteVector identifier() const;
 
@@ -97,20 +87,17 @@ namespace TagLib
             PropertyMap asProperties() const;
 
             /*!
-             * UFID frames each have a unique owner. This searches for a UFID
-             * frame with the owner \a o and returns a pointer to it.
+             * UFID frames each have a unique owner. This searches for a UFID frame with the owner \a o and returns a pointer to it.
              *
              * \see owner()
              */
             static UniqueFileIdentifierFrame *findByOwner(const Tag *tag, const String &o);
-
         protected:
             virtual void parseFields(const ByteVector &data);
             virtual ByteVector renderFields() const;
-
         private:
             UniqueFileIdentifierFrame(const UniqueFileIdentifierFrame &);
-            UniqueFileIdentifierFrame &operator=(const UniqueFileIdentifierFrame &);
+            UniqueFileIdentifierFrame &operator =(const UniqueFileIdentifierFrame &);
 
             UniqueFileIdentifierFrame(const ByteVector &data, Header *h);
 

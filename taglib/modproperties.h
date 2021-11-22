@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright           : (C) 2011 by Mathias Panzenböck
-*    email               : grosser.meister.morti@gmx.net
+/***************************************************************************
+*    copyright           : (C) 2011 by Mathias Panzenböck email               : grosser.meister.morti@gmx.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -47,12 +46,11 @@ namespace TagLib
 
             void setInstrumentCount(uint sampleCount);
             void setLengthInPatterns(uchar lengthInPatterns);
-
         private:
             friend class File;
 
             Properties(const Properties &);
-            Properties &operator=(const Properties &);
+            Properties &operator =(const Properties &);
 
             class PropertiesPrivate;
             PropertiesPrivate *d;

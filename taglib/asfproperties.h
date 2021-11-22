@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2005-2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -62,7 +62,6 @@ namespace TagLib
             void setChannels(int value);
             void setEncrypted(bool value);
 #endif
-
         private:
             class PropertiesPrivate;
             PropertiesPrivate *d;

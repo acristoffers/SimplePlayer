@@ -1,10 +1,8 @@
-﻿/***************************************************************************
+/***************************************************************************
 *    copyright            : (C) 2006 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 *
-*    copyright            : (C) 2004 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
-*                           (original MPC implementation)
+*    copyright            : (C) 2004 by Allan Sandfeld Jensen email                : kde@carewolf.org (original MPC implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -54,15 +52,15 @@ public:
     }
 
     ByteVector data;
-    long       streamLength;
-    ReadStyle  style;
-    int        version;
-    int        length;
-    int        bitrate;
-    int        sampleRate;
-    int        channels;
-    int        bitsPerSample;
-    uint       sampleFrames;
+    long streamLength;
+    ReadStyle style;
+    int version;
+    int length;
+    int bitrate;
+    int sampleRate;
+    int channels;
+    int bitsPerSample;
+    uint sampleFrames;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +119,7 @@ int TrueAudio::Properties::ttaVersion() const
 
 void TrueAudio::Properties::read()
 {
-    if ( !d->data.startsWith("TTA") ) {
+    if (!d->data.startsWith("TTA")) {
         return;
     }
 
@@ -132,7 +130,7 @@ void TrueAudio::Properties::read()
 
     // According to http://en.true-audio.com/TTA_Lossless_Audio_Codec_-_Format_Description
     // TTA2 headers are in development, and have a different format
-    if ( 1 == d->version ) {
+    if (1 == d->version) {
         // Skip the audio format
         pos += 2;
 
@@ -148,6 +146,6 @@ void TrueAudio::Properties::read()
         d->sampleFrames = d->data.toUInt(pos, false);
         d->length       = d->sampleRate > 0 ? d->sampleFrames / d->sampleRate : 0;
 
-        d->bitrate = d->length > 0 ? ( (d->streamLength * 8L) / d->length ) / 1000 : 0;
+        d->bitrate = d->length > 0 ? ((d->streamLength * 8L) / d->length) / 1000 : 0;
     }
 }

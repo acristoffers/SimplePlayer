@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -37,8 +36,7 @@ namespace TagLib
         // ! An implementation of MP3 frame headers
 
         /*!
-         * This is an implementation of MPEG Layer III headers.  The API follows more
-         * or less the binary format of these headers.  I've used
+         * This is an implementation of MPEG Layer III headers.  The API follows more or less the binary format of these headers.  I've used
          * <a href="http://www.mp3-tech.org/programmer/frame_header.html">this</a>
          * document as a reference.
          */
@@ -62,8 +60,7 @@ namespace TagLib
             virtual ~Header();
 
             /*!
-             * Returns true if the frame is at least an appropriate size and has
-             * legal values.
+             * Returns true if the frame is at least an appropriate size and has legal values.
              */
             bool isValid() const;
 
@@ -110,8 +107,7 @@ namespace TagLib
             bool isPadded() const;
 
             /*!
-             * There are a few combinations or one or two channel audio that are
-             * possible:
+             * There are a few combinations or one or two channel audio that are possible:
              */
             enum ChannelMode {
                 // ! Stereo
@@ -152,8 +148,7 @@ namespace TagLib
             /*!
              * Makes a shallow copy of the header.
              */
-            Header &operator=(const Header &h);
-
+            Header &operator =(const Header &h);
         private:
             void parse(const ByteVector &data);
 

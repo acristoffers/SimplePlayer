@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2012 by Rupert Daniel
-*    email                : rupert@cancelmonday.com
+/***************************************************************************
+*    copyright            : (C) 2012 by Rupert Daniel email                : rupert@cancelmonday.com
 ***************************************************************************/
 
 /***************************************************************************
@@ -36,14 +35,12 @@ namespace TagLib
         // ! An implementation of ID3v2 "ownership"
 
         /*!
-         * This implements the ID3v2 ownership (OWNE frame).  It consists of
-         * a price paid, a date purchased (YYYYMMDD) and the name of the seller.
+         * This implements the ID3v2 ownership (OWNE frame).  It consists of a price paid, a date purchased (YYYYMMDD) and the name of the seller.
          */
 
         class TAGLIB_EXPORT OwnershipFrame : public Frame
         {
             friend class FrameFactory;
-
         public:
             /*!
              * Construct an empty ownership frame.
@@ -110,9 +107,7 @@ namespace TagLib
             void setSeller(const String &seller);
 
             /*!
-             * Returns the text encoding that will be used in rendering this frame.
-             * This defaults to the type that was either specified in the constructor
-             * or read from the frame when parsed.
+             * Returns the text encoding that will be used in rendering this frame. This defaults to the type that was either specified in the constructor or read from the frame when parsed.
              *
              * \see setTextEncoding()
              * \see render()
@@ -127,20 +122,18 @@ namespace TagLib
              * \see render()
              */
             void setTextEncoding(String::Type encoding);
-
         protected:
             // Reimplementations.
 
             virtual void parseFields(const ByteVector &data);
             virtual ByteVector renderFields() const;
-
         private:
             /*!
              * The constructor used by the FrameFactory.
              */
             OwnershipFrame(const ByteVector &data, Header *h);
             OwnershipFrame(const OwnershipFrame &);
-            OwnershipFrame &operator=(const OwnershipFrame &);
+            OwnershipFrame &operator =(const OwnershipFrame &);
 
             class OwnershipFramePrivate;
             OwnershipFramePrivate *d;

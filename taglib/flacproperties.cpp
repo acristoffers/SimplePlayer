@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2003 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
+/***************************************************************************
+*    copyright            : (C) 2003 by Allan Sandfeld Jensen email                : kde@carewolf.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -47,16 +46,16 @@ public:
     {
     }
 
-    ByteVector         data;
-    long               streamLength;
-    ReadStyle          style;
-    int                length;
-    int                bitrate;
-    int                sampleRate;
-    int                sampleWidth;
-    int                channels;
+    ByteVector data;
+    long streamLength;
+    ReadStyle style;
+    int length;
+    int bitrate;
+    int sampleRate;
+    int sampleWidth;
+    int channels;
     unsigned long long sampleFrames;
-    ByteVector         signature;
+    ByteVector signature;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +120,7 @@ ByteVector FLAC::Properties::signature() const
 
 void FLAC::Properties::read()
 {
-    if ( d->data.size() < 18 ) {
+    if (d->data.size() < 18) {
         debug("FLAC::Properties::read() - FLAC properties must contain at least 18 bytes.");
         return;
     }
@@ -141,23 +140,25 @@ void FLAC::Properties::read()
     pos += 3;
 
     uint flags = d->data.toUInt(pos, true);
+
     pos += 4;
 
     d->sampleRate  = flags >> 12;
-    d->channels    = ( (flags >> 9) & 7 ) + 1;
-    d->sampleWidth = ( (flags >> 4) & 31 ) + 1;
+    d->channels    = ((flags >> 9) & 7) + 1;
+    d->sampleWidth = ((flags >> 4) & 31) + 1;
 
     // The last 4 bits are the most significant 4 bits for the 36 bit
     // stream length in samples. (Audio files measured in days)
 
     unsigned long long hi = flags & 0xf;
     unsigned long long lo = d->data.toUInt(pos, true);
+
     pos += 4;
 
     d->sampleFrames = (hi << 32) | lo;
 
-    if ( d->sampleRate > 0 ) {
-        d->length = int (d->sampleFrames / d->sampleRate);
+    if (d->sampleRate > 0) {
+        d->length = int(d->sampleFrames / d->sampleRate);
     }
 
     // Uncompressed bitrate:
@@ -166,7 +167,7 @@ void FLAC::Properties::read()
 
     // Real bitrate:
 
-    d->bitrate = d->length > 0 ? ( (d->streamLength * 8UL) / d->length ) / 1000 : 0;
+    d->bitrate = d->length > 0 ? ((d->streamLength * 8UL) / d->length) / 1000 : 0;
 
     d->signature = d->data.mid(pos, 32);
 }

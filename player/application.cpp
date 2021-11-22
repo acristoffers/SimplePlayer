@@ -1,4 +1,4 @@
-﻿#include "player/application.h"
+#include "player/application.h"
 
 #include <QIcon>
 
@@ -8,14 +8,16 @@
 #ifdef Q_OS_MAC
  #include <objc/objc.h>
  #include <objc/message.h>
+ #define OBJC(X, Y) ((objc_object* (*) (id, SEL)) objc_msgSend) ((objc_object*) X, sel_registerName(Y))
 
 bool dockClickHandler(id self, SEL _cmd, ...)
 {
     Q_UNUSED(self);
     Q_UNUSED(_cmd);
-    ( (Application *) qApp )->onClickOnDock();
+    ((Application*) qApp)->onClickOnDock();
     return true;
 }
+
 #endif
 
 Application::Application(int &argc, char **argv) :
@@ -27,19 +29,18 @@ Application::Application(int &argc, char **argv) :
     setOrganizationDomain("br.cefetmg");
     setOrganizationName("CEFET-MG");
 
-    setWindowIcon( QIcon(":/icon.png") );
+    setWindowIcon(QIcon(":/icon.png"));
     setQuitOnLastWindowClosed(false);
 
 #ifdef Q_OS_MAC
-    Class       cls               = (Class) objc_getClass("NSApplication");
-    SEL         sharedApplication = sel_registerName("sharedApplication");
-    objc_object *appInst          = objc_msgSend( (objc_object *) cls, sharedApplication );
+    Class       cls      = (Class) objc_getClass("NSApplication");
+    objc_object *appInst = OBJC(cls, "sharedApplication");
 
-    if ( appInst != NULL ) {
-        objc_object *delegate = objc_msgSend( appInst, sel_registerName("delegate") );
-        objc_object *delClass = objc_msgSend( delegate, sel_registerName("class") );
+    if (appInst != NULL) {
+        objc_object *delegate = OBJC(appInst, "delegate");
+        objc_object *delClass = OBJC(delegate, "class");
 
-        class_addMethod( (Class) delClass, sel_registerName("applicationShouldHandleReopen:hasVisibleWindows:"), (IMP) dockClickHandler, "B@:" );
+        class_addMethod((Class) delClass, sel_registerName("applicationShouldHandleReopen:hasVisibleWindows:"), (IMP) dockClickHandler, "B@:");
     }
 #endif
 }

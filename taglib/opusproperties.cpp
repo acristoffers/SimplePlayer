@@ -1,10 +1,8 @@
-﻿/***************************************************************************
+/***************************************************************************
 *    copyright            : (C) 2012 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 *
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
-*                           (original Vorbis implementation)
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org (original Vorbis implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -51,12 +49,12 @@ public:
     {
     }
 
-    File      *file;
+    File *file;
     ReadStyle style;
-    int       length;
-    int       inputSampleRate;
-    int       channels;
-    int       opusVersion;
+    int length;
+    int inputSampleRate;
+    int channels;
+    int opusVersion;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,15 +121,16 @@ void Opus::Properties::read()
     uint pos = 8;
 
     // *Version* (8 bits, unsigned)
-    d->opusVersion = uchar( data.at(pos) );
+    d->opusVersion = uchar(data.at(pos));
     pos           += 1;
 
     // *Output Channel Count* 'C' (8 bits, unsigned)
-    d->channels = uchar( data.at(pos) );
+    d->channels = uchar(data.at(pos));
     pos        += 1;
 
     // *Pre-skip* (16 bits, unsigned, little endian)
     const ushort preSkip = data.toUShort(pos, false);
+
     pos += 2;
 
     // *Input Sample Rate* (32 bits, unsigned, little endian)
@@ -147,17 +146,17 @@ void Opus::Properties::read()
     const Ogg::PageHeader *first = d->file->firstPageHeader();
     const Ogg::PageHeader *last  = d->file->lastPageHeader();
 
-    if ( first && last ) {
+    if (first && last) {
         long long start = first->absoluteGranularPosition();
         long long end   = last->absoluteGranularPosition();
 
-        if ( (start >= 0) && (end >= 0) ) {
-            d->length = (int) ( (end - start - preSkip) / 48000 );
+        if ((start >= 0) && (end >= 0)) {
+            d->length = (int) ((end - start - preSkip) / 48000);
         } else {
             debug("Opus::Properties::read() -- The PCM values for the start or "
                   "end of this file was incorrect.");
         }
     } else {
-            debug("Opus::Properties::read() -- Could not find valid first and last Ogg pages.");
+        debug("Opus::Properties::read() -- Could not find valid first and last Ogg pages.");
     }
 }

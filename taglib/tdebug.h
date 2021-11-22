@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -33,13 +32,9 @@ namespace TagLib
 
 #ifndef DO_NOT_DOCUMENT
     /*!
-     * A simple function that outputs the debug messages to the listener.
-     * The default listener redirects the messages to \a stderr when NDEBUG is
-     * not defined.
+     * A simple function that outputs the debug messages to the listener. The default listener redirects the messages to \a stderr when NDEBUG is not defined.
      *
-     * \warning Do not use this outside of TagLib, it could lead to undefined
-     * symbols in your build if TagLib is built with NDEBUG defined and your
-     * application is not.
+     * \warning Do not use this outside of TagLib, it could lead to undefined symbols in your build if TagLib is built with NDEBUG defined and your application is not.
      *
      * \internal
      */
@@ -48,9 +43,7 @@ namespace TagLib
     /*!
      * For debugging binary data.
      *
-     * \warning Do not use this outside of TagLib, it could lead to undefined
-     * symbols in your build if TagLib is built with NDEBUG defined and your
-     * application is not.
+     * \warning Do not use this outside of TagLib, it could lead to undefined symbols in your build if TagLib is built with NDEBUG defined and your application is not.
      *
      * \internal
      */

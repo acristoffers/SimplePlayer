@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -41,18 +40,11 @@ namespace TagLib
         // ! A abstraction for the string to data encoding in ID3v1 tags.
 
         /*!
-         * ID3v1 should in theory always contain ISO-8859-1 (Latin1) data.  In
-         * practice it does not.  TagLib by default only supports ISO-8859-1 data
-         * in ID3v1 tags.
+         * ID3v1 should in theory always contain ISO-8859-1 (Latin1) data.  In practice it does not.  TagLib by default only supports ISO-8859-1 data in ID3v1 tags.
          *
-         * However by subclassing this class and reimplementing parse() and render()
-         * and setting your reimplementation as the default with
-         * ID3v1::Tag::setStringHandler() you can define how you would like these
-         * transformations to be done.
+         * However by subclassing this class and reimplementing parse() and render() and setting your reimplementation as the default with ID3v1::Tag::setStringHandler() you can define how you would like these transformations to be done.
          *
-         * \warning It is advisable <b>not</b> to write non-ISO-8859-1 data to ID3v1
-         * tags.  Please consider disabling the writing of ID3v1 tags in the case
-         * that the data is not ISO-8859-1.
+         * \warning It is advisable <b>not</b> to write non-ISO-8859-1 data to ID3v1 tags.  Please consider disabling the writing of ID3v1 tags in the case that the data is not ISO-8859-1.
          *
          * \see ID3v1::Tag::setStringHandler()
          */
@@ -60,7 +52,6 @@ namespace TagLib
         class TAGLIB_EXPORT StringHandler
         {
             TAGLIB_IGNORE_MISSING_DESTRUCTOR
-
         public:
             // BIC: Add virtual destructor.
             StringHandler();
@@ -72,13 +63,9 @@ namespace TagLib
             virtual String parse(const ByteVector &data) const;
 
             /*!
-             * Encode a ByteVector with the data from \a s.  The default implementation
-             * assumes that \a s is an ISO-8859-1 (Latin1) string.  If the string is
-             * does not conform to ISO-8859-1, no value is written.
+             * Encode a ByteVector with the data from \a s.  The default implementation assumes that \a s is an ISO-8859-1 (Latin1) string.  If the string is does not conform to ISO-8859-1, no value is written.
              *
-             * \warning It is recommended that you <b>not</b> override this method, but
-             * instead do not write an ID3v1 tag in the case that the data is not
-             * ISO-8859-1.
+             * \warning It is recommended that you <b>not</b> override this method, but instead do not write an ID3v1 tag in the case that the data is not ISO-8859-1.
              */
             virtual ByteVector render(const String &s) const;
         };
@@ -86,21 +73,13 @@ namespace TagLib
         // ! The main class in the ID3v1 implementation
 
         /*!
-         * This is an implementation of the ID3v1 format.  ID3v1 is both the simplist
-         * and most common of tag formats but is rather limited.  Because of its
-         * pervasiveness and the way that applications have been written around the
-         * fields that it provides, the generic TagLib::Tag API is a mirror of what is
-         * provided by ID3v1.
+         * This is an implementation of the ID3v1 format.  ID3v1 is both the simplist and most common of tag formats but is rather limited.  Because of its pervasiveness and the way that applications have been written around the fields that it provides, the generic TagLib::Tag API is a mirror of what is provided by ID3v1.
          *
-         * ID3v1 tags should generally only contain Latin1 information.  However because
-         * many applications do not follow this rule there is now support for overriding
-         * the ID3v1 string handling using the ID3v1::StringHandler class.  Please see
-         * the documentation for that class for more information.
+         * ID3v1 tags should generally only contain Latin1 information.  However because many applications do not follow this rule there is now support for overriding the ID3v1 string handling using the ID3v1::StringHandler class.  Please see the documentation for that class for more information.
          *
          * \see StringHandler
          *
-         * \note Most fields are truncated to a maximum of 28-30 bytes.  The
-         * truncation happens automatically when the tag is rendered.
+         * \note Most fields are truncated to a maximum of 28-30 bytes.  The truncation happens automatically when the tag is rendered.
          */
 
         class TAGLIB_EXPORT Tag : public TagLib::Tag
@@ -123,14 +102,12 @@ namespace TagLib
             virtual ~Tag();
 
             /*!
-             * Renders the in memory values to a ByteVector suitable for writing to
-             * the file.
+             * Renders the in memory values to a ByteVector suitable for writing to the file.
              */
             ByteVector render() const;
 
             /*!
-             * Returns the string "TAG" suitable for usage in locating the tag in a
-             * file.
+             * Returns the string "TAG" suitable for usage in locating the tag in a file.
              */
             static ByteVector fileIdentifier();
 
@@ -162,24 +139,18 @@ namespace TagLib
             /*!
              * Sets the genre in number to \a i.
              *
-             * /note Valid value is from 0 up to 255. Normally 255 indicates that
-             * this tag contains no genre.
+             * /note Valid value is from 0 up to 255. Normally 255 indicates that this tag contains no genre.
              */
             void setGenreNumber(TagLib::uint i);
 
             /*!
-             * Sets the string handler that decides how the ID3v1 data will be
-             * converted to and from binary data.
-             * If the parameter \a handler is null, the previous handler is
-             * released and default ISO-8859-1 handler is restored.
+             * Sets the string handler that decides how the ID3v1 data will be converted to and from binary data. If the parameter \a handler is null, the previous handler is released and default ISO-8859-1 handler is restored.
              *
-             * \note The caller is responsible for deleting the previous handler
-             * as needed after it is released.
+             * \note The caller is responsible for deleting the previous handler as needed after it is released.
              *
              * \see StringHandler
              */
             static void setStringHandler(const StringHandler *handler);
-
         protected:
             /*!
              * Reads from the file specified in the constructor.
@@ -190,10 +161,9 @@ namespace TagLib
              * Pareses the body of the tag in \a data.
              */
             void parse(const ByteVector &data);
-
         private:
             Tag(const Tag &);
-            Tag &operator=(const Tag &);
+            Tag &operator =(const Tag &);
 
             class TagPrivate;
             TagPrivate *d;

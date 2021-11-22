@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2003 by Ismael Orenstein
-*    email                : orenstein@kde.org
+/***************************************************************************
+*    copyright            : (C) 2003 by Ismael Orenstein email                : orenstein@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -74,14 +73,14 @@ TagLib::uint MPEG::XingHeader::totalSize() const
 
 int MPEG::XingHeader::xingHeaderOffset(TagLib::MPEG::Header::Version v, TagLib::MPEG::Header::ChannelMode c)
 {
-    if ( v == MPEG::Header::Version1 ) {
-        if ( c == MPEG::Header::SingleChannel ) {
+    if (v == MPEG::Header::Version1) {
+        if (c == MPEG::Header::SingleChannel) {
             return 0x15;
         } else {
             return 0x24;
         }
     } else {
-        if ( c == MPEG::Header::SingleChannel ) {
+        if (c == MPEG::Header::SingleChannel) {
             return 0x0D;
         } else {
             return 0x15;
@@ -93,19 +92,19 @@ void MPEG::XingHeader::parse(const ByteVector &data)
 {
     // Check to see if a valid Xing header is available.
 
-    if ( !data.startsWith("Xing") && !data.startsWith("Info") ) {
+    if (!data.startsWith("Xing") && !data.startsWith("Info")) {
         return;
     }
 
     // If the XingHeader doesn't contain the number of frames and the total stream
     // info it's invalid.
 
-    if ( !(data[7] & 0x01) ) {
+    if (!(data[7] & 0x01)) {
         debug("MPEG::XingHeader::parse() -- Xing header doesn't contain the total number of frames.");
         return;
     }
 
-    if ( !(data[7] & 0x02) ) {
+    if (!(data[7] & 0x02)) {
         debug("MPEG::XingHeader::parse() -- Xing header doesn't contain the total stream size.");
         return;
     }

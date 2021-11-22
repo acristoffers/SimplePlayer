@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -45,14 +44,13 @@ namespace TagLib
 
         /*!
          * Creates a TagLib::Tag that is the union of \a first, \a second, and
-         * \a third.  The TagUnion takes ownership of these tags and will handle
-         * their deletion.
+         * \a third.  The TagUnion takes ownership of these tags and will handle their deletion.
          */
         TagUnion(Tag *first = 0, Tag *second = 0, Tag *third = 0);
 
         virtual ~TagUnion();
 
-        Tag *operator[](int index) const;
+        Tag*operator [](int index) const;
         Tag *tag(int index) const;
 
         void set(int index, Tag *tag);
@@ -77,17 +75,16 @@ namespace TagLib
         template<class T>
         T *access(int index, bool create)
         {
-            if ( !create || tag(index) ) {
-                return static_cast<T *> ( tag(index) );
+            if (!create || tag(index)) {
+                return static_cast<T*>(tag(index));
             }
 
             set(index, new T);
-            return static_cast<T *> ( tag(index) );
+            return static_cast<T*>(tag(index));
         }
-
     private:
         TagUnion(const Tag &);
-        TagUnion &operator=(const Tag &);
+        TagUnion &operator =(const Tag &);
 
         class TagUnionPrivate;
         TagUnionPrivate *d;

@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -48,13 +47,13 @@ public:
     }
 
     short format;
-    int   length;
-    int   bitrate;
-    int   sampleRate;
-    int   channels;
-    int   sampleWidth;
-    uint  sampleFrames;
-    uint  streamLength;
+    int length;
+    int bitrate;
+    int sampleRate;
+    int channels;
+    int sampleWidth;
+    uint sampleFrames;
+    uint streamLength;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -120,10 +119,11 @@ void RIFF::WAV::Properties::read(const ByteVector &data)
     d->sampleWidth = data.toShort(14, false);
 
     const uint byteRate = data.toUInt(8, false);
+
     d->bitrate = byteRate * 8 / 1000;
 
     d->length = byteRate > 0 ? d->streamLength / byteRate : 0;
-    if ( (d->channels > 0) && (d->sampleWidth > 0) ) {
-        d->sampleFrames = d->streamLength / ( d->channels * ( (d->sampleWidth + 7) / 8 ) );
+    if ((d->channels > 0) && (d->sampleWidth > 0)) {
+        d->sampleFrames = d->streamLength / (d->channels * ((d->sampleWidth + 7) / 8));
     }
 }

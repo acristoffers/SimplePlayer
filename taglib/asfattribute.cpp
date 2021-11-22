@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2005-2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -35,16 +35,16 @@ class ASF::Attribute::AttributePrivate : public RefCounter
 {
 public:
     AttributePrivate()
-        : pictureValue( ASF::Picture::fromInvalid() ),
-          stream(0),
-          language(0)
+        : pictureValue(ASF::Picture::fromInvalid()),
+        stream(0),
+        language(0)
     {
     }
 
     AttributeTypes type;
-    String         stringValue;
-    ByteVector     byteVectorValue;
-    ASF::Picture   pictureValue;
+    String stringValue;
+    ByteVector byteVectorValue;
+    ASF::Picture pictureValue;
     union {
         unsigned int       intValue;
         unsigned short     shortValue;
@@ -72,9 +72,9 @@ ASF::Attribute::Attribute(const ASF::Attribute &other)
     d->ref();
 }
 
-ASF::Attribute &ASF::Attribute::operator=(const ASF::Attribute &other)
+ASF::Attribute &ASF::Attribute::operator =(const ASF::Attribute &other)
 {
-    if ( d->deref() ) {
+    if (d->deref()) {
         delete d;
     }
     d = other.d;
@@ -84,7 +84,7 @@ ASF::Attribute &ASF::Attribute::operator=(const ASF::Attribute &other)
 
 ASF::Attribute::~Attribute()
 {
-    if ( d->deref() ) {
+    if (d->deref()) {
         delete d;
     }
 }
@@ -150,7 +150,7 @@ String ASF::Attribute::toString() const
 
 ByteVector ASF::Attribute::toByteVector() const
 {
-    if ( d->pictureValue.isValid() ) {
+    if (d->pictureValue.isValid()) {
         return d->pictureValue.render();
     }
     return d->byteVectorValue;
@@ -188,37 +188,37 @@ String ASF::Attribute::parse(ASF::File &f, int kind)
 
     d->pictureValue = Picture::fromInvalid();
     // extended content descriptor
-    if ( kind == 0 ) {
+    if (kind == 0) {
         nameLength = f.readWORD();
         name       = f.readString(nameLength);
-        d->type    = ASF::Attribute::AttributeTypes( f.readWORD() );
+        d->type    = ASF::Attribute::AttributeTypes(f.readWORD());
         size       = f.readWORD();
     }
     // metadata & metadata library
     else {
         int temp = f.readWORD();
         // metadata library
-        if ( kind == 2 ) {
+        if (kind == 2) {
             d->language = temp;
         }
         d->stream  = f.readWORD();
         nameLength = f.readWORD();
-        d->type    = ASF::Attribute::AttributeTypes( f.readWORD() );
+        d->type    = ASF::Attribute::AttributeTypes(f.readWORD());
         size       = f.readDWORD();
         name       = f.readString(nameLength);
     }
 
-    if ( (kind != 2) && (size > 65535) ) {
+    if ((kind != 2) && (size > 65535)) {
         debug("ASF::Attribute::parse() -- Value larger than 64kB");
     }
 
-    switch ( d->type ) {
+    switch (d->type) {
         case WordType:
             d->shortValue = f.readWORD();
             break;
 
         case BoolType:
-            if ( kind == 0 ) {
+            if (kind == 0) {
                 d->boolValue = f.readDWORD() == 1;
             } else {
                 d->boolValue = f.readWORD() == 1;
@@ -243,9 +243,9 @@ String ASF::Attribute::parse(ASF::File &f, int kind)
             break;
     }
 
-    if ( (d->type == BytesType) && (name == "WM/Picture") ) {
+    if ((d->type == BytesType) && (name == "WM/Picture")) {
         d->pictureValue.parse(d->byteVectorValue);
-        if ( d->pictureValue.isValid() ) {
+        if (d->pictureValue.isValid()) {
             d->byteVectorValue.clear();
         }
     }
@@ -255,7 +255,7 @@ String ASF::Attribute::parse(ASF::File &f, int kind)
 
 int ASF::Attribute::dataSize() const
 {
-    switch ( d->type ) {
+    switch (d->type) {
         case WordType:
             return 2;
 
@@ -272,7 +272,7 @@ int ASF::Attribute::dataSize() const
             return d->stringValue.size() * 2 + 2;
 
         case BytesType:
-            if ( d->pictureValue.isValid() ) {
+            if (d->pictureValue.isValid()) {
                 return d->pictureValue.dataSize();
             }
 
@@ -286,34 +286,34 @@ ByteVector ASF::Attribute::render(const String &name, int kind) const
 {
     ByteVector data;
 
-    switch ( d->type ) {
+    switch (d->type) {
         case WordType:
-            data.append( ByteVector::fromShort(d->shortValue, false) );
+            data.append(ByteVector::fromShort(d->shortValue, false));
             break;
 
         case BoolType:
-            if ( kind == 0 ) {
-                data.append( ByteVector::fromUInt(d->boolValue ? 1 : 0, false) );
+            if (kind == 0) {
+                data.append(ByteVector::fromUInt(d->boolValue ? 1 : 0, false));
             } else {
-                data.append( ByteVector::fromShort(d->boolValue ? 1 : 0, false) );
+                data.append(ByteVector::fromShort(d->boolValue ? 1 : 0, false));
             }
             break;
 
         case DWordType:
-            data.append( ByteVector::fromUInt(d->intValue, false) );
+            data.append(ByteVector::fromUInt(d->intValue, false));
             break;
 
         case QWordType:
-            data.append( ByteVector::fromLongLong(d->longLongValue, false) );
+            data.append(ByteVector::fromLongLong(d->longLongValue, false));
             break;
 
         case UnicodeType:
-            data.append( File::renderString(d->stringValue) );
+            data.append(File::renderString(d->stringValue));
             break;
 
         case BytesType:
-            if ( d->pictureValue.isValid() ) {
-                data.append( d->pictureValue.render() );
+            if (d->pictureValue.isValid()) {
+                data.append(d->pictureValue.render());
                 break;
             }
 
@@ -322,17 +322,17 @@ ByteVector ASF::Attribute::render(const String &name, int kind) const
             break;
     }
 
-    if ( kind == 0 ) {
+    if (kind == 0) {
         data = File::renderString(name, true) +
-               ByteVector::fromShort( (int) d->type, false ) +
-               ByteVector::fromShort(data.size(), false) +
+               ByteVector::fromShort((int) d->type, false) +
+               ByteVector::fromShort(data.size(),   false) +
                data;
     } else {
         ByteVector nameData = File::renderString(name);
         data = ByteVector::fromShort(kind == 2 ? d->language : 0, false) +
-               ByteVector::fromShort(d->stream, false) +
+               ByteVector::fromShort(d->stream,       false) +
                ByteVector::fromShort(nameData.size(), false) +
-               ByteVector::fromShort( (int) d->type, false ) +
+               ByteVector::fromShort((int) d->type,   false) +
                ByteVector::fromUInt(data.size(), false) +
                nameData +
                data;

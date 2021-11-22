@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2005-2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -42,7 +42,6 @@ namespace TagLib
         class TAGLIB_EXPORT Tag : public TagLib::Tag
         {
             friend class File;
-
         public:
             Tag();
 
@@ -59,8 +58,7 @@ namespace TagLib
             virtual String artist() const;
 
             /*!
-             * Returns the album name; if no album name is present in the tag
-             * String::null will be returned.
+             * Returns the album name; if no album name is present in the tag String::null will be returned.
              */
             virtual String album() const;
 
@@ -70,8 +68,7 @@ namespace TagLib
             virtual String comment() const;
 
             /*!
-             * Returns the genre name; if no genre is present in the tag String::null
-             * will be returned.
+             * Returns the genre name; if no genre is present in the tag String::null will be returned.
              */
             virtual String genre() const;
 
@@ -81,8 +78,7 @@ namespace TagLib
             virtual String rating() const;
 
             /*!
-             * Returns the genre name; if no genre is present in the tag String::null
-             * will be returned.
+             * Returns the genre name; if no genre is present in the tag String::null will be returned.
              */
             virtual String copyright() const;
 
@@ -92,8 +88,7 @@ namespace TagLib
             virtual uint year() const;
 
             /*!
-             * Returns the track number; if there is no track number set, this will
-             * return 0.
+             * Returns the track number; if there is no track number set, this will return 0.
              */
             virtual uint track() const;
 
@@ -108,8 +103,7 @@ namespace TagLib
             virtual void setArtist(const String &s);
 
             /*!
-             * Sets the album to \a s.  If \a s is String::null then this value will be
-             * cleared.
+             * Sets the album to \a s.  If \a s is String::null then this value will be cleared.
              */
             virtual void setAlbum(const String &s);
 
@@ -144,15 +138,12 @@ namespace TagLib
             virtual void setTrack(uint i);
 
             /*!
-             * Returns true if the tag does not contain any data.  This should be
-             * reimplemented in subclasses that provide more than the basic tagging
-             * abilities in this class.
+             * Returns true if the tag does not contain any data.  This should be reimplemented in subclasses that provide more than the basic tagging abilities in this class.
              */
             virtual bool isEmpty() const;
 
             /*!
-             * Returns a reference to the item list map.  This is an AttributeListMap of
-             * all of the items in the tag.
+             * Returns a reference to the item list map.  This is an AttributeListMap of all of the items in the tag.
              *
              * This is the most powerfull structure for accessing the items of the tag.
              */
@@ -164,21 +155,18 @@ namespace TagLib
             void removeItem(const String &name);
 
             /*!
-             * Sets the \a key attribute to the value of \a attribute. If an attribute
-             * with the \a key is already present, it will be replaced.
+             * Sets the \a key attribute to the value of \a attribute. If an attribute with the \a key is already present, it will be replaced.
              */
             void setAttribute(const String &name, const Attribute &attribute);
 
             /*!
-             * Sets the \a key attribute to the value of \a attribute. If an attribute
-             * with the \a key is already present, it will be added to the list.
+             * Sets the \a key attribute to the value of \a attribute. If an attribute with the \a key is already present, it will be added to the list.
              */
             void addAttribute(const String &name, const Attribute &attribute);
 
             PropertyMap properties() const;
             void removeUnsupportedProperties(const StringList &properties);
             PropertyMap setProperties(const PropertyMap &properties);
-
         private:
             class TagPrivate;
             TagPrivate *d;

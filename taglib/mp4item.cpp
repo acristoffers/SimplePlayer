@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -37,7 +37,7 @@ public:
     {
     }
 
-    bool         valid;
+    bool valid;
     AtomDataType atomDataType;
     union {
         bool      m_bool;
@@ -48,8 +48,8 @@ public:
         long long m_longlong;
     };
 
-    StringList        m_stringList;
-    ByteVectorList    m_byteVectorList;
+    StringList m_stringList;
+    ByteVectorList m_byteVectorList;
     MP4::CoverArtList m_coverArtList;
 };
 
@@ -64,9 +64,9 @@ MP4::Item::Item(const Item &item) : d(item.d)
     d->ref();
 }
 
-MP4::Item &MP4::Item::operator=(const Item &item)
+MP4::Item &MP4::Item::operator =(const Item &item)
 {
-    if ( d->deref() ) {
+    if (d->deref()) {
         delete d;
     }
     d = item.d;
@@ -76,7 +76,7 @@ MP4::Item &MP4::Item::operator=(const Item &item)
 
 MP4::Item::~Item()
 {
-    if ( d->deref() ) {
+    if (d->deref()) {
         delete d;
     }
 }

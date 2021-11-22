@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2005-2007 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -36,10 +36,10 @@ public:
     {
     }
 
-    int  length;
-    int  bitrate;
-    int  sampleRate;
-    int  channels;
+    int length;
+    int bitrate;
+    int sampleRate;
+    int channels;
     bool encrypted;
 };
 
@@ -54,7 +54,7 @@ ASF::Properties::Properties() : AudioProperties(AudioProperties::Average)
 
 ASF::Properties::~Properties()
 {
-    if ( d ) {
+    if (d) {
         delete d;
     }
 }

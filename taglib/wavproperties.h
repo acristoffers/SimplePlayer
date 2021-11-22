@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -42,22 +41,19 @@ namespace TagLib
             // ! An implementation of audio property reading for WAV
 
             /*!
-             * This reads the data from an WAV stream found in the AudioProperties
-             * API.
+             * This reads the data from an WAV stream found in the AudioProperties API.
              */
 
             class TAGLIB_EXPORT Properties : public AudioProperties
             {
             public:
                 /*!
-                 * Create an instance of WAV::Properties with the data read from the
-                 * ByteVector \a data.
+                 * Create an instance of WAV::Properties with the data read from the ByteVector \a data.
                  */
                 Properties(const ByteVector &data, ReadStyle style);
 
                 /*!
-                 * Create an instance of WAV::Properties with the data read from the
-                 * ByteVector \a data and the length calculated using \a streamLength.
+                 * Create an instance of WAV::Properties with the data read from the ByteVector \a data and the length calculated using \a streamLength.
                  */
                 Properties(const ByteVector &data, uint streamLength, ReadStyle style);
 
@@ -75,10 +71,9 @@ namespace TagLib
 
                 int sampleWidth() const;
                 uint sampleFrames() const;
-
             private:
                 Properties(const Properties &);
-                Properties &operator=(const Properties &);
+                Properties &operator =(const Properties &);
 
                 void read(const ByteVector &data);
 

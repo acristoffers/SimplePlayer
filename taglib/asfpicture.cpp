@@ -1,6 +1,5 @@
-﻿/**************************************************************************
-*    copyright            : (C) 2010 by Anton Sergunov
-*    email                : setosha@gmail.com
+/**************************************************************************
+*    copyright            : (C) 2010 by Anton Sergunov email                : setosha@gmail.com
 **************************************************************************/
 
 /***************************************************************************
@@ -35,10 +34,10 @@ using namespace TagLib;
 class ASF::Picture::PicturePrivate : public RefCounter
 {
 public:
-    bool       valid;
-    Type       type;
-    String     mimeType;
-    String     description;
+    bool valid;
+    Type type;
+    String mimeType;
+    String description;
     ByteVector picture;
 };
 
@@ -60,7 +59,7 @@ ASF::Picture::Picture(const Picture &other)
 
 ASF::Picture::~Picture()
 {
-    if ( d->deref() ) {
+    if (d->deref()) {
         delete d;
     }
 }
@@ -112,14 +111,14 @@ void ASF::Picture::setPicture(const ByteVector &p)
 
 int ASF::Picture::dataSize() const
 {
-    return 9 + ( d->mimeType.length() + d->description.length() ) * 2 +
+    return 9 + (d->mimeType.length() + d->description.length()) * 2 +
            d->picture.size();
 }
 
-ASF::Picture &ASF::Picture::operator=(const ASF::Picture &other)
+ASF::Picture &ASF::Picture::operator =(const ASF::Picture &other)
 {
-    if ( other.d != d ) {
-        if ( d->deref() ) {
+    if (other.d != d) {
+        if (d->deref()) {
             delete d;
         }
         d = other.d;
@@ -130,10 +129,10 @@ ASF::Picture &ASF::Picture::operator=(const ASF::Picture &other)
 
 ByteVector ASF::Picture::render() const
 {
-    if ( !isValid() ) {
+    if (!isValid()) {
         return ByteVector::null;
     }
-    return ByteVector( (char) d->type ) +
+    return ByteVector((char) d->type) +
            ByteVector::fromUInt(d->picture.size(), false) +
            ASF::File::renderString(d->mimeType) +
            ASF::File::renderString(d->description) +
@@ -143,32 +142,35 @@ ByteVector ASF::Picture::render() const
 void ASF::Picture::parse(const ByteVector &bytes)
 {
     d->valid = false;
-    if ( bytes.size() < 9 ) {
+    if (bytes.size() < 9) {
         return;
     }
     int pos = 0;
+
     d->type = (Type) bytes[0];
     ++pos;
     const uint dataLen = bytes.toUInt(pos, false);
+
     pos += 4;
 
     const ByteVector nullStringTerminator(2, 0);
 
     int endPos = bytes.find(nullStringTerminator, pos, 2);
-    if ( endPos < 0 ) {
+
+    if (endPos < 0) {
         return;
     }
     d->mimeType = String(bytes.mid(pos, endPos - pos), String::UTF16LE);
     pos         = endPos + 2;
 
     endPos = bytes.find(nullStringTerminator, pos, 2);
-    if ( endPos < 0 ) {
+    if (endPos < 0) {
         return;
     }
     d->description = String(bytes.mid(pos, endPos - pos), String::UTF16LE);
     pos            = endPos + 2;
 
-    if ( dataLen + pos != bytes.size() ) {
+    if (dataLen + pos != bytes.size()) {
         return;
     }
 

@@ -1,4 +1,4 @@
-﻿#include "librarymanagerprivate.h"
+#include "librarymanagerprivate.h"
 
 #include <QDebug>
 
@@ -8,7 +8,7 @@
 #include "database.h"
 #include "media.h"
 
-LibraryManager *LibraryManagerPrivate::_self = nullptr;
+LibraryManager*LibraryManagerPrivate::_self = nullptr;
 
 LibraryManagerPrivate::LibraryManagerPrivate()
     : QObject(0)
@@ -22,7 +22,7 @@ LibraryManagerPrivate::LibraryManagerPrivate()
 
 LibraryManagerPrivate::~LibraryManagerPrivate()
 {
-    if ( watcher ) {
+    if (watcher) {
         delete watcher;
     }
 }
@@ -31,51 +31,51 @@ void LibraryManagerPrivate::updateWatcher()
 {
     QStringList paths = LibraryManager::searchPaths();
 
-    if ( !watcher->directories().isEmpty() ) {
-        watcher->removePaths( watcher->directories() );
+    if (!watcher->directories().isEmpty()) {
+        watcher->removePaths(watcher->directories());
     }
 
-    if ( !watcher->directories().isEmpty() ) {
-        watcher->removePaths( watcher->files() );
+    if (!watcher->directories().isEmpty()) {
+        watcher->removePaths(watcher->files());
     }
 
     QStringList sl = paths;
 
-    for ( QString path : paths ) {
+    for (QString path : paths) {
         QDirIterator it(path, QDir::Files | QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::Subdirectories | QDirIterator::FollowSymlinks);
 
-        while ( it.hasNext() ) {
+        while (it.hasNext()) {
             sl << it.next();
         }
     }
 
-    if ( !paths.isEmpty() ) {
+    if (!paths.isEmpty()) {
         watcher->addPaths(sl);
     }
 }
 
 void LibraryManagerPrivate::fileScan(QString file)
 {
-    if ( mustClean ) {
+    if (mustClean) {
         DataBase::instance()->clean();
     }
 
     Media *m = Media::specializedObjectForFile(file);
 
-    if ( totalFiles != 0 ) {
+    if (totalFiles != 0) {
         currentFile++;
         emit processingFile(file, currentFile, totalFiles);
     }
 
-    if ( m ) {
-        if ( m->isValid() ) {
+    if (m) {
+        if (m->isValid()) {
             QStringList paths = LibraryManager::searchPaths();
             QString     shortestPath;
 
-            for ( QString dpath : paths ) {
+            for (QString dpath : paths) {
                 dpath = QDir(dpath).canonicalPath();
 
-                if ( file.startsWith(dpath) && ( ( dpath.size() < shortestPath.size() ) || shortestPath.isEmpty() ) ) {
+                if (file.startsWith(dpath) && ((dpath.size() < shortestPath.size()) || shortestPath.isEmpty())) {
                     shortestPath = dpath;
                 }
             }
@@ -93,17 +93,18 @@ void LibraryManagerPrivate::folderScan(QString path)
 
     emit scanningFolder(path);
 
-    if ( mustClean ) {
+    if (mustClean) {
         DataBase::instance()->clean();
     }
 
     QDirIterator it(path, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::FollowSymlinks);
-    while ( it.hasNext() ) {
-        if ( cancel ) {
+
+    while (it.hasNext()) {
+        if (cancel) {
             return;
         }
 
-        fileScan( it.next() );
+        fileScan(it.next());
     }
 }
 
@@ -121,26 +122,26 @@ void LibraryManagerPrivate::fullScan()
 
     QStringList paths = LibraryManager::searchPaths();
 
-    for ( QString path : paths ) {
+    for (QString path : paths) {
         QDirIterator it(path, QDir::Files | QDir::NoDotAndDotDot, QDirIterator::FollowSymlinks | QDirIterator::Subdirectories);
-        while ( it.hasNext() ) {
+        while (it.hasNext()) {
             totalFiles++;
             it.next();
         }
     }
 
-    for ( QString path : paths ) {
-            folderScan(path);
+    for (QString path : paths) {
+        folderScan(path);
 
         QDirIterator it(path, QDir::Dirs | QDir::NoDotAndDotDot, QDirIterator::FollowSymlinks | QDirIterator::Subdirectories);
-        while ( it.hasNext() ) {
-            if ( cancel ) {
+        while (it.hasNext()) {
+            if (cancel) {
                 mustClean = true;
                 emit scanFinished();
                 return;
             }
 
-            folderScan( it.next() );
+            folderScan(it.next());
         }
     }
 

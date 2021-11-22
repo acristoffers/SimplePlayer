@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -42,9 +41,9 @@ public:
     }
 
     String::Type textEncoding;
-    ByteVector   language;
-    String       description;
-    String       text;
+    ByteVector language;
+    String description;
+    String text;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,25 +117,25 @@ PropertyMap CommentsFrame::asProperties() const
     String      key = description().upper();
     PropertyMap map;
 
-    if ( key.isEmpty() || (key == "COMMENT") ) {
-        map.insert( "COMMENT", text() );
-    } else if ( key.isNull() ) {
-        map.unsupportedData().append( L"COMM/" + description() );
+    if (key.isEmpty() || (key == "COMMENT")) {
+        map.insert("COMMENT", text());
+    } else if (key.isNull()) {
+        map.unsupportedData().append(L"COMM/" + description());
     } else {
-        map.insert( "COMMENT:" + key, text() );
+        map.insert("COMMENT:" + key, text());
     }
     return map;
 }
 
-CommentsFrame *CommentsFrame::findByDescription(const ID3v2::Tag *tag, const String &d) // static
+CommentsFrame*CommentsFrame::findByDescription(const ID3v2::Tag *tag, const String &d)  // static
 {
     ID3v2::FrameList comments = tag->frameList("COMM");
 
-    for ( ID3v2::FrameList::ConstIterator it = comments.begin();
-          it != comments.end();
-          ++it ) {
-        CommentsFrame *frame = dynamic_cast<CommentsFrame *> (*it);
-        if ( frame && (frame->description() == d) ) {
+    for (ID3v2::FrameList::ConstIterator it = comments.begin();
+         it != comments.end();
+         ++it) {
+        CommentsFrame *frame = dynamic_cast<CommentsFrame*>(*it);
+        if (frame && (frame->description() == d)) {
             return frame;
         }
     }
@@ -150,7 +149,7 @@ CommentsFrame *CommentsFrame::findByDescription(const ID3v2::Tag *tag, const Str
 
 void CommentsFrame::parseFields(const ByteVector &data)
 {
-    if ( data.size() < 5 ) {
+    if (data.size() < 5) {
         debug("A comment frame must contain at least 5 bytes.");
         return;
     }
@@ -162,10 +161,10 @@ void CommentsFrame::parseFields(const ByteVector &data)
 
     ByteVectorList l = ByteVectorList::split(data.mid(4), textDelimiter(d->textEncoding), byteAlign, 2);
 
-    if ( l.size() == 2 ) {
-        if ( d->textEncoding == String::Latin1 ) {
-            d->description = Tag::latin1StringHandler()->parse( l.front() );
-            d->text        = Tag::latin1StringHandler()->parse( l.back() );
+    if (l.size() == 2) {
+        if (d->textEncoding == String::Latin1) {
+            d->description = Tag::latin1StringHandler()->parse(l.front());
+            d->text        = Tag::latin1StringHandler()->parse(l.back());
         } else {
             d->description = String(l.front(), d->textEncoding);
             d->text        = String(l.back(), d->textEncoding);
@@ -182,11 +181,11 @@ ByteVector CommentsFrame::renderFields() const
     encoding = checkTextEncoding(d->description, encoding);
     encoding = checkTextEncoding(d->text, encoding);
 
-    v.append( char (encoding) );
+    v.append(char(encoding));
     v.append(d->language.size() == 3 ? d->language : "XXX");
-    v.append( d->description.data(encoding) );
-    v.append( textDelimiter(encoding) );
-    v.append( d->text.data(encoding) );
+    v.append(d->description.data(encoding));
+    v.append(textDelimiter(encoding));
+    v.append(d->text.data(encoding));
 
     return v;
 }
@@ -198,5 +197,5 @@ ByteVector CommentsFrame::renderFields() const
 CommentsFrame::CommentsFrame(const ByteVector &data, Header *h) : Frame(h)
 {
     d = new CommentsFramePrivate();
-    parseFields( fieldData(data) );
+    parseFields(fieldData(data));
 }

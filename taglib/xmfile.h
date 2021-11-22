@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright           : (C) 2011 by Mathias Panzenböck
-*    email               : grosser.meister.morti@gmx.net
+/***************************************************************************
+*    copyright           : (C) 2011 by Mathias Panzenböck email               : grosser.meister.morti@gmx.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -40,24 +39,21 @@ namespace TagLib
              * Constructs an Extended Module file from \a file.
              *
              * \note In the current implementation, both \a readProperties and
-             * \a propertiesStyle are ignored.  The audio properties are always
-             * read.
+             * \a propertiesStyle are ignored.  The audio properties are always read.
              */
             File(FileName file, bool readProperties = true, AudioProperties::ReadStyle propertiesStyle =
-                     AudioProperties::Average);
+                 AudioProperties::Average);
 
             /*!
              * Constructs an Extended Module file from \a stream.
              *
              * \note In the current implementation, both \a readProperties and
-             * \a propertiesStyle are ignored.  The audio properties are always
-             * read.
+             * \a propertiesStyle are ignored.  The audio properties are always read.
              *
-             * \note TagLib will *not* take ownership of the stream, the caller is
-             * responsible for deleting it after the File object.
+             * \note TagLib will *not* take ownership of the stream, the caller is responsible for deleting it after the File object.
              */
             File(IOStream *stream, bool readProperties = true, AudioProperties::ReadStyle propertiesStyle =
-                     AudioProperties::Average);
+                 AudioProperties::Average);
 
             /*!
              * Destroys this instance of the File.
@@ -67,34 +63,29 @@ namespace TagLib
             Mod::Tag *tag() const;
 
             /*!
-             * Implements the unified property interface -- export function.
-             * Forwards to Mod::Tag::properties().
+             * Implements the unified property interface -- export function. Forwards to Mod::Tag::properties().
              */
             PropertyMap properties() const;
 
             /*!
-             * Implements the unified property interface -- import function.
-             * Forwards to Mod::Tag::setProperties().
+             * Implements the unified property interface -- import function. Forwards to Mod::Tag::setProperties().
              */
             PropertyMap setProperties(const PropertyMap &);
 
             /*!
-             * Returns the XM::Properties for this file. If no audio properties
-             * were read then this will return a null pointer.
+             * Returns the XM::Properties for this file. If no audio properties were read then this will return a null pointer.
              */
             XM::Properties *audioProperties() const;
 
             /*!
-             * Save the file.
-             * This is the same as calling save(AllTags);
+             * Save the file. This is the same as calling save(AllTags);
              *
              * \note Saving Extended Module tags is not supported.
              */
             bool save();
-
         private:
             File(const File &);
-            File &operator=(const File &);
+            File &operator =(const File &);
 
             void read(bool readProperties);
 

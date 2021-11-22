@@ -1,10 +1,8 @@
-﻿/***************************************************************************
+/***************************************************************************
 *    copyright            : (C) 2012 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 *
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
-*                           (original Vorbis implementation)
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org (original Vorbis implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -46,29 +44,23 @@ namespace TagLib
             // ! An implementation of Ogg::File with Opus specific methods
 
             /*!
-             * This is the central class in the Ogg Opus metadata processing collection
-             * of classes.  It's built upon Ogg::File which handles processing of the Ogg
-             * logical bitstream and breaking it down into pages which are handled by
-             * the codec implementations, in this case Opus specifically.
+             * This is the central class in the Ogg Opus metadata processing collection of classes.  It's built upon Ogg::File which handles processing of the Ogg logical bitstream and breaking it down into pages which are handled by the codec implementations, in this case Opus specifically.
              */
 
             class TAGLIB_EXPORT File : public Ogg::File
             {
             public:
                 /*!
-                 * Constructs an Opus file from \a file.  If \a readProperties is true the
-                 * file's audio properties will also be read.
+                 * Constructs an Opus file from \a file.  If \a readProperties is true the file's audio properties will also be read.
                  *
                  * \note In the current implementation, \a propertiesStyle is ignored.
                  */
                 File(FileName file, bool readProperties = true, Properties::ReadStyle propertiesStyle = Properties::Average);
 
                 /*!
-                 * Constructs an Opus file from \a stream.  If \a readProperties is true the
-                 * file's audio properties will also be read.
+                 * Constructs an Opus file from \a stream.  If \a readProperties is true the file's audio properties will also be read.
                  *
-                 * \note TagLib will *not* take ownership of the stream, the caller is
-                 * responsible for deleting it after the File object.
+                 * \note TagLib will *not* take ownership of the stream, the caller is responsible for deleting it after the File object.
                  *
                  * \note In the current implementation, \a propertiesStyle is ignored.
                  */
@@ -80,35 +72,29 @@ namespace TagLib
                 virtual ~File();
 
                 /*!
-                 * Returns the XiphComment for this file.  XiphComment implements the tag
-                 * interface, so this serves as the reimplementation of
-                 * TagLib::File::tag().
+                 * Returns the XiphComment for this file.  XiphComment implements the tag interface, so this serves as the reimplementation of TagLib::File::tag().
                  */
                 virtual Ogg::XiphComment *tag() const;
 
                 /*!
-                 * Implements the unified property interface -- export function.
-                 * This forwards directly to XiphComment::properties().
+                 * Implements the unified property interface -- export function. This forwards directly to XiphComment::properties().
                  */
                 PropertyMap properties() const;
 
                 /*!
-                 * Implements the unified tag dictionary interface -- import function.
-                 * Like properties(), this is a forwarder to the file's XiphComment.
+                 * Implements the unified tag dictionary interface -- import function. Like properties(), this is a forwarder to the file's XiphComment.
                  */
                 PropertyMap setProperties(const PropertyMap &);
 
                 /*!
-                 * Returns the Opus::Properties for this file.  If no audio properties
-                 * were read then this will return a null pointer.
+                 * Returns the Opus::Properties for this file.  If no audio properties were read then this will return a null pointer.
                  */
                 virtual Properties *audioProperties() const;
 
                 virtual bool save();
-
             private:
                 File(const File &);
-                File &operator=(const File &);
+                File &operator =(const File &);
 
                 void read(bool readProperties, Properties::ReadStyle propertiesStyle);
 

@@ -1,4 +1,4 @@
-﻿#ifndef LIBRARYMANAGERPRIVATE_H
+#ifndef LIBRARYMANAGERPRIVATE_H
 #define LIBRARYMANAGERPRIVATE_H
 
 #include <QFileSystemWatcher>
@@ -10,7 +10,6 @@
 class LibraryManagerPrivate : public QObject
 {
     Q_OBJECT
-
 public:
     LibraryManagerPrivate();
     ~LibraryManagerPrivate();
@@ -18,21 +17,18 @@ public:
     void updateWatcher();
 
     static LibraryManager *_self;
-    QFileSystemWatcher    *watcher;
-
+    QFileSystemWatcher *watcher;
 private:
     volatile bool cancel;
-    bool          mustClean;
+    bool mustClean;
 
     unsigned long long totalFiles;
     unsigned long long currentFile;
-
 public slots:
     void fileScan(QString);
     void folderScan(QString);
     void fullScan();
     void stop();
-
 signals:
     void processingFile(QString, unsigned long long, unsigned long long);
     void scanningFolder(QString);

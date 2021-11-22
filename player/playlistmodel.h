@@ -1,4 +1,4 @@
-﻿#ifndef PLAYLISTMODEL_H
+#ifndef PLAYLISTMODEL_H
 #define PLAYLISTMODEL_H
 
 #include <QAbstractListModel>
@@ -12,22 +12,17 @@ struct PlaylistModelPrivate;
 class PlaylistModel : public QAbstractListModel
 {
     Q_OBJECT
-
 public:
     PlaylistModel(QMediaPlaylist *playlist);
     ~PlaylistModel();
-
 private:
     PlaylistModelPrivate *d;
-
 public slots:
     void playIndex(QModelIndex);
-
 protected slots:
     void findModifiedModel(int);
 
     // QAbstractItemModel interface
-
 public:
     QModelIndex index(int row, int column, const QModelIndex &parent) const;
     int rowCount(const QModelIndex &parent) const;

@@ -1,10 +1,8 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2010 by Alex Novichkov
-*    email                : novichko@atnet.ru
+/***************************************************************************
+*    copyright            : (C) 2010 by Alex Novichkov email                : novichko@atnet.ru
 *
 *    copyright            : (C) 2006 by Lukáš Lalinský
-*    email                : lalinsky@gmail.com
-*                           (original WavPack implementation)
+*    email                : lalinsky@gmail.com (original WavPack implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -52,12 +50,12 @@ public:
     {
     }
 
-    int  length;
-    int  bitrate;
-    int  sampleRate;
-    int  channels;
-    int  version;
-    int  bitsPerSample;
+    int length;
+    int bitrate;
+    int sampleRate;
+    int channels;
+    int version;
+    int bitsPerSample;
     uint sampleFrames;
     File *file;
     long streamLength;
@@ -69,7 +67,7 @@ public:
 
 APE::Properties::Properties(File *file, ReadStyle style) : AudioProperties(style)
 {
-    d = new PropertiesPrivate( file, file->length() );
+    d = new PropertiesPrivate(file, file->length());
     read();
 }
 
@@ -122,19 +120,20 @@ void APE::Properties::read()
     // First we are searching the descriptor
     long offset = findDescriptor();
 
-    if ( offset < 0 ) {
+    if (offset < 0) {
         return;
     }
 
     // Then we read the header common for all versions of APE
     d->file->seek(offset);
     ByteVector commonHeader = d->file->readBlock(6);
-    if ( !commonHeader.startsWith("MAC ") ) {
+
+    if (!commonHeader.startsWith("MAC ")) {
         return;
     }
     d->version = commonHeader.toUShort(4, false);
 
-    if ( d->version >= 3980 ) {
+    if (d->version >= 3980) {
         analyzeCurrent();
     } else {
         analyzeOld();
@@ -147,22 +146,23 @@ long APE::Properties::findDescriptor()
     long ID3v2OriginalSize = 0;
     bool hasID3v2          = false;
 
-    if ( ID3v2Location >= 0 ) {
+    if (ID3v2Location >= 0) {
         ID3v2::Tag tag(d->file, ID3v2Location);
         ID3v2OriginalSize = tag.header()->completeTagSize();
-        if ( tag.header()->tagSize() > 0 ) {
+        if (tag.header()->tagSize() > 0) {
             hasID3v2 = true;
         }
     }
 
     long offset = 0;
-    if ( hasID3v2 ) {
+
+    if (hasID3v2) {
         offset = d->file->find("MAC ", ID3v2Location + ID3v2OriginalSize);
     } else {
         offset = d->file->find("MAC ");
     }
 
-    if ( offset < 0 ) {
+    if (offset < 0) {
         debug("APE::Properties::findDescriptor() -- APE descriptor not found");
         return -1;
     }
@@ -172,13 +172,13 @@ long APE::Properties::findDescriptor()
 
 long APE::Properties::findID3v2()
 {
-    if ( !d->file->isValid() ) {
+    if (!d->file->isValid()) {
         return -1;
     }
 
     d->file->seek(0);
 
-    if ( d->file->readBlock(3) == ID3v2::Header::fileIdentifier() ) {
+    if (d->file->readBlock(3) == ID3v2::Header::fileIdentifier()) {
         return 0;
     }
 
@@ -192,7 +192,7 @@ void APE::Properties::analyzeCurrent()
     ByteVector descriptor      = d->file->readBlock(44);
     const uint descriptorBytes = descriptor.toUInt(0, false);
 
-    if ( (descriptorBytes - 52) > 0 ) {
+    if ((descriptorBytes - 52) > 0) {
         d->file->seek(descriptorBytes - 52, File::Current);
     }
 
@@ -208,9 +208,10 @@ void APE::Properties::analyzeCurrent()
     const uint totalFrames      = header.toUInt(12, false);
     const uint blocksPerFrame   = header.toUInt(4, false);
     const uint finalFrameBlocks = header.toUInt(8, false);
+
     d->sampleFrames = totalFrames > 0 ? (totalFrames - 1) * blocksPerFrame + finalFrameBlocks : 0;
     d->length       = d->sampleRate > 0 ? d->sampleFrames / d->sampleRate : 0;
-    d->bitrate      = d->length > 0 ? ( (d->streamLength * 8L) / d->length ) / 1000 : 0;
+    d->bitrate      = d->length > 0 ? ((d->streamLength * 8L) / d->length) / 1000 : 0;
 }
 
 void APE::Properties::analyzeOld()
@@ -219,15 +220,16 @@ void APE::Properties::analyzeOld()
     const uint totalFrames = header.toUInt(18, false);
 
     // Fail on 0 length APE files (catches non-finalized APE files)
-    if ( totalFrames == 0 ) {
+    if (totalFrames == 0) {
         return;
     }
 
     const short compressionLevel = header.toShort(0, false);
     uint        blocksPerFrame;
-    if ( d->version >= 3950 ) {
+
+    if (d->version >= 3950) {
         blocksPerFrame = 73728 * 4;
-    } else if ( (d->version >= 3900) || ( (d->version >= 3800) && (compressionLevel == 4000) ) ) {
+    } else if ((d->version >= 3900) || ((d->version >= 3800) && (compressionLevel == 4000))) {
         blocksPerFrame = 73728;
     } else {
         blocksPerFrame = 9216;
@@ -236,7 +238,8 @@ void APE::Properties::analyzeOld()
     d->sampleRate = header.toUInt(6, false);
     const uint finalFrameBlocks = header.toUInt(22, false);
     const uint totalBlocks
-               = totalFrames > 0 ? (totalFrames - 1) * blocksPerFrame + finalFrameBlocks : 0;
+        = totalFrames > 0 ? (totalFrames - 1) * blocksPerFrame + finalFrameBlocks : 0;
+
     d->length  = totalBlocks / d->sampleRate;
-    d->bitrate = d->length > 0 ? ( (d->streamLength * 8L) / d->length ) / 1000 : 0;
+    d->bitrate = d->length > 0 ? ((d->streamLength * 8L) / d->length) / 1000 : 0;
 }

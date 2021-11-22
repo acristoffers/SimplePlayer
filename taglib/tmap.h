@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -35,9 +34,7 @@ namespace TagLib
     // ! A generic, implicitly shared map.
 
     /*!
-     * This implements a standard map container that associates a key with a value
-     * and has fast key-based lookups.  This map is also implicitly shared making
-     * it suitable for pass-by-value usage.
+     * This implements a standard map container that associates a key with a value and has fast key-based lookups.  This map is also implicitly shared making it suitable for pass-by-value usage.
      */
 
     template<class Key, class T>
@@ -68,9 +65,7 @@ namespace TagLib
         Map();
 
         /*!
-         * Make a shallow, implicitly shared, copy of \a m.  Because this is
-         * implicitly shared, this method is lightweight and suitable for
-         * pass-by-value usage.
+         * Make a shallow, implicitly shared, copy of \a m.  Because this is implicitly shared, this method is lightweight and suitable for pass-by-value usage.
          */
         Map(const Map<Key, T> &m);
 
@@ -80,38 +75,32 @@ namespace TagLib
         virtual ~Map();
 
         /*!
-         * Returns an STL style iterator to the beginning of the map.  See
-         * std::map::iterator for the semantics.
+         * Returns an STL style iterator to the beginning of the map.  See std::map::iterator for the semantics.
          */
         Iterator begin();
 
         /*!
-         * Returns an STL style iterator to the beginning of the map.  See
-         * std::map::const_iterator for the semantics.
+         * Returns an STL style iterator to the beginning of the map.  See std::map::const_iterator for the semantics.
          */
         ConstIterator begin() const;
 
         /*!
-         * Returns an STL style iterator to the end of the map.  See
-         * std::map::iterator for the semantics.
+         * Returns an STL style iterator to the end of the map.  See std::map::iterator for the semantics.
          */
         Iterator end();
 
         /*!
-         * Returns an STL style iterator to the end of the map.  See
-         * std::map::const_iterator for the semantics.
+         * Returns an STL style iterator to the end of the map.  See std::map::const_iterator for the semantics.
          */
         ConstIterator end() const;
 
         /*!
-         * Inserts \a value under \a key in the map.  If a value for \a key already
-         * exists it will be overwritten.
+         * Inserts \a value under \a key in the map.  If a value for \a key already exists it will be overwritten.
          */
         Map<Key, T> &insert(const Key &key, const T &value);
 
         /*!
-         * Removes all of the elements from elements from the map.  This however
-         * will not delete pointers if the mapped type is a pointer type.
+         * Removes all of the elements from elements from the map.  This however will not delete pointers if the mapped type is a pointer type.
          */
         Map<Key, T> &clear();
 
@@ -159,30 +148,24 @@ namespace TagLib
          *
          * \note This has undefined behavior if the key is not present in the map.
          */
-        const T &operator[](const Key &key) const;
+        const T &operator [](const Key &key) const;
 
         /*!
          * Returns a reference to the value associated with \a key.
          *
          * \note This has undefined behavior if the key is not present in the map.
          */
-        T &operator[](const Key &key);
+        T &operator [](const Key &key);
 
         /*!
-         * Make a shallow, implicitly shared, copy of \a m.  Because this is
-         * implicitly shared, this method is lightweight and suitable for
-         * pass-by-value usage.
+         * Make a shallow, implicitly shared, copy of \a m.  Because this is implicitly shared, this method is lightweight and suitable for pass-by-value usage.
          */
-        Map<Key, T> &operator=(const Map<Key, T> &m);
-
+        Map<Key, T> &operator =(const Map<Key, T> &m);
     protected:
         /*
-         * If this List is being shared via implicit sharing, do a deep copy of the
-         * data and separate from the shared members.  This should be called by all
-         * non-const subclass members.
+         * If this List is being shared via implicit sharing, do a deep copy of the data and separate from the shared members.  This should be called by all non-const subclass members.
          */
         void detach();
-
     private:
 #ifndef DO_NOT_DOCUMENT
         template<class KeyP, class TP>

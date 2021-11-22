@@ -1,4 +1,4 @@
-﻿#include "librarymanager.h"
+#include "librarymanager.h"
 
 #include <QDebug>
 
@@ -14,9 +14,9 @@
 QThread               *_thread;
 LibraryManagerPrivate *_worker;
 
-LibraryManager *LibraryManager::instance()
+LibraryManager*LibraryManager::instance()
 {
-    if ( LibraryManagerPrivate::_self == nullptr ) {
+    if (LibraryManagerPrivate::_self == nullptr) {
         LibraryManagerPrivate::_self = new LibraryManager;
     }
 
@@ -35,25 +35,25 @@ LibraryManager::LibraryManager() :
 
     d->watcher = new QFileSystemWatcher;
 
-    connect( _worker,    SIGNAL( processingFile(QString, unsigned long long, unsigned long long) ), this,    SIGNAL( processingFile(QString, unsigned long long, unsigned long long) ) );
-    connect( _worker,    SIGNAL( scanFinished() ),                                                  this,    SIGNAL( scanFinished() ) );
-    connect( _worker,    SIGNAL( scanningFolder(QString) ),                                         this,    SIGNAL( scanningFolder(QString) ) );
-    connect( _worker,    SIGNAL( scanStarted() ),                                                   this,    SIGNAL( scanStarted() ) );
+    connect(_worker,    SIGNAL(processingFile(QString, unsigned long long, unsigned long long)), this,    SIGNAL(processingFile(QString, unsigned long long, unsigned long long)));
+    connect(_worker,    SIGNAL(scanFinished()),                                                  this,    SIGNAL(scanFinished()));
+    connect(_worker,    SIGNAL(scanningFolder(QString)),                                         this,    SIGNAL(scanningFolder(QString)));
+    connect(_worker,    SIGNAL(scanStarted()),                                                   this,    SIGNAL(scanStarted()));
 
-    connect( _thread,    SIGNAL( finished() ),                                                      _worker, SLOT( deleteLater() ) );
-    connect( _thread,    SIGNAL( finished() ),                                                      _thread, SLOT( deleteLater() ) );
+    connect(_thread,    SIGNAL(finished()),                                                      _worker, SLOT(deleteLater()));
+    connect(_thread,    SIGNAL(finished()),                                                      _thread, SLOT(deleteLater()));
 
-    connect( d->watcher, SIGNAL( directoryChanged(QString) ),                                       _worker, SLOT( folderScan(QString) ) );
-    connect( d->watcher, SIGNAL( fileChanged(QString) ),                                            _worker, SLOT( fileScan(QString) ) );
+    connect(d->watcher, SIGNAL(directoryChanged(QString)),                                       _worker, SLOT(folderScan(QString)));
+    connect(d->watcher, SIGNAL(fileChanged(QString)),                                            _worker, SLOT(fileScan(QString)));
 
-    connect( qApp,       SIGNAL( aboutToQuit() ),                                                   this,    SLOT( aboutToQuit() ) );
+    connect(qApp,       SIGNAL(aboutToQuit()),                                                   this,    SLOT(aboutToQuit()));
 
     d->updateWatcher();
 }
 
 LibraryManager::~LibraryManager()
 {
-    QMetaObject::invokeMethod( _worker, SLOT( stop() ) );
+    QMetaObject::invokeMethod(_worker, SLOT(stop()));
 
     _thread->quit();
     _thread->wait();
@@ -72,11 +72,11 @@ void LibraryManager::setSearchPaths(QStringList paths)
 
     QStringList pathsToAdd;
 
-    for ( QString path : paths ) {
+    for (QString path : paths) {
         QString shortestPath;
 
-        for ( QString p : paths ) {
-            if ( path.startsWith(p) && ( ( p.size() < shortestPath.size() ) || shortestPath.isEmpty() ) ) {
+        for (QString p : paths) {
+            if (path.startsWith(p) && ((p.size() < shortestPath.size()) || shortestPath.isEmpty())) {
                 shortestPath = p;
             }
         }

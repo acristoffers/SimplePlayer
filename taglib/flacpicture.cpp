@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2010 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -41,13 +41,13 @@ public:
     {
     }
 
-    Type       type;
-    String     mimeType;
-    String     description;
-    int        width;
-    int        height;
-    int        colorDepth;
-    int        numColors;
+    Type type;
+    String mimeType;
+    String description;
+    int width;
+    int height;
+    int colorDepth;
+    int numColors;
     ByteVector data;
 };
 
@@ -74,25 +74,28 @@ int FLAC::Picture::code() const
 
 bool FLAC::Picture::parse(const ByteVector &data)
 {
-    if ( data.size() < 32 ) {
+    if (data.size() < 32) {
         debug("A picture block must contain at least 5 bytes.");
         return false;
     }
 
     uint pos = 0;
-    d->type = FLAC::Picture::Type( data.toUInt(pos) );
+
+    d->type = FLAC::Picture::Type(data.toUInt(pos));
     pos    += 4;
     uint mimeTypeLength = data.toUInt(pos);
+
     pos += 4;
-    if ( pos + mimeTypeLength + 24 > data.size() ) {
+    if (pos + mimeTypeLength + 24 > data.size()) {
         debug("Invalid picture block.");
         return false;
     }
     d->mimeType = String(data.mid(pos, mimeTypeLength), String::UTF8);
     pos        += mimeTypeLength;
     uint descriptionLength = data.toUInt(pos);
+
     pos += 4;
-    if ( pos + descriptionLength + 20 > data.size() ) {
+    if (pos + descriptionLength + 20 > data.size()) {
         debug("Invalid picture block.");
         return false;
     }
@@ -107,8 +110,9 @@ bool FLAC::Picture::parse(const ByteVector &data)
     d->numColors   = data.toUInt(pos);
     pos           += 4;
     uint dataLength = data.toUInt(pos);
+
     pos += 4;
-    if ( pos + dataLength > data.size() ) {
+    if (pos + dataLength > data.size()) {
         debug("Invalid picture block.");
         return false;
     }
@@ -121,18 +125,20 @@ ByteVector FLAC::Picture::render() const
 {
     ByteVector result;
 
-    result.append( ByteVector::fromUInt(d->type) );
+    result.append(ByteVector::fromUInt(d->type));
     ByteVector mimeTypeData = d->mimeType.data(String::UTF8);
-    result.append( ByteVector::fromUInt( mimeTypeData.size() ) );
+
+    result.append(ByteVector::fromUInt(mimeTypeData.size()));
     result.append(mimeTypeData);
     ByteVector descriptionData = d->description.data(String::UTF8);
-    result.append( ByteVector::fromUInt( descriptionData.size() ) );
+
+    result.append(ByteVector::fromUInt(descriptionData.size()));
     result.append(descriptionData);
-    result.append( ByteVector::fromUInt(d->width) );
-    result.append( ByteVector::fromUInt(d->height) );
-    result.append( ByteVector::fromUInt(d->colorDepth) );
-    result.append( ByteVector::fromUInt(d->numColors) );
-    result.append( ByteVector::fromUInt( d->data.size() ) );
+    result.append(ByteVector::fromUInt(d->width));
+    result.append(ByteVector::fromUInt(d->height));
+    result.append(ByteVector::fromUInt(d->colorDepth));
+    result.append(ByteVector::fromUInt(d->numColors));
+    result.append(ByteVector::fromUInt(d->data.size()));
     result.append(d->data);
     return result;
 }

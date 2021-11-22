@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -38,9 +37,7 @@ namespace TagLib
         // ! An RIFF file class with some useful methods specific to RIFF
 
         /*!
-         * This implements the generic TagLib::File API and additionally provides
-         * access to properties that are distinct to RIFF files, notably access
-         * to the different ID3 tags.
+         * This implements the generic TagLib::File API and additionally provides access to properties that are distinct to RIFF files, notably access to the different ID3 tags.
          */
 
         class TAGLIB_EXPORT File : public TagLib::File
@@ -50,7 +47,6 @@ namespace TagLib
              * Destroys this instance of the File.
              */
             virtual ~File();
-
         protected:
             enum Endianness {
                 BigEndian, LittleEndian
@@ -104,21 +100,16 @@ namespace TagLib
             void setChunkData(uint i, const ByteVector &data);
 
             /*!
-             * Sets the data for the chunk \a name to \a data.  If a chunk with the
-             * given name already exists it will be overwritten, otherwise it will be
-             * created after the existing chunks.
+             * Sets the data for the chunk \a name to \a data.  If a chunk with the given name already exists it will be overwritten, otherwise it will be created after the existing chunks.
              *
              * \warning This will update the file immediately.
              */
             void setChunkData(const ByteVector &name, const ByteVector &data);
 
             /*!
-             * Sets the data for the chunk \a name to \a data.  If a chunk with the
-             * given name already exists it will be overwritten, otherwise it will be
-             * created after the existing chunks.
+             * Sets the data for the chunk \a name to \a data.  If a chunk with the given name already exists it will be overwritten, otherwise it will be created after the existing chunks.
              *
-             * \note If \a alwaysCreate is true, a new chunk is created regardless of
-             * whether or not the chunk \a name exists. It should only be used for
+             * \note If \a alwaysCreate is true, a new chunk is created regardless of whether or not the chunk \a name exists. It should only be used for
              * "LIST" chunks.
              *
              * \warning This will update the file immediately.
@@ -139,10 +130,9 @@ namespace TagLib
              * \warning This removes all the chunks with the given name.
              */
             void removeChunk(const ByteVector &name);
-
         private:
             File(const File &);
-            File &operator=(const File &);
+            File &operator =(const File &);
 
             void read();
             void writeChunk(const ByteVector &name, const ByteVector &data, ulong offset, ulong replace = 0, uint leadingPadding = 0);

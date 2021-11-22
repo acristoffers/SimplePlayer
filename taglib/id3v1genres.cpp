@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -189,8 +188,8 @@ StringList ID3v1::genreList()
 {
     static StringList l;
 
-    if ( l.isEmpty() ) {
-        for ( int i = 0; i < genresSize; i++ ) {
+    if (l.isEmpty()) {
+        for (int i = 0; i < genresSize; i++) {
             l.append(genres[i]);
         }
     }
@@ -201,8 +200,8 @@ ID3v1::GenreMap ID3v1::genreMap()
 {
     static GenreMap m;
 
-    if ( m.isEmpty() ) {
-        for ( int i = 0; i < genresSize; i++ ) {
+    if (m.isEmpty()) {
+        for (int i = 0; i < genresSize; i++) {
             m.insert(genres[i], i);
         }
     }
@@ -211,7 +210,7 @@ ID3v1::GenreMap ID3v1::genreMap()
 
 String ID3v1::genre(int i)
 {
-    if ( (i >= 0) && (i < genresSize) ) {
+    if ((i >= 0) && (i < genresSize)) {
         return genres[i] + String::null; // always make a copy
     }
     return String::null;
@@ -219,7 +218,7 @@ String ID3v1::genre(int i)
 
 int ID3v1::genreIndex(const String &name)
 {
-    if ( genreMap().contains(name) ) {
+    if (genreMap().contains(name)) {
         return genreMap()[name];
     }
     return 255;

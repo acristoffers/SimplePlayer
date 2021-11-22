@@ -1,10 +1,8 @@
-﻿/***************************************************************************
+/***************************************************************************
 *    copyright            : (C) 2006 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 *
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
-*                           (original Vorbis implementation)
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org (original Vorbis implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -54,15 +52,15 @@ public:
     {
     }
 
-    File      *file;
+    File *file;
     ReadStyle style;
-    int       length;
-    int       bitrate;
-    int       sampleRate;
-    int       channels;
-    int       speexVersion;
-    bool      vbr;
-    int       mode;
+    int length;
+    int bitrate;
+    int sampleRate;
+    int channels;
+    int speexVersion;
+    bool vbr;
+    int mode;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,7 +85,7 @@ int Speex::Properties::length() const
 
 int Speex::Properties::bitrate() const
 {
-    return int (float (d->bitrate) / float (1000) + 0.5);
+    return int(float(d->bitrate) / float(1000) + 0.5);
 }
 
 int Speex::Properties::sampleRate() const
@@ -157,17 +155,17 @@ void Speex::Properties::read()
     const Ogg::PageHeader *first = d->file->firstPageHeader();
     const Ogg::PageHeader *last  = d->file->lastPageHeader();
 
-    if ( first && last ) {
+    if (first && last) {
         long long start = first->absoluteGranularPosition();
         long long end   = last->absoluteGranularPosition();
 
-        if ( (start >= 0) && (end >= 0) && (d->sampleRate > 0) ) {
-            d->length = (int) ( (end - start) / (long long) d->sampleRate );
+        if ((start >= 0) && (end >= 0) && (d->sampleRate > 0)) {
+            d->length = (int) ((end - start) / (long long) d->sampleRate);
         } else {
             debug("Speex::Properties::read() -- Either the PCM values for the start or "
                   "end of this file was incorrect or the sample rate is zero.");
         }
     } else {
-            debug("Speex::Properties::read() -- Could not find valid first and last Ogg pages.");
+        debug("Speex::Properties::read() -- Could not find valid first and last Ogg pages.");
     }
 }

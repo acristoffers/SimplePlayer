@@ -1,4 +1,4 @@
-﻿#ifndef PLAYERCONTROLS_H
+#ifndef PLAYERCONTROLS_H
 #define PLAYERCONTROLS_H
 
 #include <QMediaContent>
@@ -10,16 +10,13 @@ struct PlayerControlsPrivate;
 class PlayerControls : public QWidget
 {
     Q_OBJECT
-
 public:
-    PlayerControls(QWidget *);
+    PlayerControls(QWidget*);
     ~PlayerControls();
 
     void setPlayer(QMediaPlayer *player);
-
 private:
     PlayerControlsPrivate *d;
-
 public slots:
     void switchPlayPause();
     void switchState(QMediaPlayer::State);

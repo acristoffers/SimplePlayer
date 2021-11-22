@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2011 by Lukas Lalinsky
-*    email                : lalinsky@gmail.com
+/***************************************************************************
+*    copyright            : (C) 2011 by Lukas Lalinsky email                : lalinsky@gmail.com
 ***************************************************************************/
 
 /***************************************************************************
@@ -55,16 +54,18 @@ namespace
 
     std::string unicodeToAnsi(const wchar_t *wstr)
     {
-        if ( SystemSupportsUnicode ) {
+        if (SystemSupportsUnicode) {
             debug("unicodeToAnsi() - Should not be used on WinNT systems.");
         }
 
         const int len = WideCharToMultiByte(CP_ACP, 0, wstr, -1, NULL, 0, NULL, NULL);
-        if ( len == 0 ) {
+
+        if (len == 0) {
             return std::string();
         }
 
         std::string str(len, '\0');
+
         WideCharToMultiByte(CP_ACP, 0, wstr, -1, &str[0], len, NULL, NULL);
 
         return str;
@@ -75,8 +76,8 @@ namespace
 // If Win9x, converts and stores it into m_name to avoid calling Unicode version functions.
 
 FileName::FileName(const wchar_t *name)
-    : m_name( SystemSupportsUnicode ? "" : unicodeToAnsi(name) )
-      , m_wname(SystemSupportsUnicode ? name : L"")
+    : m_name(SystemSupportsUnicode ? "" : unicodeToAnsi(name))
+    , m_wname(SystemSupportsUnicode ? name : L"")
 {
 }
 
@@ -87,16 +88,16 @@ FileName::FileName(const char *name)
 
 FileName::FileName(const FileName &name)
     : m_name(name.m_name)
-      , m_wname(name.m_wname)
+    , m_wname(name.m_wname)
 {
 }
 
-FileName::operator const wchar_t *() const
+FileName::operator const wchar_t*() const
 {
     return m_wname.c_str();
 }
 
-FileName::operator const char *() const
+FileName::operator const char*() const
 {
     return m_name.c_str();
 }
@@ -113,11 +114,11 @@ const std::string &FileName::str() const
 
 String FileName::toString() const
 {
-    if ( !m_wname.empty() ) {
+    if (!m_wname.empty()) {
         return String(m_wname);
-    } else if ( !m_name.empty() ) {
+    } else if (!m_name.empty()) {
         const int len = MultiByteToWideChar(CP_ACP, 0, m_name.c_str(), -1, NULL, 0);
-        if ( len == 0 ) {
+        if (len == 0) {
             return String::null;
         }
 
@@ -129,6 +130,7 @@ String FileName::toString() const
         return String::null;
     }
 }
+
 #endif // _WIN32
 
 ////////////////////////////////////////////////////////////////////////////////

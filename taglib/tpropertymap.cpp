@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright           : (C) 2012 by Michael Helmling
-*    email               : helmling@mathematik.uni-kl.de
+/***************************************************************************
+*    copyright           : (C) 2012 by Michael Helmling email               : helmling@mathematik.uni-kl.de
 ***************************************************************************/
 
 /***************************************************************************
@@ -32,9 +31,9 @@ PropertyMap::PropertyMap(const PropertyMap &m) : SimplePropertyMap(m), unsupport
 
 PropertyMap::PropertyMap(const SimplePropertyMap &m)
 {
-    for ( SimplePropertyMap::ConstIterator it = m.begin(); it != m.end(); ++it ) {
+    for (SimplePropertyMap::ConstIterator it = m.begin(); it != m.end(); ++it) {
         String key = it->first.upper();
-        if ( !key.isNull() ) {
+        if (!key.isNull()) {
             insert(it->first, it->second);
         } else {
             unsupported.append(it->first);
@@ -51,10 +50,10 @@ bool PropertyMap::insert(const String &key, const StringList &values)
     String   realKey = key.upper();
     Iterator result  = SimplePropertyMap::find(realKey);
 
-    if ( result == end() ) {
+    if (result == end()) {
         SimplePropertyMap::insert(realKey, values);
     } else {
-        SimplePropertyMap::operator[](realKey).append(values);
+        SimplePropertyMap::operator [](realKey).append(values);
     }
     return true;
 }
@@ -62,6 +61,7 @@ bool PropertyMap::insert(const String &key, const StringList &values)
 bool PropertyMap::replace(const String &key, const StringList &values)
 {
     String realKey = key.upper();
+
     SimplePropertyMap::erase(realKey);
     SimplePropertyMap::insert(realKey, values);
 
@@ -70,26 +70,26 @@ bool PropertyMap::replace(const String &key, const StringList &values)
 
 PropertyMap::Iterator PropertyMap::find(const String &key)
 {
-    return SimplePropertyMap::find( key.upper() );
+    return SimplePropertyMap::find(key.upper());
 }
 
 PropertyMap::ConstIterator PropertyMap::find(const String &key) const
 {
-    return SimplePropertyMap::find( key.upper() );
+    return SimplePropertyMap::find(key.upper());
 }
 
 bool PropertyMap::contains(const String &key) const
 {
-    return SimplePropertyMap::contains( key.upper() );
+    return SimplePropertyMap::contains(key.upper());
 }
 
 bool PropertyMap::contains(const PropertyMap &other) const
 {
-    for ( ConstIterator it = other.begin(); it != other.end(); ++it ) {
-        if ( !SimplePropertyMap::contains(it->first) ) {
+    for (ConstIterator it = other.begin(); it != other.end(); ++it) {
+        if (!SimplePropertyMap::contains(it->first)) {
             return false;
         }
-        if ( (*this)[it->first] != it->second ) {
+        if ((*this)[it->first] != it->second) {
             return false;
         }
     }
@@ -98,14 +98,14 @@ bool PropertyMap::contains(const PropertyMap &other) const
 
 PropertyMap &PropertyMap::erase(const String &key)
 {
-    SimplePropertyMap::erase( key.upper() );
+    SimplePropertyMap::erase(key.upper());
 
     return *this;
 }
 
 PropertyMap &PropertyMap::erase(const PropertyMap &other)
 {
-    for ( ConstIterator it = other.begin(); it != other.end(); ++it ) {
+    for (ConstIterator it = other.begin(); it != other.end(); ++it) {
         erase(it->first);
     }
     return *this;
@@ -113,41 +113,41 @@ PropertyMap &PropertyMap::erase(const PropertyMap &other)
 
 PropertyMap &PropertyMap::merge(const PropertyMap &other)
 {
-    for ( PropertyMap::ConstIterator it = other.begin(); it != other.end(); ++it ) {
+    for (PropertyMap::ConstIterator it = other.begin(); it != other.end(); ++it) {
         insert(it->first, it->second);
     }
     unsupported.append(other.unsupported);
     return *this;
 }
 
-const StringList &PropertyMap::operator[](const String &key) const
+const StringList &PropertyMap::operator [](const String &key) const
 {
-    return SimplePropertyMap::operator[]( key.upper() );
+    return SimplePropertyMap::operator [](key.upper());
 }
 
-StringList &PropertyMap::operator[](const String &key)
+StringList &PropertyMap::operator [](const String &key)
 {
-    return SimplePropertyMap::operator[]( key.upper() );
+    return SimplePropertyMap::operator [](key.upper());
 }
 
-bool PropertyMap::operator==(const PropertyMap &other) const
+bool PropertyMap::operator ==(const PropertyMap &other) const
 {
-    for ( ConstIterator it = other.begin(); it != other.end(); ++it ) {
+    for (ConstIterator it = other.begin(); it != other.end(); ++it) {
         ConstIterator thisFind = find(it->first);
-        if ( ( thisFind == end() ) || (thisFind->second != it->second) ) {
+        if ((thisFind == end()) || (thisFind->second != it->second)) {
             return false;
         }
     }
-    for ( ConstIterator it = begin(); it != end(); ++it ) {
+    for (ConstIterator it = begin(); it != end(); ++it) {
         ConstIterator otherFind = other.find(it->first);
-        if ( ( otherFind == other.end() ) || (otherFind->second != it->second) ) {
+        if ((otherFind == other.end()) || (otherFind->second != it->second)) {
             return false;
         }
     }
     return unsupported == other.unsupported;
 }
 
-bool PropertyMap::operator!=(const PropertyMap &other) const
+bool PropertyMap::operator !=(const PropertyMap &other) const
 {
     return !(*this == other);
 }
@@ -156,10 +156,10 @@ String PropertyMap::toString() const
 {
     String ret = "";
 
-    for ( ConstIterator it = begin(); it != end(); ++it ) {
+    for (ConstIterator it = begin(); it != end(); ++it) {
         ret += it->first + "=" + it->second.toString(", ") + "\n";
     }
-    if ( !unsupported.isEmpty() ) {
+    if (!unsupported.isEmpty()) {
         ret += "Unsupported Data: " + unsupported.toString(", ") + "\n";
     }
     return ret;
@@ -169,12 +169,12 @@ void PropertyMap::removeEmpty()
 {
     StringList emptyKeys;
 
-    for ( Iterator it = begin(); it != end(); ++it ) {
-        if ( it->second.isEmpty() ) {
+    for (Iterator it = begin(); it != end(); ++it) {
+        if (it->second.isEmpty()) {
             emptyKeys.append(it->first);
         }
     }
-    for ( StringList::Iterator emptyIt = emptyKeys.begin(); emptyIt != emptyKeys.end(); emptyIt++ ) {
+    for (StringList::Iterator emptyIt = emptyKeys.begin(); emptyIt != emptyKeys.end(); emptyIt++) {
         erase(*emptyIt);
     }
 }

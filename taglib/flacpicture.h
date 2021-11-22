@@ -1,4 +1,4 @@
-﻿/**************************************************************************
+/**************************************************************************
 *    copyright            : (C) 2010 by Lukáš Lalinský
 *    email                : lalinsky@gmail.com
 **************************************************************************/
@@ -189,10 +189,9 @@ namespace TagLib
              * Parse the picture data in the FLAC picture block format.
              */
             bool parse(const ByteVector &rawData);
-
         private:
             Picture(const Picture &item);
-            Picture &operator=(const Picture &item);
+            Picture &operator =(const Picture &item);
 
             class PicturePrivate;
             PicturePrivate *d;

@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -42,9 +41,7 @@ namespace TagLib
     // ! A file class with some useful methods for tag manipulation
 
     /*!
-     * This class is a basic file class with some methods that are particularly
-     * useful for tag editors.  It has methods to take advantage of
-     * ByteVector and a binary search method for finding patterns in a file.
+     * This class is a basic file class with some methods that are particularly useful for tag editors.  It has methods to take advantage of ByteVector and a binary search method for finding patterns in a file.
      */
 
     class TAGLIB_EXPORT File
@@ -73,65 +70,34 @@ namespace TagLib
         FileName name() const;
 
         /*!
-         * Returns a pointer to this file's tag.  This should be reimplemented in
-         * the concrete subclasses.
+         * Returns a pointer to this file's tag.  This should be reimplemented in the concrete subclasses.
          */
         virtual Tag *tag() const = 0;
 
         /*!
-         * Exports the tags of the file as dictionary mapping (human readable) tag
-         * names (uppercase Strings) to StringLists of tag values. Calls the according
-         * specialization in the File subclasses.
-         * For each metadata object of the file that could not be parsed into the PropertyMap
-         * format, the returend map's unsupportedData() list will contain one entry identifying
-         * that object (e.g. the frame type for ID3v2 tags). Use removeUnsupportedProperties()
-         * to remove (a subset of) them.
-         * For files that contain more than one tag (e.g. an MP3 with both an ID3v2 and an ID3v2
-         * tag) only the most "modern" one will be exported (ID3v2 in this case).
-         * BIC: Will be made virtual in future releases.
+         * Exports the tags of the file as dictionary mapping (human readable) tag names (uppercase Strings) to StringLists of tag values. Calls the according specialization in the File subclasses. For each metadata object of the file that could not be parsed into the PropertyMap format, the returend map's unsupportedData() list will contain one entry identifying that object (e.g. the frame type for ID3v2 tags). Use removeUnsupportedProperties() to remove (a subset of) them. For files that contain more than one tag (e.g. an MP3 with both an ID3v2 and an ID3v2 tag) only the most "modern" one will be exported (ID3v2 in this case). BIC: Will be made virtual in future releases.
          */
         PropertyMap properties() const;
 
         /*!
-         * Removes unsupported properties, or a subset of them, from the file's metadata.
-         * The parameter \a properties must contain only entries from
-         * properties().unsupportedData().
-         * BIC: Will be mad virtual in future releases.
+         * Removes unsupported properties, or a subset of them, from the file's metadata. The parameter \a properties must contain only entries from properties().unsupportedData(). BIC: Will be mad virtual in future releases.
          */
         void removeUnsupportedProperties(const StringList &properties);
 
         /*!
-         * Sets the tags of this File to those specified in \a properties. Calls the
-         * according specialization method in the subclasses of File to do the translation
-         * into the format-specific details.
-         * If some value(s) could not be written imported to the specific metadata format,
-         * the returned PropertyMap will contain those value(s). Otherwise it will be empty,
-         * indicating that no problems occured.
-         * With file types that support several tag formats (for instance, MP3 files can have
-         * ID3v1, ID3v2, and APEv2 tags), this function will create the most appropriate one
-         * (ID3v2 for MP3 files). Older formats will be updated as well, if they exist, but won't
-         * be taken into account for the return value of this function.
-         * See the documentation of the subclass implementations for detailed descriptions.
-         * BIC: will become pure virtual in the future
+         * Sets the tags of this File to those specified in \a properties. Calls the according specialization method in the subclasses of File to do the translation into the format-specific details. If some value(s) could not be written imported to the specific metadata format, the returned PropertyMap will contain those value(s). Otherwise it will be empty, indicating that no problems occured. With file types that support several tag formats (for instance, MP3 files can have ID3v1, ID3v2, and APEv2 tags), this function will create the most appropriate one (ID3v2 for MP3 files). Older formats will be updated as well, if they exist, but won't be taken into account for the return value of this function. See the documentation of the subclass implementations for detailed descriptions. BIC: will become pure virtual in the future
          */
         PropertyMap setProperties(const PropertyMap &properties);
 
         /*!
-         * Returns a pointer to this file's audio properties.  This should be
-         * reimplemented in the concrete subclasses.  If no audio properties were
-         * read then this will return a null pointer.
+         * Returns a pointer to this file's audio properties.  This should be reimplemented in the concrete subclasses.  If no audio properties were read then this will return a null pointer.
          */
         virtual AudioProperties *audioProperties() const = 0;
 
         /*!
-         * Save the file and its associated tags.  This should be reimplemented in
-         * the concrete subclasses.  Returns true if the save succeeds.
+         * Save the file and its associated tags.  This should be reimplemented in the concrete subclasses.  Returns true if the save succeeds.
          *
-         * \warning On UNIX multiple processes are able to write to the same file at
-         * the same time.  This can result in serious file corruption.  If you are
-         * developing a program that makes use of TagLib from multiple processes you
-         * must insure that you are only doing writes to a particular file from one
-         * of them.
+         * \warning On UNIX multiple processes are able to write to the same file at the same time.  This can result in serious file corruption.  If you are developing a program that makes use of TagLib from multiple processes you must insure that you are only doing writes to a particular file from one of them.
          */
         virtual bool save() = 0;
 
@@ -141,50 +107,35 @@ namespace TagLib
         ByteVector readBlock(ulong length);
 
         /*!
-         * Attempts to write the block \a data at the current get pointer.  If the
-         * file is currently only opened read only -- i.e. readOnly() returns true --
+         * Attempts to write the block \a data at the current get pointer.  If the file is currently only opened read only -- i.e. readOnly() returns true --
          * this attempts to reopen the file in read/write mode.
          *
-         * \note This should be used instead of using the streaming output operator
-         * for a ByteVector.  And even this function is significantly slower than
-         * doing output with a char[].
+         * \note This should be used instead of using the streaming output operator for a ByteVector.  And even this function is significantly slower than doing output with a char[].
          */
         void writeBlock(const ByteVector &data);
 
         /*!
-         * Returns the offset in the file that \a pattern occurs at or -1 if it can
-         * not be found.  If \a before is set, the search will only continue until the
-         * pattern \a before is found.  This is useful for tagging purposes to search
-         * for a tag before the synch frame.
+         * Returns the offset in the file that \a pattern occurs at or -1 if it can not be found.  If \a before is set, the search will only continue until the pattern \a before is found.  This is useful for tagging purposes to search for a tag before the synch frame.
          *
-         * Searching starts at \a fromOffset, which defaults to the beginning of the
-         * file.
+         * Searching starts at \a fromOffset, which defaults to the beginning of the file.
          *
-         * \note This has the practial limitation that \a pattern can not be longer
-         * than the buffer size used by readBlock().  Currently this is 1024 bytes.
+         * \note This has the practial limitation that \a pattern can not be longer than the buffer size used by readBlock().  Currently this is 1024 bytes.
          */
         long find(const ByteVector &pattern, long fromOffset = 0, const ByteVector &before = ByteVector::null);
 
         /*!
-         * Returns the offset in the file that \a pattern occurs at or -1 if it can
-         * not be found.  If \a before is set, the search will only continue until the
-         * pattern \a before is found.  This is useful for tagging purposes to search
-         * for a tag before the synch frame.
+         * Returns the offset in the file that \a pattern occurs at or -1 if it can not be found.  If \a before is set, the search will only continue until the pattern \a before is found.  This is useful for tagging purposes to search for a tag before the synch frame.
          *
-         * Searching starts at \a fromOffset and proceeds from the that point to the
-         * beginning of the file and defaults to the end of the file.
+         * Searching starts at \a fromOffset and proceeds from the that point to the beginning of the file and defaults to the end of the file.
          *
-         * \note This has the practial limitation that \a pattern can not be longer
-         * than the buffer size used by readBlock().  Currently this is 1024 bytes.
+         * \note This has the practial limitation that \a pattern can not be longer than the buffer size used by readBlock().  Currently this is 1024 bytes.
          */
         long rfind(const ByteVector &pattern, long fromOffset = 0, const ByteVector &before = ByteVector::null);
 
         /*!
-         * Insert \a data at position \a start in the file overwriting \a replace
-         * bytes of the original content.
+         * Insert \a data at position \a start in the file overwriting \a replace bytes of the original content.
          *
-         * \note This method is slow since it requires rewriting all of the file
-         * after the insertion point.
+         * \note This method is slow since it requires rewriting all of the file after the insertion point.
          */
         void insert(const ByteVector &data, ulong start = 0, ulong replace = 0);
 
@@ -192,8 +143,7 @@ namespace TagLib
          * Removes a block of the file starting a \a start and continuing for
          * \a length bytes.
          *
-         * \note This method is slow since it involves rewriting all of the file
-         * after the removed portion.
+         * \note This method is slow since it involves rewriting all of the file after the removed portion.
          */
         void removeBlock(ulong start = 0, ulong length = 0);
 
@@ -203,8 +153,7 @@ namespace TagLib
         bool readOnly() const;
 
         /*!
-         * Since the file can currently only be opened as an argument to the
-         * constructor (sort-of by design), this returns if that open succeeded.
+         * Since the file can currently only be opened as an argument to the constructor (sort-of by design), this returns if that open succeeded.
          */
         bool isOpen() const;
 
@@ -214,8 +163,7 @@ namespace TagLib
         bool isValid() const;
 
         /*!
-         * Move the I/O pointer to \a offset in the file from position \a p.  This
-         * defaults to seeking from the beginning of the file.
+         * Move the I/O pointer to \a offset in the file from position \a p.  This defaults to seeking from the beginning of the file.
          *
          * \see Position
          */
@@ -237,8 +185,7 @@ namespace TagLib
         long length();
 
         /*!
-         * Returns true if \a file can be opened for reading.  If the file does not
-         * exist, this will return false.
+         * Returns true if \a file can be opened for reading.  If the file does not exist, this will return false.
          *
          * \deprecated
          */
@@ -250,25 +197,20 @@ namespace TagLib
          * \deprecated
          */
         static bool isWritable(const char *name);
-
     protected:
         /*!
-         * Construct a File object and opens the \a file.  \a file should be a
-         * be a C-string in the local file system encoding.
+         * Construct a File object and opens the \a file.  \a file should be a be a C-string in the local file system encoding.
          *
-         * \note Constructor is protected since this class should only be
-         * instantiated through subclasses.
+         * \note Constructor is protected since this class should only be instantiated through subclasses.
          */
         File(FileName file);
 
         /*!
          * Construct a File object and use the \a stream instance.
          *
-         * \note TagLib will *not* take ownership of the stream, the caller is
-         * responsible for deleting it after the File object.
+         * \note TagLib will *not* take ownership of the stream, the caller is responsible for deleting it after the File object.
          *
-         * \note Constructor is protected since this class should only be
-         * instantiated through subclasses.
+         * \note Constructor is protected since this class should only be instantiated through subclasses.
          */
         File(IOStream *stream);
 
@@ -288,10 +230,9 @@ namespace TagLib
          * Returns the buffer size that is used for internal buffering.
          */
         static uint bufferSize();
-
     private:
         File(const File &);
-        File &operator=(const File &);
+        File &operator =(const File &);
 
         class FilePrivate;
         FilePrivate *d;

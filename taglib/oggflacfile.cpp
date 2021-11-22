@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2004-2005 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
+/***************************************************************************
+*    copyright            : (C) 2004-2005 by Allan Sandfeld Jensen email                : kde@carewolf.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -59,12 +58,12 @@ public:
     Properties *properties;
     ByteVector streamInfoData;
     ByteVector xiphCommentData;
-    long       streamStart;
-    long       streamLength;
-    bool       scanned;
+    long streamStart;
+    long streamLength;
+    bool scanned;
 
     bool hasXiphComment;
-    int  commentPacket;
+    int commentPacket;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -74,7 +73,7 @@ public:
 Ogg::FLAC::File::File(FileName file, bool readProperties, Properties::ReadStyle propertiesStyle) : Ogg::File(file)
 {
     d = new FilePrivate;
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties, propertiesStyle);
     }
 }
@@ -82,7 +81,7 @@ Ogg::FLAC::File::File(FileName file, bool readProperties, Properties::ReadStyle 
 Ogg::FLAC::File::File(IOStream *stream, bool readProperties, Properties::ReadStyle propertiesStyle) : Ogg::File(stream)
 {
     d = new FilePrivate;
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties, propertiesStyle);
     }
 }
@@ -92,7 +91,7 @@ Ogg::FLAC::File::~File()
     delete d;
 }
 
-Ogg::XiphComment *Ogg::FLAC::File::tag() const
+Ogg::XiphComment*Ogg::FLAC::File::tag() const
 {
     return d->comment;
 }
@@ -107,7 +106,7 @@ PropertyMap Ogg::FLAC::File::setProperties(const PropertyMap &properties)
     return d->comment->setProperties(properties);
 }
 
-Properties *Ogg::FLAC::File::audioProperties() const
+Properties*Ogg::FLAC::File::audioProperties() const
 {
     return d->properties;
 }
@@ -120,7 +119,7 @@ bool Ogg::FLAC::File::save()
 
     // Put the size in the first 32 bit (I assume no more than 24 bit are used)
 
-    ByteVector v = ByteVector::fromUInt( d->xiphCommentData.size() );
+    ByteVector v = ByteVector::fromUInt(d->xiphCommentData.size());
 
     // Set the type of the metadata-block to be a Xiph / Vorbis comment
 
@@ -164,18 +163,18 @@ void Ogg::FLAC::File::read(bool readProperties, Properties::ReadStyle properties
 
     scan();
 
-    if ( !d->scanned ) {
+    if (!d->scanned) {
         setValid(false);
         return;
     }
 
-    if ( d->hasXiphComment ) {
-        d->comment = new Ogg::XiphComment( xiphCommentData() );
+    if (d->hasXiphComment) {
+        d->comment = new Ogg::XiphComment(xiphCommentData());
     } else {
         d->comment = new Ogg::XiphComment;
     }
 
-    if ( readProperties ) {
+    if (readProperties) {
         d->properties = new Properties(streamInfoData(), streamLength(), propertiesStyle);
     }
 }
@@ -202,11 +201,11 @@ void Ogg::FLAC::File::scan()
 {
     // Scan the metadata pages
 
-    if ( d->scanned ) {
+    if (d->scanned) {
         return;
     }
 
-    if ( !isValid() ) {
+    if (!isValid()) {
         return;
     }
 
@@ -214,19 +213,20 @@ void Ogg::FLAC::File::scan()
     long overhead = 0;
 
     ByteVector metadataHeader = packet(ipacket);
-    if ( metadataHeader.isNull() ) {
+
+    if (metadataHeader.isNull()) {
         return;
     }
 
     ByteVector header;
 
-    if ( !metadataHeader.startsWith("fLaC") ) {
+    if (!metadataHeader.startsWith("fLaC")) {
         // FLAC 1.1.2+
-        if ( metadataHeader.mid(1, 4) != "FLAC" ) {
+        if (metadataHeader.mid(1, 4) != "FLAC") {
             return;
         }
 
-        if ( metadataHeader[5] != 1 ) {
+        if (metadataHeader[5] != 1) {
             return; // not version 1
         }
         metadataHeader = metadataHeader.mid(13);
@@ -234,7 +234,7 @@ void Ogg::FLAC::File::scan()
         // FLAC 1.1.0 & 1.1.1
         metadataHeader = packet(++ipacket);
 
-        if ( metadataHeader.isNull() ) {
+        if (metadataHeader.isNull()) {
             return;
         }
     }
@@ -253,12 +253,13 @@ void Ogg::FLAC::File::scan()
     char blockType = header[0] & 0x7f;
     bool lastBlock = (header[0] & 0x80) != 0;
     uint length    = header.toUInt(1, 3, true);
+
     overhead += length;
 
     // Sanity: First block should be the stream_info metadata
 
-    if ( blockType != 0 ) {
-            debug("Ogg::FLAC::File::scan() -- Invalid Ogg/FLAC stream");
+    if (blockType != 0) {
+        debug("Ogg::FLAC::File::scan() -- Invalid Ogg/FLAC stream");
         return;
     }
 
@@ -266,10 +267,10 @@ void Ogg::FLAC::File::scan()
 
     // Search through the remaining metadata
 
-    while ( !lastBlock ) {
+    while (!lastBlock) {
         metadataHeader = packet(++ipacket);
 
-        if ( metadataHeader.isNull() ) {
+        if (metadataHeader.isNull()) {
             return;
         }
 
@@ -279,14 +280,14 @@ void Ogg::FLAC::File::scan()
         length    = header.toUInt(1, 3, true);
         overhead += length;
 
-        if ( blockType == 1 ) {
+        if (blockType == 1) {
             // debug("Ogg::FLAC::File::scan() -- Padding found");
-        } else if ( blockType == 4 ) {
+        } else if (blockType == 4) {
             // debug("Ogg::FLAC::File::scan() -- Vorbis-comments found");
             d->xiphCommentData = metadataHeader.mid(4, length);
             d->hasXiphComment  = true;
             d->commentPacket   = ipacket;
-        } else if ( blockType > 5 ) {
+        } else if (blockType > 5) {
             debug("Ogg::FLAC::File::scan() -- Unknown metadata block");
         }
     }

@@ -1,4 +1,4 @@
-﻿#ifndef MUSICTREEITEMMODEL_H
+#ifndef MUSICTREEITEMMODEL_H
 #define MUSICTREEITEMMODEL_H
 
 #include <QAbstractItemModel>
@@ -8,7 +8,6 @@ struct MusicTreeItemModelPrivate;
 class MusicTreeItemModel : public QAbstractItemModel
 {
     Q_OBJECT
-
 public:
     MusicTreeItemModel(QObject *parent = 0);
     ~MusicTreeItemModel();
@@ -24,10 +23,8 @@ public:
     QModelIndex parent(const QModelIndex &child) const;
     Qt::DropActions supportedDragActions() const;
     int rowCount(const QModelIndex &parent) const;
-
 public slots:
     void reloadData();
-
 private:
     MusicTreeItemModelPrivate *d;
 };

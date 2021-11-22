@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright           : (C) 2011 by Mathias Panzenböck
-*    email               : grosser.meister.morti@gmx.net
+/***************************************************************************
+*    copyright           : (C) 2011 by Mathias Panzenböck email               : grosser.meister.morti@gmx.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -44,17 +43,17 @@ public:
     }
 
     ushort lengthInPatterns;
-    int    channels;
-    bool   stereo;
+    int channels;
+    bool stereo;
     ushort sampleCount;
     ushort patternCount;
     ushort flags;
     ushort trackerVersion;
     ushort fileFormatVersion;
-    uchar  globalVolume;
-    uchar  masterVolume;
-    uchar  tempo;
-    uchar  bpmSpeed;
+    uchar globalVolume;
+    uchar masterVolume;
+    uchar tempo;
+    uchar bpmSpeed;
 };
 
 S3M::Properties::Properties(AudioProperties::ReadStyle propertiesStyle) :

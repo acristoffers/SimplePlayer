@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2008 by Lukas Lalinsky
-*    email                : lalinsky@gmail.com
+/***************************************************************************
+*    copyright            : (C) 2008 by Lukas Lalinsky email                : lalinsky@gmail.com
 ***************************************************************************/
 
 /***************************************************************************
@@ -37,8 +36,8 @@ public:
     {
     }
 
-    String       email;
-    int          rating;
+    String email;
+    int rating;
     TagLib::uint counter;
 };
 
@@ -103,16 +102,16 @@ void PopularimeterFrame::setCounter(TagLib::uint s)
 
 void PopularimeterFrame::parseFields(const ByteVector &data)
 {
-    int pos = 0, size = int ( data.size() );
+    int pos = 0, size = int(data.size());
 
     d->email = readStringField(data, String::Latin1, &pos);
 
     d->rating  = 0;
     d->counter = 0;
-    if ( pos < size ) {
+    if (pos < size) {
         d->rating = (unsigned char) (data[pos++]);
-        if ( pos < size ) {
-            d->counter = data.toUInt( static_cast<uint> (pos) );
+        if (pos < size) {
+            d->counter = data.toUInt(static_cast<uint>(pos));
         }
     }
 }
@@ -121,10 +120,10 @@ ByteVector PopularimeterFrame::renderFields() const
 {
     ByteVector data;
 
-    data.append( d->email.data(String::Latin1) );
-    data.append( textDelimiter(String::Latin1) );
-    data.append( char (d->rating) );
-    data.append( ByteVector::fromUInt(d->counter) );
+    data.append(d->email.data(String::Latin1));
+    data.append(textDelimiter(String::Latin1));
+    data.append(char(d->rating));
+    data.append(ByteVector::fromUInt(d->counter));
 
     return data;
 }
@@ -136,5 +135,5 @@ ByteVector PopularimeterFrame::renderFields() const
 PopularimeterFrame::PopularimeterFrame(const ByteVector &data, Header *h) : Frame(h)
 {
     d = new PopularimeterFramePrivate;
-    parseFields( fieldData(data) );
+    parseFields(fieldData(data));
 }

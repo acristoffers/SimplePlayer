@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -40,12 +39,12 @@ class Header::HeaderPrivate
 {
 public:
     HeaderPrivate() : majorVersion(4),
-                      revisionNumber(0),
-                      unsynchronisation(false),
-                      extendedHeader(false),
-                      experimentalIndicator(false),
-                      footerPresent(false),
-                      tagSize(0)
+        revisionNumber(0),
+        unsynchronisation(false),
+        extendedHeader(false),
+        experimentalIndicator(false),
+        footerPresent(false),
+        tagSize(0)
     {
     }
 
@@ -142,7 +141,7 @@ TagLib::uint Header::tagSize() const
 
 TagLib::uint Header::completeTagSize() const
 {
-    if ( d->footerPresent ) {
+    if (d->footerPresent) {
         return d->tagSize + d->size + Footer::size();
     } else {
         return d->tagSize + d->size;
@@ -164,13 +163,13 @@ ByteVector Header::render() const
     ByteVector v;
 
     // add the file identifier -- "ID3"
-    v.append( fileIdentifier() );
+    v.append(fileIdentifier());
 
     // add the version number -- we always render a 2.4.0 tag regardless of what
     // the tag originally was.
 
-    v.append( char ( majorVersion() ) );
-    v.append( char (0) );
+    v.append(char(majorVersion()));
+    v.append(char(0));
 
     // Currently we don't actually support writing extended headers, footers or
     // unsynchronized tags, make sure that the flags are set accordingly.
@@ -187,10 +186,10 @@ ByteVector Header::render() const
     flags[5] = d->experimentalIndicator;
     flags[4] = d->footerPresent;
 
-    v.append( char ( flags.to_ulong() ) );
+    v.append(char(flags.to_ulong()));
 
     // add the size
-    v.append( SynchData::fromUInt(d->tagSize) );
+    v.append(SynchData::fromUInt(d->tagSize));
 
     return v;
 }
@@ -201,7 +200,7 @@ ByteVector Header::render() const
 
 void Header::parse(const ByteVector &data)
 {
-    if ( data.size() < size() ) {
+    if (data.size() < size()) {
         return;
     }
 
@@ -214,14 +213,14 @@ void Header::parse(const ByteVector &data)
 
     ByteVector sizeData = data.mid(6, 4);
 
-    if ( sizeData.size() != 4 ) {
+    if (sizeData.size() != 4) {
         d->tagSize = 0;
-            debug("TagLib::ID3v2::Header::parse() - The tag size as read was 0 bytes!");
+        debug("TagLib::ID3v2::Header::parse() - The tag size as read was 0 bytes!");
         return;
     }
 
-    for ( ByteVector::Iterator it = sizeData.begin(); it != sizeData.end(); it++ ) {
-        if ( uchar(*it) >= 128 ) {
+    for (ByteVector::Iterator it = sizeData.begin(); it != sizeData.end(); it++) {
+        if (uchar(*it) >= 128) {
             d->tagSize = 0;
             debug("TagLib::ID3v2::Header::parse() - One of the size bytes in the id3v2 header was greater than the allowed 128.");
             return;

@@ -1,14 +1,10 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2010 by Alex Novichkov
-*    email                : novichko@atnet.ru
+/***************************************************************************
+*    copyright            : (C) 2010 by Alex Novichkov email                : novichko@atnet.ru
 *
 *    copyright            : (C) 2006 by Lukáš Lalinský
-*    email                : lalinsky@gmail.com
-*                           (original WavPack implementation)
+*    email                : lalinsky@gmail.com (original WavPack implementation)
 *
-*    copyright            : (C) 2004 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
-*                           (original MPC implementation)
+*    copyright            : (C) 2004 by Allan Sandfeld Jensen email                : kde@carewolf.org (original MPC implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -93,7 +89,7 @@ public:
 APE::File::File(FileName file, bool readProperties, Properties::ReadStyle propertiesStyle) : TagLib::File(file)
 {
     d = new FilePrivate;
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties, propertiesStyle);
     }
 }
@@ -101,7 +97,7 @@ APE::File::File(FileName file, bool readProperties, Properties::ReadStyle proper
 APE::File::File(IOStream *stream, bool readProperties, Properties::ReadStyle propertiesStyle) : TagLib::File(stream)
 {
     d = new FilePrivate;
-    if ( isOpen() ) {
+    if (isOpen()) {
         read(readProperties, propertiesStyle);
     }
 }
@@ -111,70 +107,70 @@ APE::File::~File()
     delete d;
 }
 
-TagLib::Tag *APE::File::tag() const
+TagLib::Tag*APE::File::tag() const
 {
     return &d->tag;
 }
 
 PropertyMap APE::File::properties() const
 {
-    if ( d->hasAPE ) {
-        return d->tag.access<APE::Tag> (ApeAPEIndex, false)->properties();
+    if (d->hasAPE) {
+        return d->tag.access<APE::Tag>(ApeAPEIndex, false)->properties();
     }
-    if ( d->hasID3v1 ) {
-        return d->tag.access<ID3v1::Tag> (ApeID3v1Index, false)->properties();
+    if (d->hasID3v1) {
+        return d->tag.access<ID3v1::Tag>(ApeID3v1Index, false)->properties();
     }
     return PropertyMap();
 }
 
 void APE::File::removeUnsupportedProperties(const StringList &properties)
 {
-    if ( d->hasAPE ) {
-        d->tag.access<APE::Tag> (ApeAPEIndex, false)->removeUnsupportedProperties(properties);
+    if (d->hasAPE) {
+        d->tag.access<APE::Tag>(ApeAPEIndex, false)->removeUnsupportedProperties(properties);
     }
-    if ( d->hasID3v1 ) {
-        d->tag.access<ID3v1::Tag> (ApeID3v1Index, false)->removeUnsupportedProperties(properties);
+    if (d->hasID3v1) {
+        d->tag.access<ID3v1::Tag>(ApeID3v1Index, false)->removeUnsupportedProperties(properties);
     }
 }
 
 PropertyMap APE::File::setProperties(const PropertyMap &properties)
 {
-    if ( d->hasID3v1 ) {
-        d->tag.access<ID3v1::Tag> (ApeID3v1Index, false)->setProperties(properties);
+    if (d->hasID3v1) {
+        d->tag.access<ID3v1::Tag>(ApeID3v1Index, false)->setProperties(properties);
     }
-    return d->tag.access<APE::Tag> (ApeAPEIndex, true)->setProperties(properties);
+    return d->tag.access<APE::Tag>(ApeAPEIndex, true)->setProperties(properties);
 }
 
-APE::Properties *APE::File::audioProperties() const
+APE::Properties*APE::File::audioProperties() const
 {
     return d->properties;
 }
 
 bool APE::File::save()
 {
-    if ( readOnly() ) {
+    if (readOnly()) {
         debug("APE::File::save() -- File is read only.");
         return false;
     }
 
     // Update ID3v1 tag
 
-    if ( ID3v1Tag() ) {
-        if ( d->hasID3v1 ) {
+    if (ID3v1Tag()) {
+        if (d->hasID3v1) {
             seek(d->ID3v1Location);
-            writeBlock( ID3v1Tag()->render() );
+            writeBlock(ID3v1Tag()->render());
         } else {
             seek(0, End);
             d->ID3v1Location = tell();
-            writeBlock( ID3v1Tag()->render() );
+            writeBlock(ID3v1Tag()->render());
             d->hasID3v1 = true;
         }
     } else {
-        if ( d->hasID3v1 ) {
+        if (d->hasID3v1) {
             removeBlock(d->ID3v1Location, 128);
             d->hasID3v1 = false;
-            if ( d->hasAPE ) {
-                if ( d->APELocation > d->ID3v1Location ) {
+            if (d->hasAPE) {
+                if (d->APELocation > d->ID3v1Location) {
                     d->APELocation -= 128;
                 }
             }
@@ -183,11 +179,11 @@ bool APE::File::save()
 
     // Update APE tag
 
-    if ( APETag() ) {
-        if ( d->hasAPE ) {
-                insert(APETag()->render(), d->APELocation,   d->APESize);
+    if (APETag()) {
+        if (d->hasAPE) {
+            insert(APETag()->render(), d->APELocation, d->APESize);
         } else {
-            if ( d->hasID3v1 ) {
+            if (d->hasID3v1) {
                 insert(APETag()->render(), d->ID3v1Location, 0);
                 d->APESize        = APETag()->footer()->completeTagSize();
                 d->hasAPE         = true;
@@ -196,17 +192,17 @@ bool APE::File::save()
             } else {
                 seek(0, End);
                 d->APELocation = tell();
-                writeBlock( APETag()->render() );
+                writeBlock(APETag()->render());
                 d->APESize = APETag()->footer()->completeTagSize();
                 d->hasAPE  = true;
             }
         }
     } else {
-        if ( d->hasAPE ) {
+        if (d->hasAPE) {
             removeBlock(d->APELocation, d->APESize);
             d->hasAPE = false;
-            if ( d->hasID3v1 ) {
-                if ( d->ID3v1Location > d->APELocation ) {
+            if (d->hasID3v1) {
+                if (d->ID3v1Location > d->APELocation) {
                     d->ID3v1Location -= d->APESize;
                 }
             }
@@ -216,27 +212,27 @@ bool APE::File::save()
     return true;
 }
 
-ID3v1::Tag *APE::File::ID3v1Tag(bool create)
+ID3v1::Tag*APE::File::ID3v1Tag(bool create)
 {
-    return d->tag.access<ID3v1::Tag> (ApeID3v1Index, create);
+    return d->tag.access<ID3v1::Tag>(ApeID3v1Index, create);
 }
 
-APE::Tag *APE::File::APETag(bool create)
+APE::Tag*APE::File::APETag(bool create)
 {
-    return d->tag.access<APE::Tag> (ApeAPEIndex, create);
+    return d->tag.access<APE::Tag>(ApeAPEIndex, create);
 }
 
 void APE::File::strip(int tags)
 {
-    if ( tags & ID3v1 ) {
+    if (tags & ID3v1) {
         d->tag.set(ApeID3v1Index, 0);
-            APETag(true);
+        APETag(true);
     }
 
-    if ( tags & APE ) {
+    if (tags & APE) {
         d->tag.set(ApeAPEIndex, 0);
 
-        if ( !ID3v1Tag() ) {
+        if (!ID3v1Tag()) {
             APETag(true);
         }
     }
@@ -262,8 +258,8 @@ void APE::File::read(bool readProperties, Properties::ReadStyle /* propertiesSty
 
     d->ID3v1Location = findID3v1();
 
-    if ( d->ID3v1Location >= 0 ) {
-        d->tag.set( ApeID3v1Index, new ID3v1::Tag(this, d->ID3v1Location) );
+    if (d->ID3v1Location >= 0) {
+        d->tag.set(ApeID3v1Index, new ID3v1::Tag(this, d->ID3v1Location));
         d->hasID3v1 = true;
     }
 
@@ -271,39 +267,39 @@ void APE::File::read(bool readProperties, Properties::ReadStyle /* propertiesSty
 
     d->APELocation = findAPE();
 
-    if ( d->APELocation >= 0 ) {
-        d->tag.set( ApeAPEIndex, new APE::Tag(this, d->APELocation) );
+    if (d->APELocation >= 0) {
+        d->tag.set(ApeAPEIndex, new APE::Tag(this, d->APELocation));
         d->APESize     = APETag()->footer()->completeTagSize();
         d->APELocation = d->APELocation + APETag()->footer()->size() - d->APESize;
         d->hasAPE      = true;
     }
 
-    if ( !d->hasID3v1 ) {
-            APETag(true);
+    if (!d->hasID3v1) {
+        APETag(true);
     }
 
     // Look for APE audio properties
 
-    if ( readProperties ) {
+    if (readProperties) {
         d->properties = new Properties(this);
     }
 }
 
 long APE::File::findAPE()
 {
-    if ( !isValid() ) {
+    if (!isValid()) {
         return -1;
     }
 
-    if ( d->hasID3v1 ) {
+    if (d->hasID3v1) {
         seek(-160, End);
     } else {
-        seek(-32,  End);
+        seek(-32, End);
     }
 
     long p = tell();
 
-    if ( readBlock(8) == APE::Tag::fileIdentifier() ) {
+    if (readBlock(8) == APE::Tag::fileIdentifier()) {
         return p;
     }
 
@@ -312,14 +308,14 @@ long APE::File::findAPE()
 
 long APE::File::findID3v1()
 {
-    if ( !isValid() ) {
+    if (!isValid()) {
         return -1;
     }
 
-        seek(-128, End);
+    seek(-128, End);
     long p = tell();
 
-    if ( readBlock(3) == ID3v1::Tag::fileIdentifier() ) {
+    if (readBlock(3) == ID3v1::Tag::fileIdentifier()) {
         return p;
     }
 

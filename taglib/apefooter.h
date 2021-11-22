@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2004 by Allan Sandfeld Jensen
-*    email                : kde@carewolf.org
+/***************************************************************************
+*    copyright            : (C) 2004 by Allan Sandfeld Jensen email                : kde@carewolf.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -36,10 +35,7 @@ namespace TagLib
         // ! An implementation of APE footers
 
         /*!
-         * This class implements APE footers (and headers). It attempts to follow, both
-         * semantically and programatically, the structure specified in
-         * the APE v2.0 standard.  The API is based on the properties of APE footer and
-         * headers specified there.
+         * This class implements APE footers (and headers). It attempts to follow, both semantically and programatically, the structure specified in the APE v2.0 standard.  The API is based on the properties of APE footer and headers specified there.
          */
 
         class TAGLIB_EXPORT Footer
@@ -51,8 +47,7 @@ namespace TagLib
             Footer();
 
             /*!
-             * Constructs an APE footer based on \a data.  parse() is called
-             * immediately.
+             * Constructs an APE footer based on \a data.  parse() is called immediately.
              */
             Footer(const ByteVector &data);
 
@@ -98,16 +93,14 @@ namespace TagLib
             void setItemCount(uint s);
 
             /*!
-             * Returns the tag size in bytes.  This is the size of the frame content and footer.
-             * The size of the \e entire tag will be this plus the header size, if present.
+             * Returns the tag size in bytes.  This is the size of the frame content and footer. The size of the \e entire tag will be this plus the header size, if present.
              *
              * \see completeTagSize()
              */
             uint tagSize() const;
 
             /*!
-             * Returns the tag size, including if present, the header
-             * size.
+             * Returns the tag size, including if present, the header size.
              *
              * \see tagSize()
              */
@@ -125,14 +118,12 @@ namespace TagLib
             static uint size();
 
             /*!
-             * Returns the string used to identify an APE tag inside of a file.
-             * Presently this is always "APETAGEX".
+             * Returns the string used to identify an APE tag inside of a file. Presently this is always "APETAGEX".
              */
             static ByteVector fileIdentifier();
 
             /*!
-             * Sets the data that will be used as the footer.  32 bytes,
-             * starting from \a data will be used.
+             * Sets the data that will be used as the footer.  32 bytes, starting from \a data will be used.
              */
             void setData(const ByteVector &data);
 
@@ -142,15 +133,12 @@ namespace TagLib
             ByteVector renderFooter() const;
 
             /*!
-             * Renders the header corresponding to the footer. If headerPresent is
-             * set to false, it returns an empty ByteVector.
+             * Renders the header corresponding to the footer. If headerPresent is set to false, it returns an empty ByteVector.
              */
             ByteVector renderHeader() const;
-
         protected:
             /*!
-             * Called by setData() to parse the footer data.  It makes this information
-             * available through the public API.
+             * Called by setData() to parse the footer data.  It makes this information available through the public API.
              */
             void parse(const ByteVector &data);
 
@@ -158,10 +146,9 @@ namespace TagLib
              * Called by renderFooter and renderHeader
              */
             ByteVector render(bool isHeader) const;
-
         private:
             Footer(const Footer &);
-            Footer &operator=(const Footer &);
+            Footer &operator =(const Footer &);
 
             class FooterPrivate;
             FooterPrivate *d;

@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -37,19 +36,14 @@ namespace TagLib
         // ! An ID3v2 relative volume adjustment frame implementation
 
         /*!
-         * This is an implementation of ID3v2 relative volume adjustment.  The
-         * presence of this frame makes it possible to specify an increase in volume
-         * for an audio file or specific audio tracks in that file.
+         * This is an implementation of ID3v2 relative volume adjustment.  The presence of this frame makes it possible to specify an increase in volume for an audio file or specific audio tracks in that file.
          *
-         * Multiple relative volume adjustment frames may be present in the tag
-         * each with a unique identification and describing volume adjustment for
-         * different channel types.
+         * Multiple relative volume adjustment frames may be present in the tag each with a unique identification and describing volume adjustment for different channel types.
          */
 
         class TAGLIB_EXPORT RelativeVolumeFrame : public Frame
         {
             friend class FrameFactory;
-
         public:
             /*!
              * This indicates the type of volume adjustment that should be applied.
@@ -78,8 +72,7 @@ namespace TagLib
             // ! Struct that stores the relevant values for ID3v2 peak volume
 
             /*!
-             * The peak volume is described as a series of bits that is padded to fill
-             * a block of bytes.  These two values should always be updated in tandem.
+             * The peak volume is described as a series of bits that is padded to fill a block of bytes.  These two values should always be updated in tandem.
              */
             struct PeakVolume
             {
@@ -91,20 +84,17 @@ namespace TagLib
                 }
 
                 /*!
-                 * The number of bits (in the range of 0 to 255) used to describe the
-                 * peak volume.
+                 * The number of bits (in the range of 0 to 255) used to describe the peak volume.
                  */
                 unsigned char bitsRepresentingPeak;
                 /*!
-                 * The array of bits (represented as a series of bytes) used to describe
-                 * the peak volume.
+                 * The array of bits (represented as a series of bytes) used to describe the peak volume.
                  */
                 ByteVector peakVolume;
             };
 
             /*!
-             * Constructs a RelativeVolumeFrame.  The relevant data should be set
-             * manually.
+             * Constructs a RelativeVolumeFrame.  The relevant data should be set manually.
              */
             RelativeVolumeFrame();
 
@@ -141,19 +131,14 @@ namespace TagLib
             void setChannelType(ChannelType t);
 
             /*
-             * There was a terrible API goof here, and while this can't be changed to
-             * the way it appears below for binary compaibility reasons, let's at
-             * least pretend that it looks clean.
+             * There was a terrible API goof here, and while this can't be changed to the way it appears below for binary compaibility reasons, let's at least pretend that it looks clean.
              */
 
 #ifdef DOXYGEN
             /*!
-             * Returns the relative volume adjustment "index".  As indicated by the
-             * ID3v2 standard this is a 16-bit signed integer that reflects the
-             * decibils of adjustment when divided by 512.
+             * Returns the relative volume adjustment "index".  As indicated by the ID3v2 standard this is a 16-bit signed integer that reflects the decibils of adjustment when divided by 512.
              *
-             * This defaults to returning the value for the master volume channel if
-             * available and returns 0 if the specified channel does not exist.
+             * This defaults to returning the value for the master volume channel if available and returns 0 if the specified channel does not exist.
              *
              * \see setVolumeAdjustmentIndex()
              * \see volumeAjustment()
@@ -161,9 +146,7 @@ namespace TagLib
             short volumeAdjustmentIndex(ChannelType type = MasterVolume) const;
 
             /*!
-             * Set the volume adjustment to \a index.  As indicated by the ID3v2
-             * standard this is a 16-bit signed integer that reflects the decibils of
-             * adjustment when divided by 512.
+             * Set the volume adjustment to \a index.  As indicated by the ID3v2 standard this is a 16-bit signed integer that reflects the decibils of adjustment when divided by 512.
              *
              * By default this sets the value for the master volume.
              *
@@ -175,12 +158,9 @@ namespace TagLib
             /*!
              * Returns the relative volume adjustment in decibels.
              *
-             * \note Because this is actually stored internally as an "index" to this
-             * value the value returned by this method may not be identical to the
-             * value set using setVolumeAdjustment().
+             * \note Because this is actually stored internally as an "index" to this value the value returned by this method may not be identical to the value set using setVolumeAdjustment().
              *
-             * This defaults to returning the value for the master volume channel if
-             * available and returns 0 if the specified channel does not exist.
+             * This defaults to returning the value for the master volume channel if available and returns 0 if the specified channel does not exist.
              *
              * \see setVolumeAdjustment()
              * \see volumeAdjustmentIndex()
@@ -192,9 +172,7 @@ namespace TagLib
              *
              * By default this sets the value for the master volume.
              *
-             * \note Because this is actually stored internally as an "index" to this
-             * value the value set by this method may not be identical to the one
-             * returned by volumeAdjustment().
+             * \note Because this is actually stored internally as an "index" to this value the value set by this method may not be identical to the one returned by volumeAdjustment().
              *
              * \see setVolumeAdjustment()
              * \see volumeAdjustmentIndex()
@@ -204,8 +182,7 @@ namespace TagLib
             /*!
              * Returns the peak volume (represented as a length and a string of bits).
              *
-             * This defaults to returning the value for the master volume channel if
-             * available and returns 0 if the specified channel does not exist.
+             * This defaults to returning the value for the master volume channel if available and returns 0 if the specified channel does not exist.
              *
              * \see setPeakVolume()
              */
@@ -219,7 +196,6 @@ namespace TagLib
              * \see peakVolume()
              */
             void setPeakVolume(const PeakVolume &peak, ChannelType type = MasterVolume);
-
 #else
             // BIC: Combine each of the following pairs of functions (or maybe just
             // rework this junk altogether).
@@ -249,20 +225,16 @@ namespace TagLib
             String identification() const;
 
             /*!
-             * Sets the identification of the frame to \a s. The string
-             * is used to identify the situation and/or device where this
-             * adjustment should apply.
+             * Sets the identification of the frame to \a s. The string is used to identify the situation and/or device where this adjustment should apply.
              */
             void setIdentification(const String &s);
-
         protected:
             virtual void parseFields(const ByteVector &data);
             virtual ByteVector renderFields() const;
-
         private:
             RelativeVolumeFrame(const ByteVector &data, Header *h);
             RelativeVolumeFrame(const RelativeVolumeFrame &);
-            RelativeVolumeFrame &operator=(const RelativeVolumeFrame &);
+            RelativeVolumeFrame &operator =(const RelativeVolumeFrame &);
 
             class RelativeVolumeFramePrivate;
             RelativeVolumeFramePrivate *d;

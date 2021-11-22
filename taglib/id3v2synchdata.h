@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2002 - 2008 by Scott Wheeler
-*    email                : wheeler@kde.org
+/***************************************************************************
+*    copyright            : (C) 2002 - 2008 by Scott Wheeler email                : wheeler@kde.org
 ***************************************************************************/
 
 /***************************************************************************
@@ -37,19 +36,14 @@ namespace TagLib
 
         /*!
          * In the ID3v2.4 standard most integer values are encoded as "synch safe"
-         * integers which are encoded in such a way that they will not give false
-         * MPEG syncs and confuse MPEG decoders.  This namespace provides some
-         * methods for converting to and from these values to ByteVectors for
-         * things rendering and parsing ID3v2 data.
+         * integers which are encoded in such a way that they will not give false MPEG syncs and confuse MPEG decoders.  This namespace provides some methods for converting to and from these values to ByteVectors for things rendering and parsing ID3v2 data.
          */
 
         namespace SynchData
         {
             /*!
-             * This returns the unsigned integer value of \a data where \a data is a
-             * ByteVector that contains a \e synchsafe integer (Structure,
-             * <a href="id3v2-structure.html#6.2">6.2</a>).  The default \a length of
-             * 4 is used if another value is not specified.
+             * This returns the unsigned integer value of \a data where \a data is a ByteVector that contains a \e synchsafe integer (Structure,
+             * <a href="id3v2-structure.html#6.2">6.2</a>).  The default \a length of 4 is used if another value is not specified.
              */
             TAGLIB_EXPORT uint toUInt(const ByteVector &data);
 

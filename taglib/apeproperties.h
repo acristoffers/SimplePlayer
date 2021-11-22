@@ -1,10 +1,8 @@
-﻿/***************************************************************************
-*    copyright            : (C) 2010 by Alex Novichkov
-*    email                : novichko@atnet.ru
+/***************************************************************************
+*    copyright            : (C) 2010 by Alex Novichkov email                : novichko@atnet.ru
 *
 *    copyright            : (C) 2006 by Lukáš Lalinský
-*    email                : lalinsky@gmail.com
-*                           (original WavPack implementation)
+*    email                : lalinsky@gmail.com (original WavPack implementation)
 ***************************************************************************/
 
 /***************************************************************************
@@ -42,16 +40,14 @@ namespace TagLib
         // ! An implementation of audio property reading for APE
 
         /*!
-         * This reads the data from an APE stream found in the AudioProperties
-         * API.
+         * This reads the data from an APE stream found in the AudioProperties API.
          */
 
         class TAGLIB_EXPORT Properties : public AudioProperties
         {
         public:
             /*!
-             * Create an instance of APE::Properties with the data read from the
-             * ByteVector \a data.
+             * Create an instance of APE::Properties with the data read from the ByteVector \a data.
              */
             Properties(File *f, ReadStyle style = Average);
 
@@ -77,10 +73,9 @@ namespace TagLib
              * Returns APE version.
              */
             int version() const;
-
         private:
             Properties(const Properties &);
-            Properties &operator=(const Properties &);
+            Properties &operator =(const Properties &);
 
             void read();
 

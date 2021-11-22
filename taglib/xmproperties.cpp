@@ -1,6 +1,5 @@
-﻿/***************************************************************************
-*    copyright           :(C) 2011 by Mathias Panzenböck
-*    email               : grosser.meister.morti@gmx.net
+/***************************************************************************
+*    copyright           :(C) 2011 by Mathias Panzenböck email               : grosser.meister.morti@gmx.net
 ***************************************************************************/
 
 /***************************************************************************
@@ -42,12 +41,12 @@ public:
     }
 
     ushort lengthInPatterns;
-    int    channels;
+    int channels;
     ushort version;
     ushort restartPosition;
     ushort patternCount;
     ushort instrumentCount;
-    uint   sampleCount;
+    uint sampleCount;
     ushort flags;
     ushort tempo;
     ushort bpmSpeed;
