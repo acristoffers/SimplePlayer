@@ -15,18 +15,6 @@ macx {
 }
 
 CONFIG(release, debug|release) {
-    macx {
-        QMAKE_CXX       = "clang++"
-        QMAKE_CXXFLAGS += "-Qunused-arguments -fcolor-diagnostics"
-        QMAKE_CC        = "ccache clang"
-        QMAKE_CFLAGS   += "-Qunused-arguments -fcolor-diagnostics"
-    }
-
-    linux-g++ {
-        QMAKE_CXX = "ccache g++"
-        QMAKE_CC  = "ccache gcc"
-    }
-
     QMAKE_CFLAGS_RELEASE -= -O
     QMAKE_CFLAGS_RELEASE -= -O1
     QMAKE_CFLAGS_RELEASE -= -O2
@@ -41,7 +29,7 @@ CONFIG(release, debug|release) {
 include(taglib/taglib.pri)
 include(libmedia/libmedia.pri)
 
-TARGET = SimplePlayer
+TARGET = simple-player
 TEMPLATE = app
 
 SOURCES += player/main.cpp\
@@ -73,3 +61,10 @@ RESOURCES += res/Resources.qrc
 RC_ICONS = res/icon.ico
 
 ICON = res/icon.icns
+
+isEmpty(PREFIX) {
+    PREFIX = /usr/local
+}
+
+target.path = $$PREFIX/bin
+INSTALLS += target

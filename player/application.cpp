@@ -30,9 +30,10 @@ Application::Application(int &argc, char **argv) :
     setOrganizationName("CEFET-MG");
 
     setWindowIcon(QIcon(":/icon.png"));
-    setQuitOnLastWindowClosed(false);
 
 #ifdef Q_OS_MAC
+    setQuitOnLastWindowClosed(false);
+
     Class       cls      = (Class) objc_getClass("NSApplication");
     objc_object *appInst = OBJC(cls, "sharedApplication");
 
